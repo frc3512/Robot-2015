@@ -1,0 +1,12 @@
+*.log
+*.a
+*.dll
+*.d
+*.o
+*.out
+ctdt.c
+
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
