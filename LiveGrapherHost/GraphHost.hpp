@@ -27,9 +27,9 @@
 
 #include <sys/times.h>
 
-struct graphhost_t;
+#include "graphhost.hpp"
 
-class GraphHost {
+class GraphHost : public graphhost_t {
 public:
     GraphHost(int port);
     virtual ~GraphHost();

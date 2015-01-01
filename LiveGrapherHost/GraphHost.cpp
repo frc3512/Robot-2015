@@ -1,22 +1,19 @@
 #include "GraphHost.hpp"
 #include <chrono>
 
-#include "graphhost_impl/graphhost.h"
-
 GraphHost::GraphHost(int port) :
-        m_inst( GraphHost_create(port) ) ,
+        graphhost_t( port ) ,
         m_sendInterval( 5 ) {
     resetTime();
 }
 
 GraphHost::~GraphHost() {
-    GraphHost_destroy(m_inst);
 }
 
 int GraphHost::graphData(float value, std::string dataset) {
     m_currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-    return GraphHost_graphData(m_currentTime - m_startTime, value, dataset.c_str(), m_inst);
+    return graphhost_t::graphData(m_currentTime - m_startTime, value, dataset);
 }
 
 void GraphHost::setSendInterval( uint32_t milliseconds ) {
