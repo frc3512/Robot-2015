@@ -4,7 +4,7 @@
 *.d
 *.o
 *.out
-ctdt.c
+Robot-2015
 
 CMakeFiles/
 CMakeCache.txt

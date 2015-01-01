@@ -1,0 +1,11 @@
+TEXT LEFT_RPM left "Left RPM: 0" "Left RPM: %s"
+TEXT RIGHT_RPM left "Right RPM: 0" "Right RPM: %s"
+TEXT LEFT_DIST left "Left Distance: 0" "Left Distance: %s"
+TEXT RIGHT_DIST left "Right Distance: 0" "Right Distance: %s"
+
+PBAR ANGLE_SET_DISP,ANGLE_SET right "Angle \u2192 0\u00b0" "Angle \u2192 %s\u00b0"
+PBAR ANGLE_REAL_DISP,ANGLE_REAL right "Angle: 0\u00b0" "Angle: %s\u00b0"
+
+STATUSLIGHT ANGLE_PICKUP right "Pickup Angle" "Pickup Angle"
+STATUSLIGHT ANGLE_SHOOT right "Shoot Angle" "Shoot Angle"
+STATUSLIGHT ANGLE_ZERO right "Zero Angle" "Zero Angle"
