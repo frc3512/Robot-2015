@@ -24,8 +24,7 @@
  */
 
 #include <string>
-
-#include <sys/times.h>
+#include <cstdint>
 
 #include "graphhost.hpp"
 
@@ -40,7 +39,7 @@ public:
      *       -1 = host not running
      *       0 = data sent successfully
      */
-    int graphData(float value, std::string dataset);
+    int graphData( float value , std::string dataset );
 
     /* Sets time interval after which data is sent to graph (milliseconds per
      * sample)
@@ -61,8 +60,6 @@ public:
     void resetTime();
 
 private:
-    struct graphhost_t *m_inst;
-
     // Last time data was graphed
     uint32_t m_lastTime;
 
@@ -74,7 +71,6 @@ private:
 
     // Used as a temp variables in graphData(2)
     uint32_t m_currentTime;
-    struct timeval m_rawTime;
 };
 
 #endif // GRAPHHOST_HPP

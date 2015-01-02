@@ -1,32 +1,29 @@
-/* A very simple test harness for GraphHost */
+// A very simple test harness for GraphHost
 
 #if 0
-#include <stdlib.h>
+#include <chrono>
+#include <cstdint>
 #include <unistd.h>
 #include <signal.h>
-#include "graphhost.h"
+#include "graphhost.hpp"
 
-/* main function */
-int
-main()
-{
-  struct graphhost_t *gh;
+int main() {
+    graphhost_t gh( 4098 );
 
-  /* Ignore SIGPIPE */
-  signal(SIGPIPE, SIG_IGN);
+    // Ignore SIGPIPE
+    signal( SIGPIPE , SIG_IGN );
 
-  /* Create a GraphHost */
-  gh = GraphHost_create(4098);
+    uint32_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    uint32_t currentTime = startTime;
 
-  /* Send some bogus data */
-  while(1) {
-    GraphHost_graphData(0, 0, "PID0", gh);
-    sleep(1);
-  }
+    // Send some bogus data
+    while ( 1 ) {
+        currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        gh.graphData(currentTime - startTime, 0, "PID0");
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    }
 
-  /* NOTREACHED */
-  GraphHost_destroy(gh);
-
-  return 0;
+    return 0;
 }
+
 #endif
