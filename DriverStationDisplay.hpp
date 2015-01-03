@@ -68,10 +68,10 @@ public:
     void clear();
 
     /* Sends data currently in packet to Driver Station. 'userData' holds the
-     * packet to be sent to the Driver Station. If the pointer is NULL, this
+     * packet to be sent to the Driver Station. If the pointer is nullptr, this
      * class's internal packet is sent instead.
      */
-    void sendToDS( sf::Packet* userData = NULL );
+    void sendToDS( sf::Packet* userData = nullptr );
 
     // Receives control commands from Driver Station and processes them
     const std::string receiveFromDS();

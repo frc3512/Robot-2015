@@ -71,7 +71,6 @@ void Robot::calibrateTalons() {
 
 void Robot::OperatorControl() {
     robotDrive->reloadPID();
-    //robotPosition->zeroValues();
 
     while (IsOperatorControl() && IsEnabled()){
     	//DS_PrintOut();

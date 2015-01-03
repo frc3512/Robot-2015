@@ -23,8 +23,8 @@ GearBox<T>::GearBox( unsigned int shifterChan , unsigned int encA ,
         m_havePID = true;
     }
     else {
-        m_encoder = NULL;
-        m_pid = NULL;
+        m_encoder = nullptr;
+        m_pid = nullptr;
 
         m_havePID = false;
     }
@@ -33,7 +33,7 @@ GearBox<T>::GearBox( unsigned int shifterChan , unsigned int encA ,
         m_shifter = new Solenoid( shifterChan );
     }
     else {
-        m_shifter = NULL;
+        m_shifter = nullptr;
     }
 
     m_isReversed = false;
@@ -67,7 +67,7 @@ GearBox<T>::~GearBox() {
         delete m_encoder;
     }
 
-    if ( m_shifter != NULL ) {
+    if ( m_shifter != nullptr ) {
         delete m_shifter;
     }
 
@@ -204,14 +204,14 @@ bool GearBox<T>::isReversed() const {
 
 template <class T>
 void GearBox<T>::setGear( bool gear ) {
-    if ( m_shifter != NULL ) {
+    if ( m_shifter != nullptr ) {
         m_targetGear = gear;
     }
 }
 
 template <class T>
 bool GearBox<T>::getGear() const {
-    if ( m_shifter != NULL ) {
+    if ( m_shifter != nullptr ) {
         return m_shifter->Get();
     }
     else {
@@ -238,7 +238,7 @@ void GearBox<T>::PIDWrite( float output ) {
 template <class T>
 void GearBox<T>::updateGear()
 {
-        if(m_shifter == NULL || m_targetGear == m_shifter->Get())
+        if(m_shifter == nullptr || m_targetGear == m_shifter->Get())
         {
             return;
 

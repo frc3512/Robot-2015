@@ -9,7 +9,7 @@
 #include "ButtonTracker.hpp"
 
 bool ButtonTracker::m_driverStationInit = false;
-DriverStation* ButtonTracker::m_driverStation = NULL;
+DriverStation* ButtonTracker::m_driverStation = nullptr;
 
 ButtonTracker::ButtonTracker( uint32_t port ) {
     if ( !m_driverStationInit ) {

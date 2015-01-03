@@ -78,7 +78,7 @@ void Packet::clear()
 ////////////////////////////////////////////////////////////
 const void* Packet::getData() const
 {
-    return !m_packetData.empty() ? &m_packetData[0] : NULL;
+    return !m_packetData.empty() ? &m_packetData[0] : nullptr;
 }
 
 
@@ -99,7 +99,7 @@ bool Packet::endOfPacket() const
 ////////////////////////////////////////////////////////////
 Packet::operator BoolType() const
 {
-    return m_isValid ? &Packet::checkSize : NULL;
+    return m_isValid ? &Packet::checkSize : nullptr;
 }
 
 

@@ -6,7 +6,7 @@
 
 #include "Insight.hpp"
 
-Insight* Insight::m_insight = NULL;
+Insight* Insight::m_insight = nullptr;
 
 InsightInit::InsightInit() {
 }
@@ -20,7 +20,7 @@ Insight::~Insight() {
 }
 
 Insight* Insight::getInstance( unsigned short dsPort ) {
-    if ( m_insight == NULL ) {
+    if ( m_insight == nullptr ) {
         m_insight = new Insight( dsPort );
     }
 

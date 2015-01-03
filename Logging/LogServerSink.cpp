@@ -83,7 +83,7 @@ int LogServerSink::acceptConnectionNonBlocking() {
         FD_SET(m_listensd, &readfds);
         timeout.tv_sec = 0;
         timeout.tv_usec = 0;
-        ok = select(m_listensd+1, &readfds, NULL, NULL, &timeout);
+        ok = select(m_listensd+1, &readfds, nullptr, nullptr, &timeout);
         if(ok < 0) return -1;
         accepted = 0;
         if(FD_ISSET(m_listensd, &readfds)) {

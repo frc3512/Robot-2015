@@ -91,7 +91,7 @@ bool SocketSelector::wait( std::chrono::seconds timeout ) {
     m_impl->SocketsReady = m_impl->AllSockets;
 
     // Wait until one of the sockets is ready for reading, or timeout is reached
-    int count = select(m_impl->MaxSocket + 1, &m_impl->SocketsReady, NULL, NULL, timeout.count() != 0 ? &time : NULL);
+    int count = select(m_impl->MaxSocket + 1, &m_impl->SocketsReady, nullptr, nullptr, timeout.count() != 0 ? &time : nullptr);
 
     return count > 0;
 }

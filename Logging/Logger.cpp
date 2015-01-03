@@ -46,7 +46,7 @@ Logger::LogSinkBaseList Logger::listLogSinks()
 
 void Logger::resetInitialTime()
 {
-    m_initialTime = time(NULL);
+    m_initialTime = time(nullptr);
 }
 
 void Logger::setInitialTime(time_t time)

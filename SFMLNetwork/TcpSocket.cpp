@@ -140,7 +140,7 @@ Socket::Status TcpSocket::connect(const IpAddress& remoteAddress, unsigned short
             time.tv_usec = std::chrono::duration_cast<std::chrono::microseconds>(timeout).count() % 1000000;
 
             // Wait for something to write on our socket (which means that the connection request has returned)
-            if (select(static_cast<int>(getHandle() + 1), NULL, &selector, NULL, &time) > 0) {
+            if (select(static_cast<int>(getHandle() + 1), nullptr, &selector, nullptr, &time) > 0) {
                 // At this point the connection may have been either accepted or refused.
                 // To know whether it's a success or a failure, we must check the address of the connected peer
                 if (getRemoteAddress() != sf::IpAddress::None) {

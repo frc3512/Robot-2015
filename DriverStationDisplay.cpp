@@ -17,7 +17,7 @@ SocketInit::~SocketInit() {
 }
 
 sf::UdpSocket& SocketInit::getInstance( unsigned short portNumber ) {
-    if ( m_socket == NULL ) {
+    if ( m_socket == nullptr ) {
         m_socket = new sf::UdpSocket;
         if ( portNumber == 0 ) {
             m_socket->bind( 1130 );

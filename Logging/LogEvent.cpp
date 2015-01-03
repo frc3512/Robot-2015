@@ -12,7 +12,7 @@
 LogEvent::LogEvent(std::string data, VerbosityLevel level)
 {
     m_level = level;
-    m_timestamp = time(NULL);
+    m_timestamp = time(nullptr);
     m_buffer = data;
     m_initialTime = 0;
 }
