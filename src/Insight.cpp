@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include "Insight.hpp"
+#include <cstring>
 
 Insight* Insight::m_insight = nullptr;
 

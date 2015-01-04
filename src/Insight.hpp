@@ -10,7 +10,6 @@
 #include "SFML/Network/IpAddress.hpp"
 #include "SFML/Network/UdpSocket.hpp"
 
-#include <cstring>
 #include <string>
 #include <vector>
 #include <utility>
@@ -53,7 +52,7 @@ private:
     char m_recvBuffer[256]; // buffer for Insight packets
     size_t m_recvAmount; // holds number of bytes received from Driver Station
 
-    std::vector<std::pair<char,char> > m_targets;
+    std::vector<std::pair<char,char>> m_targets;
     bool m_hasNewData;
 
     // Allows class to clean itself up when the robot task exits

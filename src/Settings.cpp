@@ -8,7 +8,6 @@
 #include "Settings.hpp"
 #include <fstream>
 #include <iostream>
-#include <cstdlib>
 
 Settings::Settings( std::string fileName ) :
         m_fileName( fileName ) ,
@@ -48,7 +47,7 @@ void Settings::update() {
 }
 
 const std::string Settings::getString( const std::string& key ) const {
-    std::map<std::string , std::string>::const_iterator const index = m_values.find( key );
+    auto index = m_values.find( key );
 
     // If the element wasn't found
     if ( index == m_values.end() ) {
@@ -61,7 +60,7 @@ const std::string Settings::getString( const std::string& key ) const {
 }
 
 const float Settings::getFloat( const std::string& key ) const {
-    std::map<std::string , std::string>::const_iterator index = m_values.find( key );
+    auto index = m_values.find( key );
 
     // If the element wasn't found
     if ( index == m_values.end() ) {
@@ -74,7 +73,7 @@ const float Settings::getFloat( const std::string& key ) const {
 }
 
 const int Settings::getInt( const std::string& key ) const {
-    std::map<std::string , std::string>::const_iterator index = m_values.find( key );
+    auto index = m_values.find( key );
 
     // If the element wasn't found
     if ( index == m_values.end() ) {
@@ -90,8 +89,8 @@ const int Settings::getInt( const std::string& key ) const {
 void Settings::saveToFile( const std::string& fileName ) {
     std::ofstream outFile( fileName.c_str() , std::ios_base::out | std::ios_base::trunc );
     if ( outFile.is_open() ) {
-        for ( std::map<std::string , std::string>::iterator index = m_values.begin() ; index != m_values.end() ; index++ ) {
-            outFile << index->first << " = " << index->second << "\n";
+        for ( auto index : m_values ) {
+            outFile << index.first << " = " << index.second << "\n";
         }
 
         outFile.close();

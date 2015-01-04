@@ -50,6 +50,8 @@ graphhost_t::~graphhost_t() {
 
 // We assume that a float is 32 bits long
 int graphhost_t::graphData( float x , float y , std::string dataset ) {
+    static_assert( sizeof(float) == sizeof(uint32_t) , "float isn't 32 bits long" );
+
     struct graph_payload_t payload;
     uint32_t tmp;
 

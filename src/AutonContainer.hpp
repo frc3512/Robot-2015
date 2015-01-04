@@ -43,7 +43,7 @@ public:
 
 private:
     // Contains function pointers to the autonomous functions
-    std::vector<AutonMethod<T> > m_functionList;
+    std::vector<AutonMethod<T>> m_functionList;
 };
 
 #include "AutonContainer.inl"
