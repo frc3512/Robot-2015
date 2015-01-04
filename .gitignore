@@ -3,10 +3,6 @@
 *.dll
 *.d
 *.o
-*.out
-Robot-2015
+FRCUserProgram
 
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
 Makefile
