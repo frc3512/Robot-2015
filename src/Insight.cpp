@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: Insight.cpp
-//Description: Receives Insight's processed target data
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: Insight.cpp
+// Description: Receives Insight's processed target data
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #include "Insight.hpp"
 #include <cstring>
@@ -29,13 +29,18 @@ Insight* Insight::getInstance( unsigned short dsPort ) {
 }
 
 const std::string Insight::receiveFromDS() {
-    if ( m_socket.receive( m_recvBuffer , 256 , m_recvAmount , m_recvIP , m_recvPort ) == sf::Socket::Done ) {
+    if ( m_socket.receive( m_recvBuffer , 256 , m_recvAmount , m_recvIP ,
+                           m_recvPort ) == sf::Socket::Done ) {
         if ( std::strncmp( m_recvBuffer , "ctrl\r\n" , 6 ) == 0 ) {
             m_targets.clear();
 
             for ( unsigned int i = 0 ; i < 3 ; i++ ) {
-                if ( !(m_recvBuffer[8+i*2] == 0 && m_recvBuffer[9+i*2] == 0) ) {
-                    m_targets.push_back( std::make_pair( m_recvBuffer[8+i*2] , m_recvBuffer[9+i*2] ) );
+                if ( !( m_recvBuffer[8 + i * 2] == 0 &&
+                        m_recvBuffer[9 + i * 2] == 0 ) ) {
+                    m_targets.push_back( std::make_pair( m_recvBuffer[8 + i *
+                                                                      2] ,
+                                                         m_recvBuffer[9 + i *
+                                                                      2] ) );
                 }
             }
 
@@ -55,7 +60,7 @@ bool Insight::hasNewData() const {
     return m_hasNewData;
 }
 
-const std::pair<char,char>& Insight::getTarget( size_t i ) {
+const std::pair<char , char>& Insight::getTarget( size_t i ) {
     return m_targets[i];
 }
 
@@ -71,3 +76,4 @@ Insight::Insight( unsigned short portNumber ) {
     m_recvAmount = 0;
     m_hasNewData = false;
 }
+

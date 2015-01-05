@@ -8,18 +8,15 @@
 #include "LogConsoleSink.h"
 #include <iostream>
 
-LogConsoleSink::LogConsoleSink()
-{
+LogConsoleSink::LogConsoleSink() {
     // TODO Auto-generated constructor stub
-
 }
 
-LogConsoleSink::~LogConsoleSink()
-{
+LogConsoleSink::~LogConsoleSink() {
     // TODO Auto-generated destructor stub
 }
 
-void LogConsoleSink::logEvent(LogEvent event)
-{
+void LogConsoleSink::logEvent( LogEvent event ) {
     std::cout << event.toFormattedString();
 }
+

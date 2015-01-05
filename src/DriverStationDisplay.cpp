@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: DriverStationDisplay.cpp
-//Description: Receives IP address from remote host then sends HUD data there
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: DriverStationDisplay.cpp
+// Description: Receives IP address from remote host then sends HUD data there
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #include "DriverStationDisplay.hpp"
 
@@ -32,3 +32,4 @@ sf::UdpSocket& SocketInit::getInstance( unsigned short portNumber ) {
 }
 
 SocketInit gSocket;
+

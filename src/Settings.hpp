@@ -1,9 +1,9 @@
-//=============================================================================
-//File Name: Settings.hpp
-//Description: Opens a given file and creates an STL map of its name-value
+// =============================================================================
+// File Name: Settings.hpp
+// Description: Opens a given file and creates an STL map of its name-value
 //             pairs
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #ifndef SETTINGS_HPP
 #define SETTINGS_HPP
@@ -51,3 +51,4 @@ private:
 };
 
 #endif // SETTINGS_HPP
+

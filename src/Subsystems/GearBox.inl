@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: GearBox.inl
-//Description: Represents a gear box with up to 3 motors and an encoder
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: GearBox.inl
+// Description: Represents a gear box with up to 3 motors and an encoder
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #include <cmath>
 #include <Encoder.h>
@@ -12,10 +12,12 @@
 #include <PIDController.h>
 
 template <class T>
-GearBox<T>::GearBox( unsigned int shifterChan , unsigned int encA ,
-        unsigned int encB , unsigned int motor1 , unsigned int motor2 ,
-        unsigned int motor3 ) {
-
+GearBox<T>::GearBox( unsigned int shifterChan ,
+                     unsigned int encA ,
+                     unsigned int encB ,
+                     unsigned int motor1 ,
+                     unsigned int motor2 ,
+                     unsigned int motor3 ) {
     if ( encA != 0 && encB != 0 ) {
         m_encoder = new Encoder( encA , encB );
         m_pid = new PIDController( 0 , 0 , 0 , 0 , m_encoder , this );
@@ -53,8 +55,8 @@ GearBox<T>::GearBox( unsigned int shifterChan , unsigned int encA ,
     if ( m_havePID ) {
         m_encoder->SetPIDSourceParameter( Encoder::kDistance );
 
-        //m_pid->SetPercentTolerance( 5.f );
-        m_pid->SetAbsoluteTolerance(1);
+        // m_pid->SetPercentTolerance( 5.f );
+        m_pid->SetAbsoluteTolerance( 1 );
 
         m_pid->Enable();
     }
@@ -81,10 +83,8 @@ GearBox<T>::~GearBox() {
 template <class T>
 void GearBox<T>::setSetpoint( float setpoint ) {
     if ( m_havePID ) {
-        if(!m_pid->IsEnabled())
-        {
+        if ( !m_pid->IsEnabled() ) {
             m_pid->Enable();
-
         }
 
         m_pid->SetSetpoint( setpoint );
@@ -154,7 +154,8 @@ void GearBox<T>::setDistancePerPulse( double distancePerPulse ) {
 }
 
 template <class T>
-void GearBox<T>::setPIDSourceParameter( PIDSource::PIDSourceParameter pidSource ) {
+void GearBox<T>::setPIDSourceParameter( PIDSource::PIDSourceParameter pidSource )
+{
     if ( m_havePID ) {
         m_encoder->SetPIDSourceParameter( pidSource );
     }
@@ -172,7 +173,7 @@ void GearBox<T>::resetEncoder() {
 
 template <class T>
 double GearBox<T>::getDistance() const {
-	if ( m_havePID ) {
+    if ( m_havePID ) {
         return m_encoder->GetDistance();
     }
     else {
@@ -221,7 +222,6 @@ bool GearBox<T>::getGear() const {
 
 template <class T>
 void GearBox<T>::PIDWrite( float output ) {
-
     for ( unsigned int i = 0 ; i < m_motors.size() ; i++ ) {
         if ( !m_isReversed ) {
             m_motors[i]->Set( output );
@@ -232,54 +232,42 @@ void GearBox<T>::PIDWrite( float output ) {
     }
 
     updateGear();
-
 }
 
 template <class T>
-void GearBox<T>::updateGear()
-{
-        if(m_shifter == nullptr || m_targetGear == m_shifter->Get())
-        {
-            return;
-
-        }
-
-        for(unsigned int i = 0; i < m_motors.size(); i++)
-        {
-            if(fabs(m_motors[i]->Get()) < 0.12)
-            {
-                return;
-
-            }
-
-        }
-
-        //if ( (m_pid->IsEnabled() && fabs(m_encoder->GetRate()) > 50) || !m_pid->IsEnabled()) {
-            m_shifter->Set( m_targetGear );
-
-        //}
-
-}
-
-template <class T>
-bool GearBox<T>::onTarget()
-{
-#if 0
-    if(!m_havePID)
-    {
-        return false;
-
+void GearBox<T>::updateGear() {
+    if ( m_shifter == nullptr || m_targetGear == m_shifter->Get() ) {
+        return;
     }
 
-    return fabs(m_pid->GetError()/100.f) <= m_pid->GetTolerance() && fabs(m_pid->GetDeltaError()) <= m_pid->GetTolerance();
+    for ( unsigned int i = 0 ; i < m_motors.size() ; i++ ) {
+        if ( fabs( m_motors[i]->Get() ) < 0.12 ) {
+            return;
+        }
+    }
+
+    // if ( (m_pid->IsEnabled() && fabs(m_encoder->GetRate()) > 50) || !m_pid->IsEnabled()) {
+    m_shifter->Set( m_targetGear );
+
+    // }
+}
+
+template <class T>
+bool GearBox<T>::onTarget() {
+#if 0
+    if ( !m_havePID ) {
+        return false;
+    }
+
+    return fabs( m_pid->GetError() / 100.f ) <= m_pid->GetTolerance() && fabs(
+        m_pid->GetDeltaError() ) <= m_pid->GetTolerance();
 #endif
     return m_pid->OnTarget();
 }
 
 template <class T>
-void GearBox<T>::resetPID()
-{
+void GearBox<T>::resetPID() {
     m_pid->Reset();
     m_pid->Enable();
-
 }
+

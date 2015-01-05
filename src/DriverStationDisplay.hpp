@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: DriverStationDisplay.hpp
-//Description: Receives IP address from remote host then sends HUD data there
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: DriverStationDisplay.hpp
+// Description: Receives IP address from remote host then sends HUD data there
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #ifndef DRIVER_STATION_DISPLAY_HPP
 #define DRIVER_STATION_DISPLAY_HPP
@@ -77,7 +77,9 @@ public:
     const std::string receiveFromDS();
 
     // Add and remove autonomous functions
-    void addAutonMethod( const std::string& methodName , void ( T::*function)() , T* object );
+    void addAutonMethod( const std::string & methodName ,
+                         void ( T::* function )() ,
+                         T * object );
     void deleteAllMethods();
 
     // Runs autonomous function currently selected
@@ -108,25 +110,25 @@ private:
 };
 
 namespace DS {
-    enum StatusLight {
-        active,
-        standby,
-        inactive
-    };
+enum StatusLight {
+    active ,
+    standby ,
+    inactive
+};
 
-    /* Add UI element data to packet
-     *
-     * The types allowed for 'data' are char, int, unsigned int, std::wstring,
-     * std::string, float, and double. String literals are converted to
-     * std::string implicitly. Every std::string is converted to a std::wstring
-     * before packing the string in the packet.
-     *
-     * The correct identifier to send with the data is deduced from its type at
-     * compile time. floats and doubles are converted to strings because VxWorks
-     * messes up floats over the network.
-     */
-    template <class T, class U>
-    void AddElementData( DriverStationDisplay<T>* inst , std::string ID , U data );
+/* Add UI element data to packet
+ *
+ * The types allowed for 'data' are char, int, unsigned int, std::wstring,
+ * std::string, float, and double. String literals are converted to
+ * std::string implicitly. Every std::string is converted to a std::wstring
+ * before packing the string in the packet.
+ *
+ * The correct identifier to send with the data is deduced from its type at
+ * compile time. floats and doubles are converted to strings because VxWorks
+ * messes up floats over the network.
+ */
+template <class T , class U>
+void AddElementData( DriverStationDisplay<T>* inst , std::string ID , U data );
 }
 
 class SocketInit {
@@ -143,3 +145,4 @@ private:
 #include "DriverStationDisplay.inl"
 
 #endif // DRIVER_STATION_DISPLAY_HPP
+

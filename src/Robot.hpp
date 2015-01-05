@@ -27,10 +27,13 @@ public:
     Robot();
     virtual ~Robot();
     void OperatorControl();
-    void Autonomous ();
-    void Disabled ();
-    void Test ();
-    bool testDriveTrain(bool shifterState, bool direction, float lowerBound,float upperBound);
+    void Autonomous();
+    void Disabled();
+    void Test();
+    bool testDriveTrain( bool shifterState ,
+                         bool direction ,
+                         float lowerBound ,
+                         float upperBound );
     void calibrateTalons();
 
     bool checkReflectiveStrips();
@@ -46,19 +49,19 @@ public:
 private:
     Settings settings;
 
-    DriveTrain *robotDrive;
-    Claw *claw;
+    DriveTrain* robotDrive;
+    Claw* claw;
 
-    Joystick *driveStick1;
-    Joystick *driveStick2;
-    Joystick *shootStick;
+    Joystick* driveStick1;
+    Joystick* driveStick2;
+    Joystick* shootStick;
 
     ButtonTracker drive1Buttons;
     ButtonTracker drive2Buttons;
     ButtonTracker shootButtons;
 
-    Timer *autonTimer;
-    Timer *displayTimer;
+    Timer* autonTimer;
+    Timer* displayTimer;
 
     // Used for sending data to the Driver Station
     DriverStationDisplay<Robot>* driverStation;
@@ -66,12 +69,13 @@ private:
     // The LiveGrapher host
     GraphHost pidGraph;
 
-    Insight *insight;
+    Insight* insight;
 
-    Logger *logger1;
-    LogFileSink *logFileSink;
-    LogServerSink *logServerSink;
-    LogStream *ls;
+    Logger* logger1;
+    LogFileSink* logFileSink;
+    LogServerSink* logServerSink;
+    LogStream* ls;
 };
 
 #endif // _ROBOT_HPP
+

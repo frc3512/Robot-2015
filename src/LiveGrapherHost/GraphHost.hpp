@@ -30,7 +30,7 @@
 
 class GraphHost : public graphhost_t {
 public:
-    GraphHost(int port);
+    GraphHost( int port );
     virtual ~GraphHost();
 
     /* * Send data (y value) for a given dataset to remote client
@@ -74,3 +74,4 @@ private:
 };
 
 #endif // GRAPHHOST_HPP
+

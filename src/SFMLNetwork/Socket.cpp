@@ -28,12 +28,10 @@
 #include <fcntl.h>
 
 namespace sf {
-
-Socket::Socket(Type sockType) :
-m_socketType      (sockType),
-m_socket    (-1),
-m_isBlocking(true) {
-
+Socket::Socket( Type sockType ) :
+    m_socketType( sockType ) ,
+    m_socket( -1 ) ,
+    m_isBlocking( true ) {
 }
 
 Socket::~Socket() {
@@ -59,15 +57,16 @@ bool Socket::isBlocking() const {
 
 
 ////////////////////////////////////////////////////////////
-int Socket::getHandle() const
-{
+int Socket::getHandle() const {
     return m_socket;
 }
 
 void Socket::create() {
     // Don't create the socket if it already exists
     if ( m_socket == -1 ) {
-        int handle = socket(PF_INET, m_socketType == Tcp ? SOCK_STREAM : SOCK_DGRAM, 0);
+        int handle = socket( PF_INET ,
+                             m_socketType == Tcp ? SOCK_STREAM : SOCK_DGRAM ,
+                             0 );
         create( handle );
     }
 }
@@ -79,20 +78,24 @@ void Socket::create( int handle ) {
         m_socket = handle;
 
         // Set the current blocking state
-        setBlocking(m_isBlocking);
+        setBlocking( m_isBlocking );
 
         if ( m_socketType == Tcp ) {
             // Disable the Nagle algorithm (ie. removes buffering of TCP packets)
             int yes = 1;
-            if (setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<char*>(&yes), sizeof(yes)) == -1) {
+            if ( setsockopt( m_socket , IPPROTO_TCP , TCP_NODELAY ,
+                             reinterpret_cast<char*>( &yes ) ,
+                             sizeof( yes ) ) == -1 ) {
                 std::cerr << "Failed to set socket option \"TCP_NODELAY\" ; "
-                      << "all your TCP packets will be buffered\n";
+                          << "all your TCP packets will be buffered\n";
             }
         }
         else {
             // Enable broadcast by default for UDP sockets
             int yes = 1;
-            if (setsockopt(m_socket, SOL_SOCKET, SO_BROADCAST, reinterpret_cast<char*>(&yes), sizeof(yes)) == -1) {
+            if ( setsockopt( m_socket , SOL_SOCKET , SO_BROADCAST ,
+                             reinterpret_cast<char*>( &yes ) ,
+                             sizeof( yes ) ) == -1 ) {
                 std::cerr << "Failed to enable broadcast on UDP socket\n";
             }
         }
@@ -107,12 +110,12 @@ void Socket::close() {
     }
 }
 
-sockaddr_in Socket::createAddress(uint32_t address, unsigned short port) {
+sockaddr_in Socket::createAddress( uint32_t address , unsigned short port ) {
     sockaddr_in addr;
-    std::memset(addr.sin_zero, 0, sizeof(addr.sin_zero));
-    addr.sin_addr.s_addr = htonl(address);
+    std::memset( addr.sin_zero , 0 , sizeof( addr.sin_zero ) );
+    addr.sin_addr.s_addr = htonl( address );
     addr.sin_family      = AF_INET;
-    addr.sin_port        = htons(port);
+    addr.sin_port        = htons( port );
 
     return addr;
 }
@@ -121,19 +124,19 @@ Socket::Status Socket::getErrorStatus() {
     // The followings are sometimes equal to EWOULDBLOCK,
     // so we have to make a special case for them in order
     // to avoid having double values in the switch case
-    if ((errno == EAGAIN) || (errno == EINPROGRESS)) {
+    if ( ( errno == EAGAIN ) || ( errno == EINPROGRESS ) ) {
         return Socket::NotReady;
     }
 
-    switch (errno) {
-        case EWOULDBLOCK :  return Socket::NotReady;
-        case ECONNABORTED : return Socket::Disconnected;
-        case ECONNRESET :   return Socket::Disconnected;
-        case ETIMEDOUT :    return Socket::Disconnected;
-        case ENETRESET :    return Socket::Disconnected;
-        case ENOTCONN :     return Socket::Disconnected;
-        default :           return Socket::Error;
+    switch ( errno ) {
+    case EWOULDBLOCK:  return Socket::NotReady;
+    case ECONNABORTED: return Socket::Disconnected;
+    case ECONNRESET:   return Socket::Disconnected;
+    case ETIMEDOUT:    return Socket::Disconnected;
+    case ENETRESET:    return Socket::Disconnected;
+    case ENOTCONN:     return Socket::Disconnected;
+    default:           return Socket::Error;
     }
 }
-
 } // namespace sf
+

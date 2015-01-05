@@ -1,9 +1,9 @@
-//=============================================================================
-//File Name: ButtonTracker.cpp
-//Description: Helps user determine if joystick button was just pressed or just
+// =============================================================================
+// File Name: ButtonTracker.cpp
+// Description: Helps user determine if joystick button was just pressed or just
 //             released
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #include <DriverStation.h>
 #include "ButtonTracker.hpp"
@@ -38,5 +38,6 @@ bool ButtonTracker::releasedButton( uint32_t button ) {
 }
 
 bool ButtonTracker::getButtonState( short& buttonStates , uint32_t& button ) {
-    return ( (1 << (button-1)) & buttonStates ) != 0;
+    return ( ( 1 << ( button - 1 ) ) & buttonStates ) != 0;
 }
+

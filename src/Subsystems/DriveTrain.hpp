@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: DriveTrain.hpp
-//Description: Provides an interface for this year's drive train
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: DriveTrain.hpp
+// Description: Provides an interface for this year's drive train
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #ifndef DRIVE_TRAIN_HPP
 #define DRIVE_TRAIN_HPP
@@ -21,7 +21,7 @@ public:
     /* Drives robot with given speed and turn values [-1..1].
      * This is a convenience function for use in Operator Control.
      */
-    void drive( float throttle, float turn, bool isQuickTurn = false );
+    void drive( float throttle , float turn , bool isQuickTurn = false );
 
     // Sets joystick deadband
     void setDeadband( float band );
@@ -59,7 +59,7 @@ public:
     // TODO check if 'true' is high gear
     bool getGear() const;
 
-    void setDefencive (bool defencive);
+    void setDefencive( bool defencive );
 
     bool getDefencive();
 
@@ -94,3 +94,4 @@ private:
 #include "DriveTrain.inl"
 
 #endif // DRIVE_TRAIN_HPP
+

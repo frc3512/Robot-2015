@@ -16,8 +16,8 @@ class Solenoid;
 
 class Claw {
 public:
-    Claw (unsigned int clawRotatePort, unsigned int clawWheelPort,
-            unsigned int zeroSwitchPort, unsigned int haveBallPort);
+    Claw( unsigned int clawRotatePort , unsigned int clawWheelPort ,
+          unsigned int zeroSwitchPort , unsigned int haveBallPort );
     ~Claw();
 
     // Set mode of collector
@@ -29,9 +29,9 @@ public:
     void SetAngle( float shooterAngle );
 
     // Manually set the value of the angle motor
-    void ManualSetAngle(float value);
+    void ManualSetAngle( float value );
 
-	// Returns setpoint of rotator's internal PID loop in degrees
+    // Returns setpoint of rotator's internal PID loop in degrees
     double GetTargetAngle() const;
 
     // Sets speed of claw's intake wheel
@@ -61,18 +61,18 @@ public:
 
     bool onTarget();
 
-    void setK(float k);
+    void setK( float k );
 
-    void setF(float f);
+    void setF( float f );
 
     void testClaw();
 
     float calcF();
     typedef enum ShooterStates {
-    	SHOOTER_IDLE,
-    	SHOOTER_SHOOTING,
-    	SHOOTER_VACUUMING,
-    	SHOOTER_ARMISLIFTING
+        SHOOTER_IDLE ,
+        SHOOTER_SHOOTING ,
+        SHOOTER_VACUUMING ,
+        SHOOTER_ARMISLIFTING
     } ShooterStates;
 
 private:
@@ -95,17 +95,19 @@ private:
     float m_setpoint;
 
     std::vector<Solenoid*> m_ballShooter;
-    Relay *m_vacuum;
-    Solenoid *m_collectorArm;
+    Relay* m_vacuum;
+    Solenoid* m_collectorArm;
 
     bool m_lastZeroSwitch;
 
     /* Used for claw rotation encoder interrupt
      * 'void* obj' should be a pointer to an instance of this class
      */
-    static void ResetClawEncoder( unsigned int interruptAssertedMask, void* obj );
+    static void ResetClawEncoder( unsigned int interruptAssertedMask ,
+                                  void* obj );
 
-    static void CloseClaw( unsigned int interruptAssertedMask, void* obj );
+    static void CloseClaw( unsigned int interruptAssertedMask , void* obj );
 };
 
 #endif // CLAW_HPP
+

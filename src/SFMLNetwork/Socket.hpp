@@ -59,9 +59,9 @@ public:
 
     // Status codes that may be returned by socket functions
     enum Status {
-        Done,         // The socket has sent / received the data
-        NotReady,     // The socket is not ready to send / receive data yet
-        Disconnected, // The TCP socket has been disconnected
+        Done ,         // The socket has sent / received the data
+        NotReady ,     // The socket is not ready to send / receive data yet
+        Disconnected , // The TCP socket has been disconnected
         Error         // An unexpected error happened
     };
 
@@ -93,7 +93,7 @@ public:
 protected:
     // Types of protocols that the socket can use
     enum Type {
-        Tcp, // TCP protocol
+        Tcp , // TCP protocol
         Udp  // UDP protocol
     };
 
@@ -130,8 +130,8 @@ private:
     int m_socket;      // Socket descriptor
     bool m_isBlocking; // Current blocking mode of the socket
 };
-
 } // namespace sf
 
 
 #endif // SFML_SOCKET_HPP
+

@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: AutonContainer.inl
-//Description: Stores Autonomous modes as function pointers for easy retrieval
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: AutonContainer.inl
+// Description: Stores Autonomous modes as function pointers for easy retrieval
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 template <class T>
 AutonContainer<T>::~AutonContainer() {
@@ -10,8 +10,11 @@ AutonContainer<T>::~AutonContainer() {
 }
 
 template <class T>
-void AutonContainer<T>::addMethod( const std::string& methodName , void (T::*function)() , T* object ) {
-    m_functionList.push_back( AutonMethod<T>( methodName , function , object ) );
+void AutonContainer<T>::addMethod( const std::string& methodName ,
+                                   void ( T::* function )() ,
+                                   T* object ) {
+    m_functionList.push_back( AutonMethod<T>( methodName , function ,
+                                              object ) );
 }
 
 template <class T>
@@ -35,5 +38,6 @@ void AutonContainer<T>::execAutonomous( size_t pos ) {
     AutonMethod<T>* auton = &m_functionList[pos];
 
     // Runs the routine
-    ((auton->object)->*(auton->function))();
+    ( ( auton->object )->*( auton->function ) )();
 }
+

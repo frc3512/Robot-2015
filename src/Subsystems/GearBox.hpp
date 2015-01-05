@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: GearBox.hpp
-//Description: Represents a gear box with up to 3 motors and an encoder
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: GearBox.hpp
+// Description: Represents a gear box with up to 3 motors and an encoder
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #ifndef GEARBOX_HPP
 #define GEARBOX_HPP
@@ -31,8 +31,8 @@ template <class T>
 class GearBox : public PIDOutput {
 public:
     GearBox( unsigned int shifterChan , unsigned int encA , unsigned int encB ,
-            unsigned int motor1 , unsigned int motor2 = 0 ,
-            unsigned int motor3 = 0 );
+             unsigned int motor1 , unsigned int motor2 = 0 ,
+             unsigned int motor3 = 0 );
     virtual ~GearBox();
 
     // Enables PID controller automatically and sets its setpoint
@@ -80,7 +80,7 @@ public:
     // Sets motor speed to 'output'
     void PIDWrite( float output );
 
-    //updates the gear to targetState if it is safe todo so.
+    // updates the gear to targetState if it is safe todo so.
     void updateGear();
 
     bool onTarget();
@@ -104,3 +104,4 @@ private:
 #include "GearBox.inl"
 
 #endif // GEARBOX_HPP
+

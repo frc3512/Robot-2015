@@ -13,17 +13,20 @@ int main() {
     // Ignore SIGPIPE
     signal( SIGPIPE , SIG_IGN );
 
-    uint32_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    uint32_t startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch() ).count();
     uint32_t currentTime = startTime;
 
     // Send some bogus data
     while ( 1 ) {
-        currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        gh.graphData(currentTime - startTime, 0, "PID0");
-        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+        currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch() ).count();
+        gh.graphData( currentTime - startTime , 0 , "PID0" );
+        std::this_thread::sleep_for( std::chrono::milliseconds( 250 ) );
     }
 
     return 0;
 }
 
 #endif
+

@@ -29,23 +29,21 @@
 
 
 namespace sf {
-struct SocketSelector::SocketSelectorImpl
-{
+struct SocketSelector::SocketSelectorImpl {
     fd_set AllSockets;   ///< Set containing all the sockets handles
     fd_set SocketsReady; ///< Set containing handles of the sockets that are ready
-    int    MaxSocket;    ///< Maximum socket handle
+    int MaxSocket;    ///< Maximum socket handle
 };
 
 
 SocketSelector::SocketSelector() :
-m_impl(new SocketSelectorImpl) {
+    m_impl( new SocketSelectorImpl ) {
     clear();
 }
 
 
 SocketSelector::SocketSelector( const SocketSelector& copy ) :
-m_impl(new SocketSelectorImpl(*copy.m_impl)) {
-
+    m_impl( new SocketSelectorImpl( *copy.m_impl ) ) {
 }
 
 
@@ -59,7 +57,7 @@ void SocketSelector::add( Socket& socket ) {
     if ( handle != -1 ) {
         FD_SET( handle , &m_impl->AllSockets );
 
-        int size = static_cast<int>(handle);
+        int size = static_cast<int>( handle );
         if ( size > m_impl->MaxSocket ) {
             m_impl->MaxSocket = size;
         }
@@ -84,14 +82,20 @@ void SocketSelector::clear() {
 bool SocketSelector::wait( std::chrono::seconds timeout ) {
     // Setup the timeout
     timeval time;
-    time.tv_sec = std::chrono::duration_cast<std::chrono::seconds>(timeout).count();
-    time.tv_usec = std::chrono::duration_cast<std::chrono::microseconds>(timeout).count() % 1000000;
+    time.tv_sec =
+        std::chrono::duration_cast<std::chrono::seconds>( timeout ).count();
+    time.tv_usec = std::chrono::duration_cast<std::chrono::microseconds>(
+        timeout ).count() % 1000000;
 
     // Initialize the set that will contain the sockets that are ready
     m_impl->SocketsReady = m_impl->AllSockets;
 
     // Wait until one of the sockets is ready for reading, or timeout is reached
-    int count = select(m_impl->MaxSocket + 1, &m_impl->SocketsReady, nullptr, nullptr, timeout.count() != 0 ? &time : nullptr);
+    int count = select( m_impl->MaxSocket + 1 ,
+                        &m_impl->SocketsReady ,
+                        nullptr ,
+                        nullptr ,
+                        timeout.count() != 0 ? &time : nullptr );
 
     return count > 0;
 }
@@ -104,12 +108,12 @@ bool SocketSelector::isReady( Socket& socket ) const {
 
 
 ////////////////////////////////////////////////////////////
-SocketSelector& SocketSelector::operator =( const SocketSelector& right ) {
-    SocketSelector temp(right);
+SocketSelector& SocketSelector::operator=( const SocketSelector& right ) {
+    SocketSelector temp( right );
 
     std::swap( m_impl , temp.m_impl );
 
     return *this;
 }
-
 } // namespace sf
+

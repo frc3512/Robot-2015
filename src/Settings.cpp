@@ -1,17 +1,16 @@
-//=============================================================================
-//File Name: Settings.cpp
-//Description: Opens a given file and creates an STL map of its name-value
+// =============================================================================
+// File Name: Settings.cpp
+// Description: Opens a given file and creates an STL map of its name-value
 //             pairs
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #include "Settings.hpp"
 #include <fstream>
 #include <iostream>
 
-Settings::Settings( std::string fileName ) :
-        m_fileName( fileName ) ,
-        m_index( 0 ) {
+Settings::Settings( std::string fileName ) : m_fileName( fileName ) ,
+                                             m_index( 0 ) {
     update();
 }
 
@@ -83,11 +82,11 @@ const int Settings::getInt( const std::string& key ) const {
 
     // Else return the value for that element
     return atoi( index->second.c_str() );
-
 }
 
 void Settings::saveToFile( const std::string& fileName ) {
-    std::ofstream outFile( fileName.c_str() , std::ios_base::out | std::ios_base::trunc );
+    std::ofstream outFile(
+        fileName.c_str() , std::ios_base::out | std::ios_base::trunc );
     if ( outFile.is_open() ) {
         for ( auto index : m_values ) {
             outFile << index.first << " = " << index.second << "\n";
@@ -102,7 +101,8 @@ std::string Settings::extractDataFromString( const bool& isName ) {
     bool hasEquals = false;
 
     // Find start of name
-    while ( ( m_rawStr[m_index] == ' ' || m_rawStr[m_index] == '\t' ) && m_index < m_rawStr.length() ) {
+    while ( ( m_rawStr[m_index] == ' ' || m_rawStr[m_index] == '\t' ) &&
+            m_index < m_rawStr.length() ) {
         m_index++;
     }
     if ( m_index == m_rawStr.length() ) {
@@ -112,7 +112,8 @@ std::string Settings::extractDataFromString( const bool& isName ) {
     size_t valueStart = m_index;
 
     // Find end of name
-    while ( m_rawStr[m_index] != ' ' && m_rawStr[m_index] != '\t' && m_rawStr[m_index] != '=' && m_index < m_rawStr.length() ) {
+    while ( m_rawStr[m_index] != ' ' && m_rawStr[m_index] != '\t' &&
+            m_rawStr[m_index] != '=' && m_index < m_rawStr.length() ) {
         m_index++;
     }
     if ( m_index == m_rawStr.length() && isName ) {
@@ -128,7 +129,8 @@ std::string Settings::extractDataFromString( const bool& isName ) {
         }
 
         // Find an equals sign if there wasn't already one
-        while ( !hasEquals && m_rawStr[m_index] != '=' && m_index < m_rawStr.length() ) {
+        while ( !hasEquals && m_rawStr[m_index] != '=' &&
+                m_index < m_rawStr.length() ) {
             m_index++;
         }
         if ( m_index == m_rawStr.length() ) {
@@ -143,3 +145,4 @@ std::string Settings::extractDataFromString( const bool& isName ) {
 
     return value;
 }
+

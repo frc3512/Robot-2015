@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: AutonContainer.hpp
-//Description: Stores Autonomous modes as function pointers for easy retrieval
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: AutonContainer.hpp
+// Description: Stores Autonomous modes as function pointers for easy retrieval
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #ifndef AUTON_CONTAINER_HPP
 #define AUTON_CONTAINER_HPP
@@ -13,10 +13,11 @@
 template <class T>
 struct AutonMethod {
     std::string name;
-    void (T::*function)();
+    void (T::* function)();
     T* object;
 
-    AutonMethod( const std::string& methodName , void (T::*func)() , T* obj ) {
+    AutonMethod( const std::string& methodName , void( T::* func )() ,
+                 T* obj ) {
         name = methodName;
         function = func;
         object = obj;
@@ -29,7 +30,8 @@ public:
     virtual ~AutonContainer();
 
     // Add and remove autonomous functions
-    void addMethod( const std::string& methodName , void (T::*function)() , T* object );
+    void addMethod( const std::string & methodName ,
+                    void ( T::* function )() , T * object );
     void deleteAllMethods();
 
     // Returns number of routines currently held
@@ -49,3 +51,4 @@ private:
 #include "AutonContainer.inl"
 
 #endif // AUTON_CONTAINER_HPP
+

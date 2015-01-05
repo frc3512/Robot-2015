@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: Insight.hpp
-//Description: Receives Insight's processed target data
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: Insight.hpp
+// Description: Receives Insight's processed target data
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #ifndef INSIGHT_HPP
 #define INSIGHT_HPP
@@ -34,7 +34,7 @@ public:
     bool hasNewData() const;
 
     // Provides access to target data
-    const std::pair<char,char>& getTarget( size_t i );
+    const std::pair<char , char>& getTarget( size_t i );
     size_t getNumTargets() const;
 
 private:
@@ -52,7 +52,7 @@ private:
     char m_recvBuffer[256]; // buffer for Insight packets
     size_t m_recvAmount; // holds number of bytes received from Driver Station
 
-    std::vector<std::pair<char,char>> m_targets;
+    std::vector<std::pair<char , char>> m_targets;
     bool m_hasNewData;
 
     // Allows class to clean itself up when the robot task exits
@@ -61,3 +61,4 @@ private:
 };
 
 #endif // INSIGHT_HPP
+

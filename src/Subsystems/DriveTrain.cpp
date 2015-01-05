@@ -1,15 +1,15 @@
-//=============================================================================
-//File Name: DriveTrain.cpp
-//Description: Provides an interface for this year's drive train
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: DriveTrain.cpp
+// Description: Provides an interface for this year's drive train
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #include "DriveTrain.hpp"
 
 #include <cmath>
 #include <Talon.h>
 
-#define max( x , y ) (((x) > (y)) ? (x) : (y))
+#define max( x , y ) ( ( ( x ) > ( y ) ) ? ( x ) : ( y ) )
 
 #ifndef M_PI
 #define M_PI 3.14159265
@@ -17,9 +17,8 @@
 
 const float DriveTrain::maxWheelSpeed = 274.f;
 
-DriveTrain::DriveTrain() :
-            TrapezoidProfile( maxWheelSpeed , 3.f ),
-            m_settings( "RobotSettings.txt" ) {
+DriveTrain::DriveTrain() : TrapezoidProfile( maxWheelSpeed , 3.f ) ,
+                           m_settings( "RobotSettings.txt" ) {
     m_settings.update();
 
     m_deadband = 0.02f;
@@ -30,15 +29,17 @@ DriveTrain::DriveTrain() :
     m_quickStopAccumulator = 0.f;
     m_negInertiaAccumulator = 0.f;
 
-    m_leftGrbx = new GearBox<Talon>( 7 , 5, 6 , 1 , 2, 3 );
+    m_leftGrbx = new GearBox<Talon>( 7 , 5 , 6 , 1 , 2 , 3 );
 
-    m_rightGrbx = new GearBox<Talon>( 0 , 3 , 4 , 4 , 5, 6 );
+    m_rightGrbx = new GearBox<Talon>( 0 , 3 , 4 , 4 , 5 , 6 );
     m_rightGrbx->setReversed( true );
     m_isDefencive = ( false );
     // c = PI * 10.16cm [wheel diameter]
     // dPerP = c / pulses
-    m_leftGrbx->setDistancePerPulse( ((3.14159265 * 10.16 )/ 360.0 )* 1.0/3.0);
-    m_rightGrbx->setDistancePerPulse( ((3.14159265 * 10.16 )/ 360.0 )* 1.0/3.0);
+    m_leftGrbx->setDistancePerPulse(
+        ( ( 3.14159265 * 10.16 ) / 360.0 ) * 1.0 / 3.0 );
+    m_rightGrbx->setDistancePerPulse(
+        ( ( 3.14159265 * 10.16 ) / 360.0 ) * 1.0 / 3.0 );
 
     reloadPID();
 }
@@ -48,13 +49,13 @@ DriveTrain::~DriveTrain() {
     delete m_rightGrbx;
 }
 
-void DriveTrain::drive( float throttle, float turn, bool isQuickTurn ) {
+void DriveTrain::drive( float throttle , float turn , bool isQuickTurn ) {
     // Modified Cheesy Drive; base code courtesy of FRC Team 254
 
-	if (m_isDefencive == true){
-		throttle = throttle * -1;
-		turn = turn *-1;
-	}
+    if ( m_isDefencive == true ) {
+        throttle = throttle * -1;
+        turn = turn * -1;
+    }
     // Limit values to [-1 .. 1]
     throttle = limit( throttle , 1.f );
     turn = limit( turn , 1.f );
@@ -74,11 +75,11 @@ void DriveTrain::drive( float throttle, float turn, bool isQuickTurn ) {
      * turnNonLinearity should never be zero, but can be close
      */
     turn = sin( M_PI / 2.0 * turnNonLinearity * turn ) /
-            sin( M_PI / 2.0 * turnNonLinearity );
+           sin( M_PI / 2.0 * turnNonLinearity );
 
     double angularPower = 0.f;
     double linearPower = throttle;
-    double leftPwm = linearPower, rightPwm = linearPower;
+    double leftPwm = linearPower , rightPwm = linearPower;
 
     // Negative inertia!
     double negInertiaScalar;
@@ -90,11 +91,13 @@ void DriveTrain::drive( float throttle, float turn, bool isQuickTurn ) {
             negInertiaScalar = m_settings.getFloat( "INERTIA_LOW_DAMPEN" );
         }
         else {
-            if ( fabs(turn) > 0.65 ) {
-                negInertiaScalar = m_settings.getFloat( "INERTIA_LOW_HIGH_TURN" );
+            if ( fabs( turn ) > 0.65 ) {
+                negInertiaScalar =
+                    m_settings.getFloat( "INERTIA_LOW_HIGH_TURN" );
             }
             else {
-                negInertiaScalar = m_settings.getFloat( "INERTIA_LOW_LOW_TURN" );
+                negInertiaScalar =
+                    m_settings.getFloat( "INERTIA_LOW_LOW_TURN" );
             }
         }
     }
@@ -115,16 +118,17 @@ void DriveTrain::drive( float throttle, float turn, bool isQuickTurn ) {
 
     // QuickTurn!
     if ( isQuickTurn ) {
-        if ( fabs(linearPower) < 0.2 ) {
+        if ( fabs( linearPower ) < 0.2 ) {
             double alpha = 0.1;
-            m_quickStopAccumulator = (1 - alpha) * m_quickStopAccumulator +
-                    alpha * limit( turn, 1.f ) * 5;
+            m_quickStopAccumulator = ( 1 - alpha ) * m_quickStopAccumulator +
+                                     alpha * limit( turn , 1.f ) * 5;
         }
 
         angularPower = turn;
     }
     else {
-        angularPower = fabs(throttle) * turn * m_sensitivity - m_quickStopAccumulator;
+        angularPower = fabs( throttle ) * turn * m_sensitivity -
+                       m_quickStopAccumulator;
 
         if ( m_quickStopAccumulator > 1 ) {
             m_quickStopAccumulator -= 1;
@@ -145,7 +149,7 @@ void DriveTrain::drive( float throttle, float turn, bool isQuickTurn ) {
     if ( leftPwm > 1.0 ) {
         // If overpowered turning enabled
         if ( isQuickTurn ) {
-            rightPwm -= (leftPwm - 1.f);
+            rightPwm -= ( leftPwm - 1.f );
         }
 
         leftPwm = 1.0;
@@ -153,7 +157,7 @@ void DriveTrain::drive( float throttle, float turn, bool isQuickTurn ) {
     else if ( rightPwm > 1.0 ) {
         // If overpowered turning enabled
         if ( isQuickTurn ) {
-            leftPwm -= (rightPwm - 1.f);
+            leftPwm -= ( rightPwm - 1.f );
         }
 
         rightPwm = 1.0;
@@ -161,7 +165,7 @@ void DriveTrain::drive( float throttle, float turn, bool isQuickTurn ) {
     else if ( leftPwm < -1.0 ) {
         // If overpowered turning enabled
         if ( isQuickTurn ) {
-            rightPwm += (-leftPwm - 1.f);
+            rightPwm += ( -leftPwm - 1.f );
         }
 
         leftPwm = -1.0;
@@ -169,7 +173,7 @@ void DriveTrain::drive( float throttle, float turn, bool isQuickTurn ) {
     else if ( rightPwm < -1.0 ) {
         // If overpowered turning enabled
         if ( isQuickTurn ) {
-            leftPwm += (-rightPwm - 1.f);
+            leftPwm += ( -rightPwm - 1.f );
         }
 
         rightPwm = -1.0;
@@ -178,8 +182,8 @@ void DriveTrain::drive( float throttle, float turn, bool isQuickTurn ) {
     m_leftGrbx->setManual( leftPwm );
     m_rightGrbx->setManual( rightPwm );
 
-    //std::cout << "left PWM:" << leftPwm << std::endl;
-    //std::cout << "right PWM:" << rightPwm << std::endl;
+    // std::cout << "left PWM:" << leftPwm << std::endl;
+    // std::cout << "right PWM:" << rightPwm << std::endl;
 }
 
 void DriveTrain::setDeadband( float band ) {
@@ -268,21 +272,21 @@ void DriveTrain::setGear( bool gear ) {
 bool DriveTrain::getGear() const {
     return m_leftGrbx->getGear();
 }
-void DriveTrain::setDefencive(bool defencive){
-	m_isDefencive = defencive;
+void DriveTrain::setDefencive( bool defencive ) {
+    m_isDefencive = defencive;
 }
-//returns true if drive train is reversed
-bool DriveTrain::getDefencive(){
-	if (m_isDefencive == true){
-		return true;
-	}
-	else{
-		return false;
-	}
+// returns true if drive train is reversed
+bool DriveTrain::getDefencive() {
+    if ( m_isDefencive == true ) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 float DriveTrain::applyDeadband( float value ) {
-    if ( fabs(value) > m_deadband ) {
+    if ( fabs( value ) > m_deadband ) {
         if ( value > 0 ) {
             return ( value - m_deadband ) / ( 1 - m_deadband );
         }
@@ -294,3 +298,4 @@ float DriveTrain::applyDeadband( float value ) {
         return 0.f;
     }
 }
+

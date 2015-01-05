@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: AutonMotionProfile.cpp
-//Description: Drives set distance with motion profiles
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: AutonMotionProfile.cpp
+// Description: Drives set distance with motion profiles
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #include "../Robot.hpp"
 
@@ -22,7 +22,8 @@ void Robot::AutonMotionProfile() {
     while ( IsAutonomous() && IsEnabled() && !robotDrive->atGoal() ) {
         DS_PrintOut();
 
-        setpoint = robotDrive->updateSetpoint( setpoint , 0 , autonTimer->Get() );
+        setpoint =
+            robotDrive->updateSetpoint( setpoint , 0 , autonTimer->Get() );
         robotDrive->setLeftSetpoint( setpoint );
         robotDrive->setRightSetpoint( setpoint );
 
@@ -44,3 +45,4 @@ void Robot::AutonMotionProfile() {
         Wait( 0.01 );
     }
 }
+

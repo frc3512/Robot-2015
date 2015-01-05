@@ -38,8 +38,7 @@
 #include <cstdint>
 
 
-namespace sf
-{
+namespace sf {
 class TcpListener;
 class IpAddress;
 class Packet;
@@ -48,9 +47,8 @@ class Packet;
 /// \brief Specialized socket using the TCP protocol
 ///
 ////////////////////////////////////////////////////////////
-class TcpSocket : public Socket
-{
-public :
+class TcpSocket : public Socket {
+public:
 
     ////////////////////////////////////////////////////////////
     /// \brief Default constructor
@@ -113,7 +111,9 @@ public :
     /// \see disconnect
     ///
     ////////////////////////////////////////////////////////////
-    Status connect(const IpAddress& remoteAddress, unsigned short remotePort, std::chrono::seconds timeout = std::chrono::seconds(0));
+    Status connect( const IpAddress& remoteAddress ,
+                    unsigned short remotePort ,
+                    std::chrono::seconds timeout = std::chrono::seconds(0) );
 
     ////////////////////////////////////////////////////////////
     /// \brief Disconnect the socket from its remote peer
@@ -139,7 +139,7 @@ public :
     /// \see receive
     ///
     ////////////////////////////////////////////////////////////
-    Status send(const void* data, std::size_t size);
+    Status send( const void* data , std::size_t size );
 
     ////////////////////////////////////////////////////////////
     /// \brief Receive raw data from the remote peer
@@ -157,7 +157,7 @@ public :
     /// \see send
     ///
     ////////////////////////////////////////////////////////////
-    Status receive(void* data, std::size_t size, std::size_t& received);
+    Status receive( void* data , std::size_t size , std::size_t& received );
 
     ////////////////////////////////////////////////////////////
     /// \brief Send a formatted packet of data to the remote peer
@@ -171,7 +171,7 @@ public :
     /// \see receive
     ///
     ////////////////////////////////////////////////////////////
-    Status send(Packet& packet);
+    Status send( Packet& packet );
 
     ////////////////////////////////////////////////////////////
     /// \brief Receive a formatted packet of data from the remote peer
@@ -187,7 +187,7 @@ public :
     /// \see send
     ///
     ////////////////////////////////////////////////////////////
-    Status receive(Packet& packet);
+    Status receive( Packet& packet );
 
 private:
 
@@ -200,8 +200,8 @@ private:
     struct PendingPacket {
         PendingPacket();
 
-        uint32_t          Size;         ///< Data of packet size
-        std::size_t       SizeReceived; ///< Number of size bytes received so far
+        uint32_t Size;         ///< Data of packet size
+        std::size_t SizeReceived; ///< Number of size bytes received so far
         std::vector<char> Data;         ///< Data of the packet
     };
 
@@ -210,8 +210,8 @@ private:
     ////////////////////////////////////////////////////////////
     PendingPacket m_pendingPacket; ///< Temporary data of the packet currently being received
 };
-
 } // namespace sf
 
 
 #endif // SFML_TCPSOCKET_HPP
+

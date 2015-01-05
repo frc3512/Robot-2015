@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: TrapezoidProfile.hpp
-//Description: Provides trapezoidal velocity control
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: TrapezoidProfile.hpp
+// Description: Provides trapezoidal velocity control
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 /* Constant acceleration until target (max) velocity is reached, sets
  * acceleration to zero for a calculated time, then decelerates at a constant
@@ -17,7 +17,7 @@
 #include <mutex>
 
 typedef enum {
-    distance,
+    distance ,
     velocity
 } SetpointMode;
 
@@ -36,7 +36,9 @@ public:
      *
      * curTime is current time
      */
-    double updateSetpoint( double curSetpoint , double curSource , double curTime );
+    double updateSetpoint( double curSetpoint ,
+                           double curSource ,
+                           double curTime );
 
     /* goal is a distance to which to travel
      * curSource is the current position

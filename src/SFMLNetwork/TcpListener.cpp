@@ -28,20 +28,20 @@
 #include <iostream>
 
 namespace sf {
-
 TcpListener::TcpListener() :
-Socket(Tcp) {
-
+    Socket( Tcp ) {
 }
 
 unsigned short TcpListener::getLocalPort() const {
     if ( getHandle() != -1 ) {
         // Retrieve informations about the local end of the socket
         sockaddr_in address;
-        Socket::AddrLength size = sizeof(address);
+        Socket::AddrLength size = sizeof( address );
         socklen_t temp = size;
-        if ( getsockname(getHandle(), reinterpret_cast<sockaddr*>(&address), &temp) != -1 ) {
-            return ntohs(address.sin_port);
+        if ( getsockname( getHandle() ,
+                          reinterpret_cast<sockaddr*>( &address ) ,
+                          &temp ) != -1 ) {
+            return ntohs( address.sin_port );
         }
     }
 
@@ -54,16 +54,16 @@ Socket::Status TcpListener::listen( unsigned short port ) {
     create();
 
     // Bind the socket to the specified port
-    sockaddr_in address = Socket::createAddress(INADDR_ANY, port);
-    if (bind(getHandle(), reinterpret_cast<sockaddr*>(&address), sizeof(address)) == -1)
-    {
+    sockaddr_in address = Socket::createAddress( INADDR_ANY , port );
+    if ( bind( getHandle() , reinterpret_cast<sockaddr*>( &address ) ,
+               sizeof( address ) ) == -1 ) {
         // Not likely to happen, but...
         std::cerr << "Failed to bind listener socket to port " << port << "\n";
         return Error;
     }
 
     // Listen to the bound port
-    if ( ::listen(getHandle(), 0) == -1 ) {
+    if ( ::listen( getHandle() , 0 ) == -1 ) {
         // Oops, socket is deaf
         std::cerr << "Failed to listen to port " << port << "\n";
         return Error;
@@ -80,15 +80,17 @@ void TcpListener::close() {
 Socket::Status TcpListener::accept( TcpSocket& socket ) {
     // Make sure that we're listening
     if ( getHandle() == -1 ) {
-        std::cerr << "Failed to accept a new connection, the socket is not listening\n";
+        std::cerr <<
+            "Failed to accept a new connection, the socket is not listening\n";
         return Error;
     }
 
     // Accept a new connection
     sockaddr_in address;
-    Socket::AddrLength length = sizeof(address);
+    Socket::AddrLength length = sizeof( address );
     socklen_t temp = length;
-    int remote = ::accept(getHandle(), reinterpret_cast<sockaddr*>(&address), &temp);
+    int remote = ::accept(
+        getHandle() , reinterpret_cast<sockaddr*>( &address ) , &temp );
 
     // Check for errors
     if ( remote == -1 ) {
@@ -101,5 +103,5 @@ Socket::Status TcpListener::accept( TcpSocket& socket ) {
 
     return Done;
 }
-
 } // namespace sf
+

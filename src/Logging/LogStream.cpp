@@ -7,21 +7,17 @@
 
 #include "LogStream.h"
 
-LogStream::LogStream(Logger *logger) : std::ostream(new LogStreambuf(logger))
-{
+LogStream::LogStream( Logger* logger ) :   std::ostream( new LogStreambuf(
+                                                             logger ) ) {
     m_logger = logger;
 }
 
-LogStream::~LogStream()
-{
+LogStream::~LogStream() {
     delete rdbuf();
     // TODO Auto-generated destructor stub
 }
 
-void LogStream::setLevel(LogEvent::VerbosityLevel level)
-{
-    ((LogStreambuf *)rdbuf())->setLevel(level);
-
-    return;
+void LogStream::setLevel( LogEvent::VerbosityLevel level ) {
+    ( (LogStreambuf*) rdbuf() )->setLevel( level );
 }
 

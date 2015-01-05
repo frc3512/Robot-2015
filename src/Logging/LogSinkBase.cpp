@@ -7,39 +7,31 @@
 
 #include "LogSinkBase.h"
 
-LogSinkBase::LogSinkBase()
-{
+LogSinkBase::LogSinkBase() {
     /* Default to VERBOSE_ERROR */
     m_verbosity = LogEvent::VERBOSE_ERROR;
 }
 
-LogSinkBase::~LogSinkBase()
-{
-
-
+LogSinkBase::~LogSinkBase() {
 }
 
-void LogSinkBase::setVerbosityLevels(LogEvent::VerbosityLevel levels)
-{
+void LogSinkBase::setVerbosityLevels( LogEvent::VerbosityLevel levels ) {
     m_verbosity = levels;
 }
 
-LogEvent::VerbosityLevel LogSinkBase::getVerbosityLevels()
-{
+LogEvent::VerbosityLevel LogSinkBase::getVerbosityLevels() {
     return m_verbosity;
 }
 
-void LogSinkBase::enableVerbosityLevels(LogEvent::VerbosityLevel levels)
-{
+void LogSinkBase::enableVerbosityLevels( LogEvent::VerbosityLevel levels ) {
     m_verbosity |= levels;
 }
 
-void LogSinkBase::disableVerbosityLevels(LogEvent::VerbosityLevel levels)
-{
-    m_verbosity &= ~(levels);
+void LogSinkBase::disableVerbosityLevels( LogEvent::VerbosityLevel levels ) {
+    m_verbosity &= ~( levels );
 }
 
-bool LogSinkBase::testVerbosityLevel(LogEvent::VerbosityLevel levels)
-{
-    return (bool)(m_verbosity & levels);
+bool LogSinkBase::testVerbosityLevel( LogEvent::VerbosityLevel levels ) {
+    return (bool) ( m_verbosity & levels );
 }
+
