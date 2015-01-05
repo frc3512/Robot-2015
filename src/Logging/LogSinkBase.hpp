@@ -8,7 +8,7 @@
 #ifndef LOGSINKBASE_H_
 #define LOGSINKBASE_H_
 
-#include "LogEvent.h"
+#include "LogEvent.hpp"
 
 /*!
   LogSinkBase provides a base class on which to implement

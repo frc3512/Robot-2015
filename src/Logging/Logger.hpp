@@ -8,10 +8,10 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
+#include "LogEvent.hpp"
+#include "LogSinkBase.hpp"
 #include <string>
 #include <list>
-#include "LogEvent.h"
-#include "LogSinkBase.h"
 
 /**
  * A logging engine.

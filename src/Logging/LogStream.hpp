@@ -8,11 +8,11 @@
 #ifndef LOGSTREAM_H_
 #define LOGSTREAM_H_
 
+#include "LogEvent.hpp"
+#include "Logger.hpp"
+#include "LogStreambuf.hpp"
 #include <iostream>
-#include "LogStreambuf.h"
 
-#include "Logger.h"
-#include "LogEvent.h"
 
 /*!
   A subclass of std::ostream for logging messages

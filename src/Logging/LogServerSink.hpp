@@ -8,8 +8,8 @@
 #ifndef LOGSERVERSINK_H_
 #define LOGSERVERSINK_H_
 
+#include "LogSinkBase.hpp"
 #include <list>
-#include "LogSinkBase.h"
 
 /*!
   A file sink for the logged events.

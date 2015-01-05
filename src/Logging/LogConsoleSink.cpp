@@ -5,7 +5,7 @@
  *      Author: acf
  */
 
-#include "LogConsoleSink.h"
+#include "LogConsoleSink.hpp"
 #include <iostream>
 
 LogConsoleSink::LogConsoleSink() {

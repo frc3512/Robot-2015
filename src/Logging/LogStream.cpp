@@ -5,7 +5,7 @@
  *      Author: acf
  */
 
-#include "LogStream.h"
+#include "LogStream.hpp"
 
 LogStream::LogStream( Logger* logger ) :   std::ostream( new LogStreambuf(
                                                              logger ) ) {

@@ -5,7 +5,7 @@
  *      Author: acf
  */
 
-#include "SetLogLevel.h"
+#include "SetLogLevel.hpp"
 
 SetLogLevel::SetLogLevel( int level ) {
     m_level = level;

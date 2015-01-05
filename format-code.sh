@@ -7,11 +7,12 @@ args() {
   echo -e "COMMAND can be either 'format' or 'clean'"
 
   echo $NAME format
-  echo -e "\tformat C++ code\n"
+  echo -e "\tformat C/C++ code\n"
 }
 
 format() {
   find src -type f -name \*.cpp -o -name \*.hpp -o -name \*.inl | uncrustify -c uncrustify.cfg -F - -l CPP --replace --no-backup
+  find src -type f -name \*.c -o -name \*.h | uncrustify -c uncrustify.cfg -F - -l C --replace --no-backup
 }
 
 if [ $# = 0 ] ; then

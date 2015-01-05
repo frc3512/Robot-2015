@@ -5,7 +5,7 @@
  *      Author: acf
  */
 
-#include "LogSinkBase.h"
+#include "LogSinkBase.hpp"
 
 LogSinkBase::LogSinkBase() {
     /* Default to VERBOSE_ERROR */

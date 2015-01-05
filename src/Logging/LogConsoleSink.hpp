@@ -8,7 +8,7 @@
 #ifndef LOGCONSOLESINK_H_
 #define LOGCONSOLESINK_H_
 
-#include "LogSinkBase.h"
+#include "LogSinkBase.hpp"
 #include <iostream>
 
 /*!

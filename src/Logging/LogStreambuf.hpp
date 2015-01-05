@@ -8,11 +8,11 @@
 #ifndef LOGSTREAMBUF_H_
 #define LOGSTREAMBUF_H_
 
+#include "LogEvent.hpp"
+#include "Logger.hpp"
 #include <iostream>
 #include <streambuf>
 
-#include "Logger.h"
-#include "LogEvent.h"
 
 /*!
   An internal class used by LogStream. This class

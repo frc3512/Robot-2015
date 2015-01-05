@@ -5,7 +5,7 @@
  *      Author: acf
  */
 
-#include "LogFileSink.h"
+#include "LogFileSink.hpp"
 
 LogFileSink::LogFileSink( std::string filename ) {
     m_logfile.open( filename.c_str() );

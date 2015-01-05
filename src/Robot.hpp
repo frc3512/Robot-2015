@@ -15,12 +15,12 @@
 #include "LiveGrapherHost/GraphHost.hpp"
 #include "Insight.hpp"
 
-#include "Logging/Logger.h"
-#include "Logging/LogConsoleSink.h"
-#include "Logging/LogFileSink.h"
-#include "Logging/LogServerSink.h"
-#include "Logging/LogStream.h"
-#include "Logging/SetLogLevel.h"
+#include "Logging/LogConsoleSink.hpp"
+#include "Logging/LogFileSink.hpp"
+#include "Logging/Logger.hpp"
+#include "Logging/LogServerSink.hpp"
+#include "Logging/LogStream.hpp"
+#include "Logging/SetLogLevel.hpp"
 
 class Robot : public SampleRobot {
 public:

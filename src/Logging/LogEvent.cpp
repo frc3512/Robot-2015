@@ -5,7 +5,7 @@
  *      Author: acf
  */
 
-#include "LogEvent.h"
+#include "LogEvent.hpp"
 #include <sstream>
 #include <iomanip>
 

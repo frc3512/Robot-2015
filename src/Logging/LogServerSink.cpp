@@ -5,7 +5,7 @@
  *      Author: acf
  */
 
-#include "LogServerSink.h"
+#include "LogServerSink.hpp"
 #include <stdio.h>
 #include <stdint.h>
 // #include <netinet/sctp.h>

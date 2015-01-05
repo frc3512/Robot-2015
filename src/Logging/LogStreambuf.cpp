@@ -5,7 +5,7 @@
  *      Author: acf
  */
 
-#include "LogStreambuf.h"
+#include "LogStreambuf.hpp"
 
 LogStreambuf::LogStreambuf( Logger* logger ) {
     // TODO Auto-generated constructor stub

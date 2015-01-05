@@ -5,7 +5,7 @@
  *      Author: acf
  */
 
-#include "Logger.h"
+#include "Logger.hpp"
 
 Logger::Logger() {
     resetInitialTime();

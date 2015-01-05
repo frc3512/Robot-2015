@@ -8,7 +8,7 @@
 #ifndef SETLOGLEVEL_H_
 #define SETLOGLEVEL_H_
 
-#include "LogStream.h"
+#include "LogStream.hpp"
 
 /*!
   The SetLogLevel class provides a manipulator for
