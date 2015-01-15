@@ -1,21 +1,22 @@
 #include "GraphHost.hpp"
 #include <chrono>
 
-GraphHost::GraphHost( int port ) :
-    graphhost_t( port ) ,
-    m_sendInterval( 5 ) {
-    resetTime();
+GraphHost::GraphHost(int port) :
+        graphhost_t( port ) ,
+        m_sendInterval( 5 ) {
+    m_lastTime = 0;
+    m_currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
 GraphHost::~GraphHost() {
 }
 
-int GraphHost::graphData( float value , std::string dataset ) {
+int GraphHost::graphData(float value, std::string dataset) {
     m_currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch() ).count();
+            std::chrono::system_clock::now().time_since_epoch()).count();
 
-    return graphhost_t::graphData( m_currentTime - m_startTime , value ,
-                                   dataset );
+    return graphhost_t::graphData(m_currentTime, value, dataset);
 }
 
 void GraphHost::setSendInterval( uint32_t milliseconds ) {
@@ -24,7 +25,7 @@ void GraphHost::setSendInterval( uint32_t milliseconds ) {
 
 bool GraphHost::hasIntervalPassed() {
     m_currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch() ).count();
+            std::chrono::system_clock::now().time_since_epoch()).count();
 
     return m_currentTime - m_lastTime > m_sendInterval;
 }
@@ -32,13 +33,3 @@ bool GraphHost::hasIntervalPassed() {
 void GraphHost::resetInterval() {
     m_lastTime = m_currentTime;
 }
-
-void GraphHost::resetTime() {
-    /* Store the current time into startTime as the fixed starting point
-     * for our graph.
-     */
-    m_startTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch() ).count();
-    m_lastTime = m_startTime;
-}
-

@@ -30,7 +30,7 @@
 
 class GraphHost : public graphhost_t {
 public:
-    GraphHost( int port );
+    GraphHost(int port);
     virtual ~GraphHost();
 
     /* * Send data (y value) for a given dataset to remote client
@@ -39,7 +39,7 @@ public:
      *       -1 = host not running
      *       0 = data sent successfully
      */
-    int graphData( float value , std::string dataset );
+    int graphData(float value, std::string dataset);
 
     /* Sets time interval after which data is sent to graph (milliseconds per
      * sample)
@@ -56,22 +56,15 @@ public:
      */
     void resetInterval();
 
-    // Reset startTime to current system time (relative time is reset to zero)
-    void resetTime();
-
 private:
     // Last time data was graphed
-    uint32_t m_lastTime;
-
-    // Starting time used as offset
-    uint32_t m_startTime;
+    uint64_t m_lastTime;
 
     // Time interval after which data is sent to graph (in milliseconds per sample)
     uint32_t m_sendInterval;
 
     // Used as a temp variables in graphData(2)
-    uint32_t m_currentTime;
+    uint64_t m_currentTime;
 };
 
 #endif // GRAPHHOST_HPP
-
