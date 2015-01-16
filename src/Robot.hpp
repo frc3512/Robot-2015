@@ -7,7 +7,6 @@
 #include <Timer.h>
 
 #include "Subsystems/DriveTrain.hpp"
-#include "Subsystems/Claw.hpp"
 #include "ButtonTracker.hpp"
 #include "Settings.hpp"
 
@@ -50,7 +49,6 @@ private:
     Settings settings;
 
     DriveTrain* robotDrive;
-    Claw* claw;
 
     Joystick* driveStick1;
     Joystick* driveStick2;

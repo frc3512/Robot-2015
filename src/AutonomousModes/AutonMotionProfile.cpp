@@ -13,8 +13,6 @@ void Robot::AutonMotionProfile() {
 
     robotDrive->resetEncoders();
 
-    claw->SetAngle( 88.f );
-
     // Move robot 360 cm forward
     robotDrive->resetTime();
     robotDrive->setGoal( 60 , robotDrive->getLeftDist() , autonTimer->Get() );
@@ -27,8 +25,6 @@ void Robot::AutonMotionProfile() {
         robotDrive->setLeftSetpoint( setpoint );
         robotDrive->setRightSetpoint( setpoint );
 
-        claw->Update();
-
         Wait( 0.01 );
     }
 
@@ -36,13 +32,5 @@ void Robot::AutonMotionProfile() {
     robotDrive->setLeftManual( 0.f );
     robotDrive->setRightManual( 0.f );
 
-    // Start shooting
-    claw->Shoot();
-
-    while ( IsAutonomous() && IsEnabled() && claw->IsShooting() ) {
-        claw->Update();
-
-        Wait( 0.01 );
-    }
 }
 

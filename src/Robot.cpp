@@ -7,7 +7,6 @@ Robot::Robot() : settings( "RobotSettings.txt" ) ,
                  shootButtons( 3 ) ,
                  pidGraph( 3513 ) {
     robotDrive = new DriveTrain();
-    claw = new Claw( 7 , 8 , 2 , 9 );
 
     driveStick1 = new Joystick( 1 );
     driveStick2 = new Joystick( 2 );
@@ -19,7 +18,7 @@ Robot::Robot() : settings( "RobotSettings.txt" ) ,
     driverStation =
         DriverStationDisplay<Robot>::getInstance( settings.getInt( "DS_Port" ) );
 
-    driverStation->addAutonMethod( "DriveForward Autonomous" ,
+    /* driverStation->addAutonMethod( "DriveForward Autonomous" ,
                                    &Robot::DriveForwardAuton ,
                                    this );
     driverStation->addAutonMethod( "Right/Left Autonomous" ,
@@ -28,7 +27,7 @@ Robot::Robot() : settings( "RobotSettings.txt" ) ,
     driverStation->addAutonMethod( "MotionProfile" ,
                                    &Robot::AutonMotionProfile ,
                                    this );
-    driverStation->addAutonMethod( "Side Auton" , &Robot::SideAuton , this );
+    driverStation->addAutonMethod( "Side Auton" , &Robot::SideAuton , this ); */
     driverStation->addAutonMethod( "Noop Auton" , &Robot::NoopAuton , this );
 
     pidGraph.resetTime();
@@ -50,7 +49,6 @@ Robot::Robot() : settings( "RobotSettings.txt" ) ,
 
 Robot::~Robot() {
     delete robotDrive;
-    delete claw;
 
     delete driveStick1;
     delete driveStick2;
@@ -94,57 +92,6 @@ void Robot::OperatorControl() {
             robotDrive->setGear( !robotDrive->getGear() );
         }
 
-        // Shoots Ball
-        if ( ( shootStick->GetRawButton( 1 ) ||
-               driveStick2->GetRawButton( 1 ) ) && !claw->IsShooting() ) {
-            claw->Shoot();
-        }
-
-        // Engage collector
-        if ( shootButtons.releasedButton( 2 ) ) {
-            claw->SetCollectorMode( !claw->GetCollectorMode() );
-        }
-
-        if ( shootStick->GetRawButton( 3 ) ) {
-            claw->SetWheelManual( -1 );
-        }
-        else if ( shootStick->GetRawButton( 4 ) ) {
-            claw->SetWheelManual( 1 );
-        }
-        else {
-            claw->SetWheelManual( 0 );
-        }
-
-        if ( shootButtons.pressedButton( 7 ) ) {
-            claw->SetAngle( 190.0 );
-        }
-        else if ( shootButtons.pressedButton( 9 ) ) {
-            claw->SetAngle( 106.0 );
-        }
-        else if ( shootButtons.pressedButton( 8 ) ) {
-            claw->SetAngle( 57.0 );
-        }
-        else if ( shootButtons.pressedButton( 11 ) ) {
-            // Collector should always be retracted when resetting encoder
-            claw->SetCollectorMode( false );
-            claw->SetAngle( 0 );
-        }
-        else if ( shootButtons.pressedButton( 10 ) ) {
-            claw->SetAngle( claw->GetTargetAngle() + 3.0f );
-        }
-        else if ( shootButtons.pressedButton( 12 ) ) {
-            claw->SetAngle( claw->GetTargetAngle() - 3.0f );
-        }
-        if ( drive1Buttons.pressedButton( 2 ) ) {
-            robotDrive->setDefencive( !robotDrive->getDefencive() );
-        }
-
-        claw->Update();
-
-        if ( drive2Buttons.releasedButton( 8 ) ) {
-            robotDrive->reloadPID();
-            claw->ReloadPID();
-        }
         drive1Buttons.updateButtons();
         drive2Buttons.updateButtons();
         shootButtons.updateButtons();
@@ -165,12 +112,10 @@ void Robot::Autonomous() {
 }
 
 void Robot::Disabled() {
-    claw->SetAngle( 0 );
-    claw->ManualSetAngle( 0 );
-    claw->SetWheelManual( 0 );
+
 
     while ( IsDisabled() ) {
-        claw->Update();
+
 
         DS_PrintOut();
 
@@ -180,7 +125,7 @@ void Robot::Disabled() {
 }
 
 void Robot::Test() {
-    claw->testClaw();
+
 
     /* calibrateTalons();
      *
@@ -222,8 +167,7 @@ void Robot::DS_PrintOut() {
     if ( pidGraph.hasIntervalPassed() ) {
         pidGraph.graphData( robotDrive->getLeftDist() , "Left PID" );
         pidGraph.graphData( robotDrive->getLeftSetpoint() , "Left Setpoint" );
-        pidGraph.graphData( claw->GetTargetAngle() , "Target Angle" );
-        pidGraph.graphData( claw->GetAngle() , "Angle" );
+
 
         pidGraph.resetInterval();
     }
@@ -258,56 +202,6 @@ void Robot::DS_PrintOut() {
                             "RIGHT_DIST" ,
                             robotDrive->getRightDist() );
 
-        DS::AddElementData( driverStation ,
-                            "ANGLE_SET_DISP" ,
-                            claw->GetTargetAngle() );
-        DS::AddElementData( driverStation , "ANGLE_SET" ,
-                            static_cast<int8_t>( claw->GetTargetAngle() /
-                                                 175.f * 100.f ) );
-
-        DS::AddElementData( driverStation , "ANGLE_REAL_DISP" ,
-                            claw->GetAngle() );
-        DS::AddElementData( driverStation , "ANGLE_REAL" ,
-                            static_cast<int8_t>( claw->GetAngle() / 175.f *
-                                                 100.f ) );
-
-        DS::StatusLight atAngle = DS::StatusLight::inactive;
-
-        if ( claw->GetTargetAngle() > 150.f ) {
-            if ( claw->AtAngle() ) {
-                atAngle = DS::StatusLight::active;
-            }
-            else {
-                atAngle = DS::StatusLight::standby;
-            }
-        }
-        DS::AddElementData( driverStation , "ANGLE_PICKUP" , atAngle );
-
-        if ( claw->GetTargetAngle() < 150.f && claw->GetTargetAngle() > 50.f ) {
-            if ( claw->AtAngle() ) {
-                atAngle = DS::StatusLight::active;
-            }
-            else {
-                atAngle = DS::StatusLight::standby;
-            }
-        }
-        else {
-            atAngle = DS::StatusLight::inactive;
-        }
-        DS::AddElementData( driverStation , "ANGLE_SHOOT" , atAngle );
-
-        if ( claw->GetTargetAngle() <= 1.f ) {
-            if ( claw->AtAngle() ) {
-                atAngle = DS::StatusLight::active;
-            }
-            else {
-                atAngle = DS::StatusLight::standby;
-            }
-        }
-        else {
-            atAngle = DS::StatusLight::inactive;
-        }
-        DS::AddElementData( driverStation , "ANGLE_ZERO" , atAngle );
 
         driverStation->sendToDS();
     }
