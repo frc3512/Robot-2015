@@ -6,6 +6,9 @@ Robot::Robot() : settings( "RobotSettings.txt" ) ,
                  drive2Buttons( 2 ) ,
                  shootButtons( 3 ) ,
                  pidGraph( 3513 ) {
+
+	std::cout << "Constructor" << std::endl;
+
     robotDrive = new DriveTrain();
 
     driveStick1 = new Joystick( 1 );
@@ -37,7 +40,7 @@ Robot::Robot() : settings( "RobotSettings.txt" ) ,
 
     logger1 = new Logger();
     ls = new LogStream( logger1 );
-    logFileSink = new LogFileSink( "LogFile.txt" );
+    logFileSink = new LogFileSink( "/home/admin/LogFile.txt" );
     logServerSink = new LogServerSink();
     logger1->addLogSink( logFileSink );
     logger1->addLogSink( logServerSink );
@@ -74,10 +77,13 @@ void Robot::calibrateTalons() {
 }
 
 void Robot::OperatorControl() {
+	std::cout << "OperatorControl" << std::endl;
+
     robotDrive->reloadPID();
 
     while ( IsOperatorControl() && IsEnabled() ) {
         // DS_PrintOut();
+    	std::cout << "Looping" << std::endl;
 
         // arcade Drive
         if ( driveStick2->GetRawButton( 2 ) ) {
@@ -86,6 +92,8 @@ void Robot::OperatorControl() {
         }
         else {
             robotDrive->drive( driveStick1->GetY() , driveStick2->GetZ() );
+            std::cout << "Y: " << driveStick1->GetY()
+            		<< " X: " << driveStick1->GetX();
         }
 
         if ( drive1Buttons.releasedButton( 1 ) ) {

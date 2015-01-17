@@ -11,7 +11,7 @@
 #include "../MotionProfile/TrapezoidProfile.hpp"
 #include "GearBox.hpp"
 
-#include <Talon.h>
+#include <CANTalon.h>
 
 class DriveTrain : public TrapezoidProfile {
 public:
@@ -78,10 +78,10 @@ private:
     float m_quickStopAccumulator;
     float m_negInertiaAccumulator;
 
-    GearBox<Talon>* m_leftFrontGrbx;
-    GearBox<Talon>* m_rightFrontGrbx;
-    GearBox<Talon>* m_leftBackGrbx;
-    GearBox<Talon>* m_rightBackGrbx;
+    GearBox<CANTalon>* m_leftFrontGrbx;
+    GearBox<CANTalon>* m_rightFrontGrbx;
+    GearBox<CANTalon>* m_leftBackGrbx;
+    GearBox<CANTalon>* m_rightBackGrbx;
 
     /* Zeroes value if its inside deadband range, and rescales values outside
      * of it

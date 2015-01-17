@@ -7,7 +7,7 @@
 #include "DriveTrain.hpp"
 
 #include <cmath>
-#include <Talon.h>
+#include <CANTalon.h>
 
 #define max( x , y ) ( ( ( x ) > ( y ) ) ? ( x ) : ( y ) )
 
@@ -29,10 +29,10 @@ DriveTrain::DriveTrain() : TrapezoidProfile( maxWheelSpeed , 3.f ) ,
     m_quickStopAccumulator = 0.f;
     m_negInertiaAccumulator = 0.f;
 
-    m_leftFrontGrbx = new GearBox<Talon>( 0, 0, 0, 0 );
-    m_leftBackGrbx = new GearBox<Talon>( 0, 0, 0, 1);
-    m_rightFrontGrbx = new GearBox<Talon>( 0, 0, 0, 2 );
-    m_rightBackGrbx = new GearBox<Talon>( 0, 0, 0, 3 );
+    m_leftFrontGrbx = new GearBox<CANTalon>( 0, 0, 0, 0 );
+    m_leftBackGrbx = new GearBox<CANTalon>( 0, 0, 0, 1 );
+    m_rightFrontGrbx = new GearBox<CANTalon>( 0, 0, 0, 2 );
+    m_rightBackGrbx = new GearBox<CANTalon>( 0, 0, 0, 3 );
 
     m_rightFrontGrbx->setReversed( true );
     m_rightBackGrbx->setReversed( true );
