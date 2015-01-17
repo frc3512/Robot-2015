@@ -17,7 +17,7 @@
 
 const float DriveTrain::maxWheelSpeed = 274.f;
 
-DriveTrain::DriveTrain() : TrapezoidProfile( maxWheelSpeed , 3.f ) ,
+DriveTrain::DriveTrain() : BezierTrapezoidProfile( maxWheelSpeed , 3.f ) ,
                            m_settings( "RobotSettings.txt" ) {
     m_settings.update();
 

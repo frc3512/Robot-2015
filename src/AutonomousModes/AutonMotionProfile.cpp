@@ -1,29 +1,34 @@
-// =============================================================================
-// File Name: AutonMotionProfile.cpp
-// Description: Drives set distance with motion profiles
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+//=============================================================================
+//File Name: AutonMotionProfile.cpp
+//Description: Drives set distance with motion profiles
+//Author: FRC Team 3512, Spartatroniks
+//=============================================================================
 
 #include "../Robot.hpp"
+#include "../MotionProfile/BezierCurve.hpp"
 
 void Robot::AutonMotionProfile() {
     // Reload drive PID constants
     settings.update();
     robotDrive->reloadPID();
 
+    BezierCurve curve;
+    curve.push_back( std::make_pair( 0.0 , 0.0 ) );
+    curve.push_back( std::make_pair( 365.0 , 0.0 ) );
+
     robotDrive->resetEncoders();
 
-    // Move robot 360 cm forward
-    robotDrive->resetTime();
-    robotDrive->setGoal( 60 , robotDrive->getLeftDist() , autonTimer->Get() );
-    double setpoint = 0.0;
+    claw->SetAngle( 94.f );
+    Wait( 0.5 );
+
+    // Move robot 365 cm forward
+    robotDrive->setGoal( curve , autonTimer->Get() );
     while ( IsAutonomous() && IsEnabled() && !robotDrive->atGoal() ) {
         DS_PrintOut();
 
-        setpoint =
-            robotDrive->updateSetpoint( setpoint , 0 , autonTimer->Get() );
-        robotDrive->setLeftSetpoint( setpoint );
-        robotDrive->setRightSetpoint( setpoint );
+        robotDrive->updateSetpoint( autonTimer->Get() );
+        robotDrive->setLeftSetpoint( robotDrive->getLeftSetpoint() );
+        robotDrive->setRightSetpoint( robotDrive->getRightSetpoint() );
 
         Wait( 0.01 );
     }
@@ -33,4 +38,3 @@ void Robot::AutonMotionProfile() {
     robotDrive->setRightManual( 0.f );
 
 }
-

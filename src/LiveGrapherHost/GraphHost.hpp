@@ -23,12 +23,33 @@
  *     }
  */
 
+#include <list>
 #include <string>
+#include <thread>
+#include <mutex>
+#include <atomic>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <cstdint>
 
-#include "graphhost.hpp"
+#include "SocketConnection.hpp"
 
-class GraphHost : public graphhost_t {
+struct [[gnu::packed]] graph_payload_t {
+    char type; // Set to 'd' to identify this as a graph payload packet
+    char dataset[15];
+    uint64_t x;
+    float y;
+};
+
+struct [[gnu::packed]] graph_list_t {
+    char type;
+    char dataset[15];
+    char end;
+    char pad[11];
+};
+
+class GraphHost {
 public:
     GraphHost( int port );
     virtual ~GraphHost();
@@ -56,22 +77,38 @@ public:
      */
     void resetInterval();
 
-    // Reset startTime to current system time (relative time is reset to zero)
-    void resetTime();
-
 private:
     // Last time data was graphed
-    uint32_t m_lastTime;
-
-    // Starting time used as offset
-    uint32_t m_startTime;
+    uint64_t m_lastTime;
 
     // Time interval after which data is sent to graph (in milliseconds per sample)
     uint32_t m_sendInterval;
 
     // Used as a temp variables in graphData(2)
-    uint32_t m_currentTime;
+    uint64_t m_currentTime;
+
+    std::thread* m_thread;
+    std::mutex m_mutex;
+    std::atomic<bool> m_running;
+    int m_ipcfd_r;
+    int m_ipcfd_w;
+    int m_port;
+    std::list<std::string> m_graphList;
+    std::list<SocketConnection> m_connList;
+
+    void sockets_threadmain();
+
+    static int sockets_listen( int port , sa_family_t sin_family ,
+            uint32_t s_addr );
+    void sockets_accept( int listenfd );
+    int sockets_readh( SocketConnection& conn );
+    int sockets_readdoneh( char* inbuf , size_t bufsize ,
+            SocketConnection& conn );
+    int sockets_sendlist( SocketConnection& conn );
+    int sockets_writeh( SocketConnection& conn );
+    int sockets_queuewrite( SocketConnection& conn , char* buf ,
+            size_t buflength );
+    int socket_addgraph( std::string& dataset );
 };
 
 #endif // GRAPHHOST_HPP
-

@@ -1,8 +1,12 @@
-// =============================================================================
-// File Name: TrapezoidProfile.hpp
-// Description: Provides trapezoidal velocity control
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+//=============================================================================
+//File Name: TrapezoidProfile.hpp
+//Description: Provides trapezoidal velocity control
+//Author: FRC Team 3512, Spartatroniks
+//=============================================================================
+
+/* Implementation of trapezoid motion profile translated to C++; base Java code
+ * courtesy of FRC Team 254
+ */
 
 /* Constant acceleration until target (max) velocity is reached, sets
  * acceleration to zero for a calculated time, then decelerates at a constant
@@ -15,11 +19,6 @@
 
 #include "ProfileBase.hpp"
 #include <mutex>
-
-typedef enum {
-    distance ,
-    velocity
-} SetpointMode;
 
 class TrapezoidProfile : public ProfileBase {
 public:
@@ -36,15 +35,13 @@ public:
      *
      * curTime is current time
      */
-    double updateSetpoint( double curSetpoint ,
-                           double curSource ,
-                           double curTime );
+    double updateSetpoint( double curTime , double curSource = 0.0 );
 
     /* goal is a distance to which to travel
      * curSource is the current position
      * t initializes m_lastTime
      */
-    double setGoal( double goal , double curSource , double t );
+    double setGoal( double t , double goal , double curSource = 0.0 );
 
     bool atGoal();
 
@@ -57,7 +54,9 @@ public:
     void setMode( SetpointMode mode );
     SetpointMode getMode();
 
-private:
+protected:
+    double m_setpoint;
+
     double m_lastTime;
     double m_acceleration;
     double m_velocity;
@@ -71,6 +70,4 @@ private:
     std::recursive_mutex m_varMutex;
 };
 
-
 #endif // TRAPEZOID_PROFILE_HPP
-

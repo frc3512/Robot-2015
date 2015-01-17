@@ -8,12 +8,12 @@
 #define DRIVE_TRAIN_HPP
 
 #include "../Settings.hpp"
-#include "../MotionProfile/TrapezoidProfile.hpp"
+#include "../MotionProfile/BezierTrapezoidProfile.hpp"
 #include "GearBox.hpp"
 
 #include <CANTalon.h>
 
-class DriveTrain : public TrapezoidProfile {
+class DriveTrain : public BezierTrapezoidProfile {
 public:
     DriveTrain();
     virtual ~DriveTrain();

@@ -1,7 +1,7 @@
 #include "Robot.hpp"
 #include <cmath>
 
-Robot::Robot() : settings( "RobotSettings.txt" ) ,
+Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
                  drive1Buttons( 1 ) ,
                  drive2Buttons( 2 ) ,
                  shootButtons( 3 ) ,
@@ -48,6 +48,8 @@ Robot::Robot() : settings( "RobotSettings.txt" ) ,
     logServerSink->setVerbosityLevels( LogEvent::VERBOSE_ALL );
     logServerSink->startServer( 4097 );
     displayTimer->Start();
+
+    std::cout << "Constructor Finished" << std::endl;
 }
 
 Robot::~Robot() {
@@ -122,15 +124,15 @@ void Robot::Autonomous() {
 void Robot::Disabled() {
 
 
-    while ( IsDisabled() ) {
+  //  while ( IsDisabled() ) {
 
 
-        DS_PrintOut();
+    //    DS_PrintOut();
 
-        logServerSink->acceptor( false );
-        Wait( 0.1 );
-    }
-}
+      //  logServerSink->acceptor( false );
+        // Wait( 0.1 );
+  //  }
+	}
 
 void Robot::Test() {
 
@@ -216,7 +218,7 @@ void Robot::DS_PrintOut() {
 
     driverStation->receiveFromDS();
 
-    insight->receiveFromDS();
+ //   insight->receiveFromDS();
 }
 
 START_ROBOT_CLASS( Robot );
