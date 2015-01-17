@@ -18,7 +18,6 @@ void Robot::AutonMotionProfile() {
 
     robotDrive->resetEncoders();
 
-    claw->SetAngle( 94.f );
     Wait( 0.5 );
 
     // Move robot 365 cm forward

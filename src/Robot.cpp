@@ -33,7 +33,6 @@ Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
     driverStation->addAutonMethod( "Side Auton" , &Robot::SideAuton , this ); */
     driverStation->addAutonMethod( "Noop Auton" , &Robot::NoopAuton , this );
 
-    pidGraph.resetTime();
     pidGraph.setSendInterval( 200 );
 
     insight = Insight::getInstance( settings.getInt( "Insight_Port" ) );
