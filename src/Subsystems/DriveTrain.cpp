@@ -29,24 +29,33 @@ DriveTrain::DriveTrain() : TrapezoidProfile( maxWheelSpeed , 3.f ) ,
     m_quickStopAccumulator = 0.f;
     m_negInertiaAccumulator = 0.f;
 
-    m_leftGrbx = new GearBox<Talon>( 7 , 5 , 6 , 1 , 2 , 3 );
+    m_leftFrontGrbx = new GearBox<Talon>( 0, 0, 0, 0 );
+    m_leftBackGrbx = new GearBox<Talon>( 0, 0, 0, 1);
+    m_rightFrontGrbx = new GearBox<Talon>( 0, 0, 0, 2 );
+    m_rightBackGrbx = new GearBox<Talon>( 0, 0, 0, 3 );
 
-    m_rightGrbx = new GearBox<Talon>( 0 , 3 , 4 , 4 , 5 , 6 );
-    m_rightGrbx->setReversed( true );
+    m_rightFrontGrbx->setReversed( true );
+    m_rightBackGrbx->setReversed( true );
     m_isDefencive = ( false );
     // c = PI * 10.16cm [wheel diameter]
     // dPerP = c / pulses
-    m_leftGrbx->setDistancePerPulse(
+    m_leftFrontGrbx->setDistancePerPulse(
         ( ( 3.14159265 * 10.16 ) / 360.0 ) * 1.0 / 3.0 );
-    m_rightGrbx->setDistancePerPulse(
+    m_rightFrontGrbx->setDistancePerPulse(
+        ( ( 3.14159265 * 10.16 ) / 360.0 ) * 1.0 / 3.0 );
+    m_leftBackGrbx->setDistancePerPulse(
+        ( ( 3.14159265 * 10.16 ) / 360.0 ) * 1.0 / 3.0 );
+    m_rightBackGrbx->setDistancePerPulse(
         ( ( 3.14159265 * 10.16 ) / 360.0 ) * 1.0 / 3.0 );
 
     reloadPID();
 }
 
 DriveTrain::~DriveTrain() {
-    delete m_leftGrbx;
-    delete m_rightGrbx;
+    delete m_leftFrontGrbx;
+    delete m_rightFrontGrbx;
+    delete m_leftBackGrbx;
+    delete m_rightBackGrbx;
 }
 
 void DriveTrain::drive( float throttle , float turn , bool isQuickTurn ) {
@@ -179,8 +188,15 @@ void DriveTrain::drive( float throttle , float turn , bool isQuickTurn ) {
         rightPwm = -1.0;
     }
 
-    m_leftGrbx->setManual( leftPwm );
-    m_rightGrbx->setManual( rightPwm );
+    m_leftFrontGrbx->setManual( leftPwm );
+    m_rightFrontGrbx->setManual( rightPwm );
+    if( !isQuickTurn ) {
+    	m_leftBackGrbx->setManual( leftPwm );
+    	m_rightBackGrbx->setManual( rightPwm );
+    }else{
+    	m_leftBackGrbx->setManual( 0.0 );
+    	m_rightBackGrbx->setManual( 0.0 );
+    }
 
     // std::cout << "left PWM:" << leftPwm << std::endl;
     // std::cout << "right PWM:" << rightPwm << std::endl;
@@ -191,8 +207,10 @@ void DriveTrain::setDeadband( float band ) {
 }
 
 void DriveTrain::resetEncoders() {
-    m_leftGrbx->resetEncoder();
-    m_rightGrbx->resetEncoder();
+    m_leftFrontGrbx->resetEncoder();
+    m_rightFrontGrbx->resetEncoder();
+    m_leftBackGrbx->resetEncoder();
+    m_rightBackGrbx->resetEncoder();
 }
 
 void DriveTrain::reloadPID() {
@@ -206,53 +224,69 @@ void DriveTrain::reloadPID() {
     i = m_settings.getFloat( "PID_DRIVE_I" );
     d = m_settings.getFloat( "PID_DRIVE_D" );
 
-    m_leftGrbx->setPID( p , i , d );
-    m_rightGrbx->setPID( p , i , d );
+    m_leftFrontGrbx->setPID( p , i , d );
+    m_rightBackGrbx->setPID( p , i , d );
+    m_leftFrontGrbx->setPID( p , i , d );
+    m_rightBackGrbx->setPID( p , i , d );
+
 }
 
 void DriveTrain::setLeftSetpoint( double setpt ) {
-    m_leftGrbx->setSetpoint( setpt );
+    m_leftFrontGrbx->setSetpoint( setpt );
+    m_leftBackGrbx->setSetpoint( setpt );
 }
 
 void DriveTrain::setRightSetpoint( double setpt ) {
-    m_rightGrbx->setSetpoint( setpt );
+    m_rightFrontGrbx->setSetpoint( setpt );
+    m_rightBackGrbx->setSetpoint( setpt );
 }
 
 void DriveTrain::setLeftManual( float value ) {
-    m_leftGrbx->PIDWrite( value );
+    m_leftFrontGrbx->PIDWrite( value );
+    m_leftBackGrbx->PIDWrite( value );
 }
 
 void DriveTrain::setRightManual( float value ) {
-    m_rightGrbx->PIDWrite( value );
+    m_rightFrontGrbx->PIDWrite( value );
+    m_rightBackGrbx->PIDWrite( value );
 }
 
 double DriveTrain::getLeftDist() {
-    return m_leftGrbx->getDistance();
+    return m_leftFrontGrbx->getDistance();
+    return m_leftBackGrbx->getDistance();
 }
 
 double DriveTrain::getRightDist() {
-    return m_rightGrbx->getDistance();
+    return m_rightFrontGrbx->getDistance();
+    return m_rightBackGrbx->getDistance();
 }
 
 double DriveTrain::getLeftRate() {
-    return m_leftGrbx->getRate();
+    return m_leftFrontGrbx->getRate();
+    return m_leftBackGrbx->getRate();
 }
 
 double DriveTrain::getRightRate() {
-    return m_rightGrbx->getRate();
+    return m_rightFrontGrbx->getRate();
+    return m_rightBackGrbx->getRate();
 }
 
 double DriveTrain::getLeftSetpoint() {
-    return m_leftGrbx->getSetpoint();
+    return m_leftFrontGrbx->getSetpoint();
+    return m_leftBackGrbx->getSetpoint();
 }
 
 double DriveTrain::getRightSetpoint() {
-    return m_rightGrbx->getSetpoint();
+    return m_rightFrontGrbx->getSetpoint();
+    return m_rightBackGrbx->getSetpoint();
 }
 
 void DriveTrain::setGear( bool gear ) {
-    m_leftGrbx->setGear( gear );
-    m_rightGrbx->setGear( gear );
+    m_leftFrontGrbx->setGear( gear );
+    m_rightBackGrbx->setGear( gear );
+    m_leftFrontGrbx->setGear( gear );
+    m_rightBackGrbx->setGear( gear );
+
 
     /* Update turning sensitivity
      * Lower value makes robot turn less when full turn is commanded.
@@ -270,7 +304,8 @@ void DriveTrain::setGear( bool gear ) {
 }
 
 bool DriveTrain::getGear() const {
-    return m_leftGrbx->getGear();
+    return m_leftFrontGrbx->getGear();
+    return m_leftBackGrbx->getGear();
 }
 void DriveTrain::setDefencive( bool defencive ) {
     m_isDefencive = defencive;

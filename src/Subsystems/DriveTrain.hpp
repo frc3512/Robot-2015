@@ -78,8 +78,10 @@ private:
     float m_quickStopAccumulator;
     float m_negInertiaAccumulator;
 
-    GearBox<Talon>* m_leftGrbx;
-    GearBox<Talon>* m_rightGrbx;
+    GearBox<Talon>* m_leftFrontGrbx;
+    GearBox<Talon>* m_rightFrontGrbx;
+    GearBox<Talon>* m_leftBackGrbx;
+    GearBox<Talon>* m_rightBackGrbx;
 
     /* Zeroes value if its inside deadband range, and rescales values outside
      * of it

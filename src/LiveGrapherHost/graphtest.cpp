@@ -1,6 +1,6 @@
 // A very simple test harness for GraphHost
 
-#if 0
+#if 1
 #include <chrono>
 #include <cstdint>
 #include <unistd.h>
