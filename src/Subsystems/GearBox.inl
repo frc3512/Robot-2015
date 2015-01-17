@@ -12,13 +12,13 @@
 #include <PIDController.h>
 
 template <class T>
-GearBox<T>::GearBox( unsigned int shifterChan ,
-                     unsigned int encA ,
-                     unsigned int encB ,
-                     unsigned int motor1 ,
-                     unsigned int motor2 ,
-                     unsigned int motor3 ) {
-    if ( encA != 0 && encB != 0 ) {
+GearBox<T>::GearBox( int shifterChan ,
+                     int encA ,
+                     int encB ,
+                     int motor1 ,
+                     int motor2 ,
+                     int motor3 ) {
+    if ( encA != -1 && encB != -1 ) {
         m_encoder = new Encoder( encA , encB );
         m_pid = new PIDController( 0 , 0 , 0 , 0 , m_encoder , this );
 
@@ -31,7 +31,7 @@ GearBox<T>::GearBox( unsigned int shifterChan ,
         m_havePID = false;
     }
 
-    if ( shifterChan != 0 ) {
+    if ( shifterChan != -1 ) {
         m_shifter = new Solenoid( shifterChan );
     }
     else {
@@ -43,13 +43,13 @@ GearBox<T>::GearBox( unsigned int shifterChan ,
     m_targetGear = false;
 
     // Create motor controllers of specified template type
-    if ( motor1 != 0 ) {
+    if ( motor1 != -1 ) {
         m_motors.push_back( new T( motor1 ) );
     }
-    if ( motor2 != 0 ) {
+    if ( motor2 != -1 ) {
         m_motors.push_back( new T( motor2 ) );
     }
-    if ( motor3 != 0 ) {
+    if ( motor3 != -1 ) {
         m_motors.push_back( new T( motor3 ) );
     }
     if ( m_havePID ) {

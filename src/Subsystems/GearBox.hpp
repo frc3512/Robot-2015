@@ -30,9 +30,9 @@ class SpeedController;
 template <class T>
 class GearBox : public PIDOutput {
 public:
-    GearBox( unsigned int shifterChan , unsigned int encA , unsigned int encB ,
-             unsigned int motor1 , unsigned int motor2 = 0 ,
-             unsigned int motor3 = 0 );
+    GearBox( int shifterChan , int encA , int encB ,
+             int motor1 , int motor2 = -1 ,
+             int motor3 = -1 );
     virtual ~GearBox();
 
     // Enables PID controller automatically and sets its setpoint

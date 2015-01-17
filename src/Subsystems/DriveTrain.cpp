@@ -29,10 +29,10 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile( maxWheelSpeed , 3.f ) ,
     m_quickStopAccumulator = 0.f;
     m_negInertiaAccumulator = 0.f;
 
-    m_leftFrontGrbx = new GearBox<CANTalon>( 0, 0, 0, 0 );
-    m_leftBackGrbx = new GearBox<CANTalon>( 0, 0, 0, 1 );
-    m_rightFrontGrbx = new GearBox<CANTalon>( 0, 0, 0, 2 );
-    m_rightBackGrbx = new GearBox<CANTalon>( 0, 0, 0, 3 );
+    m_leftFrontGrbx = new GearBox<CANTalon>( -1, -1, -1, 0 );
+    m_leftBackGrbx = new GearBox<CANTalon>( -1, -1, -1, 1 );
+    m_rightFrontGrbx = new GearBox<CANTalon>( -1, -1, -1, 2 );
+    m_rightBackGrbx = new GearBox<CANTalon>( -1, -1, -1, 3 );
 
     m_rightFrontGrbx->setReversed( true );
     m_rightBackGrbx->setReversed( true );
@@ -60,6 +60,11 @@ DriveTrain::~DriveTrain() {
 
 void DriveTrain::drive( float throttle , float turn , bool isQuickTurn ) {
     // Modified Cheesy Drive; base code courtesy of FRC Team 254
+	/* m_leftFrontGrbx->setManual( 1 );
+	m_rightFrontGrbx->setManual( 1 );
+	m_leftBackGrbx->setManual( 1 );
+	m_rightBackGrbx->setManual( 1 );
+	return; */
 
     if ( m_isDefencive == true ) {
         throttle = throttle * -1;
@@ -187,7 +192,7 @@ void DriveTrain::drive( float throttle , float turn , bool isQuickTurn ) {
 
         rightPwm = -1.0;
     }
-
+    std::cout << "ldfkjhga" << leftPwm << " " << rightPwm << std::endl;
     m_leftFrontGrbx->setManual( leftPwm );
     m_rightFrontGrbx->setManual( rightPwm );
     if( !isQuickTurn ) {

@@ -2,18 +2,18 @@
 #include <cmath>
 
 Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
-                 drive1Buttons( 1 ) ,
-                 drive2Buttons( 2 ) ,
-                 shootButtons( 3 ) ,
+                 drive1Buttons( 0 ) ,
+                 drive2Buttons( 1 ) ,
+                 shootButtons( 2 ) ,
                  pidGraph( 3513 ) {
 
 	std::cout << "Constructor" << std::endl;
 
     robotDrive = new DriveTrain();
 
-    driveStick1 = new Joystick( 1 );
-    driveStick2 = new Joystick( 2 );
-    shootStick = new Joystick( 3 );
+    driveStick1 = new Joystick( 0 );
+    driveStick2 = new Joystick( 1 );
+    shootStick = new Joystick( 2 );
 
     autonTimer = new Timer();
     displayTimer = new Timer();
@@ -47,8 +47,6 @@ Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
     logServerSink->setVerbosityLevels( LogEvent::VERBOSE_ALL );
     logServerSink->startServer( 4097 );
     displayTimer->Start();
-
-    std::cout << "Constructor Finished" << std::endl;
 }
 
 Robot::~Robot() {
@@ -78,13 +76,11 @@ void Robot::calibrateTalons() {
 }
 
 void Robot::OperatorControl() {
-	std::cout << "OperatorControl" << std::endl;
 
     robotDrive->reloadPID();
 
     while ( IsOperatorControl() && IsEnabled() ) {
         // DS_PrintOut();
-    	std::cout << "Looping" << std::endl;
 
         // arcade Drive
         if ( driveStick2->GetRawButton( 2 ) ) {
@@ -93,8 +89,6 @@ void Robot::OperatorControl() {
         }
         else {
             robotDrive->drive( driveStick1->GetY() , driveStick2->GetZ() );
-            std::cout << "Y: " << driveStick1->GetY()
-            		<< " X: " << driveStick1->GetX();
         }
 
         if ( drive1Buttons.releasedButton( 1 ) ) {
