@@ -1,5 +1,6 @@
 #include "GraphHost.hpp"
 #include <chrono>
+#include <algorithm>
 
 #include <cstdio>
 #include <cstring>
@@ -359,7 +360,7 @@ void GraphHost::sockets_accept( int listenfd ) {
 #endif
 
     // Add it to the list, this makes it a bit non-thread-safe
-    m_connList.emplace_front( new_fd );
+    m_connList.emplace_back( new_fd );
 }
 
 int GraphHost::sockets_readh( SocketConnection& conn ) {
@@ -397,11 +398,13 @@ int GraphHost::sockets_readdoneh( char* inbuf , size_t bufsize ,
     switch( inbuf[0] ) {
     case 'c':
         // Start sending data for the graph specified by graphstr
-        conn.datasets.push_front( graphstr );
+        if ( std::find( conn.datasets.begin() , conn.datasets.end() , graphstr ) == conn.datasets.end() ) {
+            conn.datasets.push_back( graphstr );
+        }
         break;
     case 'd':
         // Stop sending data for the graph specified by graphstr
-        for ( auto i = m_graphList.begin() ; i != m_graphList.end() ; i++ ) {
+        for ( auto i = conn.datasets.begin() ; i != conn.datasets.end() ; i++ ) {
             if ( *i == graphstr ) {
                 conn.datasets.erase( i );
                 break;
@@ -514,7 +517,7 @@ int GraphHost::socket_addgraph( std::string& dataset ) {
     }
 
     // Graph wasn't in the list, so add it
-    m_graphList.push_front( dataset );
+    m_graphList.push_back( dataset );
 
     return 0;
 }
