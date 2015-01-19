@@ -5,6 +5,12 @@
 *.o
 FRCUserProgram
 
+# CMake-generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
 Makefile
+
 /Debug/
+/Release/
 sysProps.xml
