@@ -5,7 +5,7 @@
  *      Author: acf
  */
 
-#include <Elevator.h>
+#include "Elevator.hpp"
 
 Elevator::Elevator() {
 	m_grabSolenoid = new Solenoid(1);
