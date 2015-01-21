@@ -28,7 +28,7 @@
  * internally to store the currently selected autonomous routine.
  *
  * Before sending HUD data to the DriverStation, call clear() followed by
- * calls to DS::AddElementData() and a call to sendToDS(). If clear() isn't
+ * calls to addElementData() and a call to sendToDS(). If clear() isn't
  * called first, undefined behavior may result. (The header "display\r\n" isn't
  * inserted when the packet isn't empty.)
  *
@@ -49,13 +49,19 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <functional>
 
-template <class T>
 class DriverStationDisplay : public sf::Packet {
 public:
+    enum StatusLight {
+        active ,
+        standby ,
+        inactive
+    };
+
     virtual ~DriverStationDisplay();
 
-    static DriverStationDisplay<T>& getInstance( unsigned short dsPort );
+    static DriverStationDisplay& getInstance( unsigned short dsPort );
 
     // Empties internal packet of data
     void clear();
@@ -70,20 +76,42 @@ public:
     const std::string receiveFromDS();
 
     // Add and remove autonomous functions
+    template <class T>
     void addAutonMethod( const std::string& methodName ,
-                         void ( T::* function )() ,
+                         void (T::* function)() ,
                          T* object );
     void deleteAllMethods();
 
     // Runs autonomous function currently selected
     void execAutonomous();
 
+    /* Add UI element data to packet
+     *
+     * The types allowed for 'data' are char, int, unsigned int, std::wstring,
+     * std::string, float, and double. String literals are converted to
+     * std::string implicitly. Every std::string is converted to a std::wstring
+     * before packing the string in the packet.
+     *
+     * The correct identifier to send with the data is deduced from its type at
+     * compile time. floats and doubles are converted to strings because VxWorks
+     * messes up floats over the network.
+     */
+    void addElementData( std::string ID , StatusLight data );
+    void addElementData( std::string ID , bool data );
+    void addElementData( std::string ID , int8_t data );
+    void addElementData( std::string ID , int32_t data );
+    void addElementData( std::string ID , uint32_t data );
+    void addElementData( std::string ID , std::string data );
+    void addElementData( std::string ID , float data );
+    void addElementData( std::string ID , double data );
+
 private:
     DriverStationDisplay( unsigned short portNumber );
 
-    DriverStationDisplay( const DriverStationDisplay<T>& );
-    DriverStationDisplay<T>& operator=( const DriverStationDisplay<T>& ) = delete;
+    DriverStationDisplay( const DriverStationDisplay& );
+    DriverStationDisplay& operator=( const DriverStationDisplay& ) = delete;
 
+    sf::UdpSocket m_socket; // socket for sending data to Driver Station
     sf::IpAddress m_dsIP; // IP address of Driver Station
     unsigned short m_dsPort; // port to which to send data
 
@@ -92,41 +120,8 @@ private:
     char m_recvBuffer[256]; // buffer for Driver Station requests
     size_t m_recvAmount; // holds number of bytes received from Driver Station
 
-    AutonContainer<T> m_autonModes;
+    AutonContainer m_autonModes;
     char curAutonMode;
-};
-
-namespace DS {
-enum StatusLight {
-    active ,
-    standby ,
-    inactive
-};
-
-/* Add UI element data to packet
- *
- * The types allowed for 'data' are char, int, unsigned int, std::wstring,
- * std::string, float, and double. String literals are converted to
- * std::string implicitly. Every std::string is converted to a std::wstring
- * before packing the string in the packet.
- *
- * The correct identifier to send with the data is deduced from its type at
- * compile time. floats and doubles are converted to strings because VxWorks
- * messes up floats over the network.
- */
-template <class T , class U>
-void AddElementData( DriverStationDisplay<T>& inst , std::string ID , U data );
-}
-
-class SocketInit {
-public:
-    SocketInit();
-    virtual ~SocketInit();
-
-    static sf::UdpSocket& getInstance( unsigned short portNumber = 0 );
-
-private:
-    static sf::UdpSocket* m_socket;
 };
 
 #include "DriverStationDisplay.inl"

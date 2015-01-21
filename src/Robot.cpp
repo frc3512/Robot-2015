@@ -5,7 +5,8 @@ Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
                  drive1Buttons( 0 ) ,
                  drive2Buttons( 1 ) ,
                  shootButtons( 2 ) ,
-                 dsDisplay( DriverStationDisplay<Robot>::getInstance( settings.getInt( "DS_Port" ) ) ) ,
+                 dsDisplay( DriverStationDisplay::getInstance(
+                     settings.getInt( "DS_Port" ) ) ) ,
                  pidGraph( 3513 ) {
 
 	std::cout << "Constructor" << std::endl;
@@ -190,18 +191,10 @@ void Robot::DS_PrintOut() {
 
         dsDisplay.clear();
 
-        DS::AddElementData( dsDisplay ,
-                            "LEFT_RPM" ,
-                            robotDrive->getLeftRate() );
-        DS::AddElementData( dsDisplay ,
-                            "RIGHT_RPM" ,
-                            robotDrive->getRightRate() );
-        DS::AddElementData( dsDisplay ,
-                            "LEFT_DIST" ,
-                            robotDrive->getLeftDist() );
-        DS::AddElementData( dsDisplay ,
-                            "RIGHT_DIST" ,
-                            robotDrive->getRightDist() );
+        dsDisplay.addElementData( "LEFT_RPM" , robotDrive->getLeftRate() );
+        dsDisplay.addElementData( "RIGHT_RPM" , robotDrive->getRightRate() );
+        dsDisplay.addElementData( "LEFT_DIST" , robotDrive->getLeftDist() );
+        dsDisplay.addElementData( "RIGHT_DIST", robotDrive->getRightDist() );
 
 
         dsDisplay.sendToDS();
