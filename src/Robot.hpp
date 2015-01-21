@@ -62,7 +62,7 @@ private:
     Timer* displayTimer;
 
     // Used for sending data to the Driver Station
-    DriverStationDisplay<Robot>* driverStation;
+    DriverStationDisplay<Robot>& dsDisplay;
 
     // The LiveGrapher host
     GraphHost pidGraph;

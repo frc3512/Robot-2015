@@ -51,18 +51,11 @@
 #include <string>
 
 template <class T>
-class DriverStationDisplayInit {
-public:
-    DriverStationDisplayInit();
-    ~DriverStationDisplayInit();
-};
-
-template <class T>
 class DriverStationDisplay : public sf::Packet {
 public:
     virtual ~DriverStationDisplay();
 
-    static DriverStationDisplay<T>* getInstance( unsigned short dsPort );
+    static DriverStationDisplay<T>& getInstance( unsigned short dsPort );
 
     // Empties internal packet of data
     void clear();
@@ -77,9 +70,9 @@ public:
     const std::string receiveFromDS();
 
     // Add and remove autonomous functions
-    void addAutonMethod( const std::string & methodName ,
+    void addAutonMethod( const std::string& methodName ,
                          void ( T::* function )() ,
-                         T * object );
+                         T* object );
     void deleteAllMethods();
 
     // Runs autonomous function currently selected
@@ -89,9 +82,7 @@ private:
     DriverStationDisplay( unsigned short portNumber );
 
     DriverStationDisplay( const DriverStationDisplay<T>& );
-    DriverStationDisplay<T>& operator=( const DriverStationDisplay<T>& );
-
-    static DriverStationDisplay<T>* m_dsDisplay;
+    DriverStationDisplay<T>& operator=( const DriverStationDisplay<T>& ) = delete;
 
     sf::IpAddress m_dsIP; // IP address of Driver Station
     unsigned short m_dsPort; // port to which to send data
@@ -103,10 +94,6 @@ private:
 
     AutonContainer<T> m_autonModes;
     char curAutonMode;
-
-    // Allows class to clean itself up when the robot task exits
-    friend class DriverStationDisplayInit<T>;
-    static DriverStationDisplayInit<T> deleter;
 };
 
 namespace DS {
@@ -128,7 +115,7 @@ enum StatusLight {
  * messes up floats over the network.
  */
 template <class T , class U>
-void AddElementData( DriverStationDisplay<T>* inst , std::string ID , U data );
+void AddElementData( DriverStationDisplay<T>& inst , std::string ID , U data );
 }
 
 class SocketInit {

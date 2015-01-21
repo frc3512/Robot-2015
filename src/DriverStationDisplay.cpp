@@ -12,7 +12,6 @@ SocketInit::SocketInit() {
 }
 
 SocketInit::~SocketInit() {
-    m_socket->unbind();
     delete m_socket;
 }
 
