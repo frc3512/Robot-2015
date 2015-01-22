@@ -7,6 +7,7 @@
 #include <Timer.h>
 
 #include "Subsystems/DriveTrain.hpp"
+#include "Subsystems/Elevator.hpp"
 #include "ButtonTracker.hpp"
 #include "Settings.hpp"
 
@@ -56,7 +57,7 @@ private:
 
     ButtonTracker drive1Buttons;
     ButtonTracker drive2Buttons;
-    ButtonTracker shootButtons;
+    ButtonTracker elevatorButtons;
 
     Timer* autonTimer;
     Timer* displayTimer;
@@ -68,7 +69,8 @@ private:
     GraphHost pidGraph;
 
     Insight* insight;
-
+    DriverStation *ds;
+    Elevator* ev;
     Logger* logger1;
     LogFileSink* logFileSink;
     LogServerSink* logServerSink;

@@ -30,7 +30,20 @@ void Elevator::intakeVer(bool state) {
 	m_intakeVertical->Set(state);
 }
 
+bool Elevator::getElevatorGrab() {
+	return m_grabSolenoid->Get();
+}
+
+bool Elevator::getIntakeGrab() {
+	return m_intakeGrabber->Get();
+}
+
+bool Elevator::getIntakeVer() {
+	return m_intakeVertical->Get();
+}
+
 void Elevator::intakeWheels(IntakeMotorState state) {
+	m_intakeState = state;
 
 	if(state == S_STOPPED) {
 		m_intakeWheels->Set(0);
@@ -40,4 +53,8 @@ void Elevator::intakeWheels(IntakeMotorState state) {
 		m_intakeWheels->Set(-1);
 	}
 
+}
+
+Elevator::IntakeMotorState Elevator::getIntakeWheels() {
+	return m_intakeState;
 }

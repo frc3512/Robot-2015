@@ -4,7 +4,7 @@
 Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
                  drive1Buttons( 0 ) ,
                  drive2Buttons( 1 ) ,
-                 shootButtons( 2 ) ,
+                 elevatorButtons( 2 ) ,
                  pidGraph( 3513 ) {
 
 	std::cout << "Constructor" << std::endl;
@@ -14,11 +14,9 @@ Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
     driveStick1 = new Joystick( 0 );
     driveStick2 = new Joystick( 1 );
     shootStick = new Joystick( 2 );
-
     autonTimer = new Timer();
     displayTimer = new Timer();
-
-    driverStation =
+    ev = new Elevator();
         DriverStationDisplay<Robot>::getInstance( settings.getInt( "DS_Port" ) );
 
     /* driverStation->addAutonMethod( "DriveForward Autonomous" ,
@@ -58,7 +56,7 @@ Robot::~Robot() {
 
     delete autonTimer;
     delete displayTimer;
-
+    delete ev;
     delete logger1;
     delete ls;
     delete logFileSink;
@@ -79,7 +77,6 @@ void Robot::OperatorControl() {
 
     robotDrive->reloadPID();
 
-    while ( IsOperatorControl() && IsEnabled() ) {
         // DS_PrintOut();
 
         // arcade Drive
@@ -91,19 +88,55 @@ void Robot::OperatorControl() {
             robotDrive->drive( driveStick1->GetY() , driveStick2->GetZ() );
         }
 
-        if ( drive1Buttons.releasedButton( 1 ) ) {
-            robotDrive->setGear( !robotDrive->getGear() );
+        /*
+        CurrentState = ds->GetStickButton(0,1);
+
+        		if(CurrentState != LastState && CurrentState == true){
+        			std::cout << ev->;
+        			ev->(!ev->);
+        		}
+        		LastState = CurrentState;
+
+        		ds->GetStickButton(1,1);
+
+        		shootStick->GetTrigger();
+		*/
+
+        /* Trailing edge of trigger press */
+        if(elevatorButtons.releasedButton(1)) {
+        	// ...
+        	std::cout << ev->getElevatorGrab();
+        	ev->elevatorGrab(!ev->getElevatorGrab());
         }
+        if(elevatorButtons.releasedButton(2)){
+        	std::cout << ev->getIntakeGrab();
+        	ev->intakeGrab(!ev->getIntakeGrab());
+    	}
+    	if(elevatorButtons.releasedButton(3)){
+    		std::cout << ev->getIntakeVer();
+    		ev->intakeVer(!ev->getIntakeVer());
+    	}
+    	if(elevatorButtons.releasedButton(4)){
+    		std::cout << ev->getIntakeWheels();
+    		ev->intakeWheels(Elevator::S_FORWARD);
+    	}else if(elevatorButtons.releasedButton(5)){
+    		std::cout << ev->getIntakeWheels();
+    		ev->intakeWheels(Elevator::S_REVERSED);
+    	}else if(elevatorButtons.releasedButton(0)){
+    		std::cout << ev->getIntakeWheels();
+    		ev->intakeWheels(Elevator::S_STOPPED);
+    	}
 
-        drive1Buttons.updateButtons();
-        drive2Buttons.updateButtons();
-        shootButtons.updateButtons();
+		drive1Buttons.updateButtons();
+		drive2Buttons.updateButtons();
+		elevatorButtons.updateButtons();
 
-        DS_PrintOut();
+		DS_PrintOut();
 
-        Wait( 0.01 );
+		Wait( 0.01 );
+
     }
-}
+
 
 void Robot::Autonomous() {
     autonTimer->Reset();
