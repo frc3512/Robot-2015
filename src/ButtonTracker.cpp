@@ -8,15 +8,9 @@
 #include <DriverStation.h>
 #include "ButtonTracker.hpp"
 
-bool ButtonTracker::m_driverStationInit = false;
-DriverStation* ButtonTracker::m_driverStation = nullptr;
+DriverStation* ButtonTracker::m_driverStation = DriverStation::GetInstance();
 
 ButtonTracker::ButtonTracker( uint32_t port ) {
-    if ( !m_driverStationInit ) {
-        m_driverStation = DriverStation::GetInstance();
-        m_driverStationInit = true;
-    }
-
     m_port = port;
     m_oldStates = 0;
     m_newStates = 0;
