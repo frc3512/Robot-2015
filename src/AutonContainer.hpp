@@ -9,29 +9,25 @@
 
 #include <vector>
 #include <string>
+#include <functional>
 
-template <class T>
 struct AutonMethod {
     std::string name;
-    void (T::* function)();
-    T* object;
+    std::function<void()> function;
 
-    AutonMethod( const std::string& methodName , void( T::* func )() ,
-                 T* obj ) {
+    AutonMethod( const std::string& methodName , std::function<void()> func ) {
         name = methodName;
         function = func;
-        object = obj;
     }
 };
 
-template <class T>
 class AutonContainer {
 public:
     virtual ~AutonContainer();
 
     // Add and remove autonomous functions
-    void addMethod( const std::string & methodName ,
-                    void ( T::* function )() , T * object );
+    void addMethod( const std::string& methodName ,
+                    std::function<void()> func );
     void deleteAllMethods();
 
     // Returns number of routines currently held
@@ -45,10 +41,8 @@ public:
 
 private:
     // Contains function pointers to the autonomous functions
-    std::vector<AutonMethod<T>> m_functionList;
+    std::vector<AutonMethod> m_functionList;
 };
-
-#include "AutonContainer.inl"
 
 #endif // AUTON_CONTAINER_HPP
 

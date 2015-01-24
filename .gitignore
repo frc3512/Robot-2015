@@ -13,4 +13,5 @@ Makefile
 
 /Debug/
 /Release/
+.settings/
 sysProps.xml

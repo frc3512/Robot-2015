@@ -192,7 +192,6 @@ void DriveTrain::drive( float throttle , float turn , bool isQuickTurn ) {
 
         rightPwm = -1.0;
     }
-    std::cout << "ldfkjhga" << leftPwm << " " << rightPwm << std::endl;
     m_leftFrontGrbx->setManual( leftPwm );
     m_rightFrontGrbx->setManual( rightPwm );
     if( !isQuickTurn ) {

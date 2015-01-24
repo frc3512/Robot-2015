@@ -41,7 +41,6 @@ protected:
 private:
     static bool getButtonState( short& buttonStates , uint32_t& button );
 
-    static bool m_driverStationInit;
     static DriverStation* m_driverStation;
 
     short m_oldStates;

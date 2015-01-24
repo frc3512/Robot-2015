@@ -5,6 +5,8 @@ Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
                  drive1Buttons( 0 ) ,
                  drive2Buttons( 1 ) ,
                  elevatorButtons( 2 ) ,
+                 dsDisplay( DriverStationDisplay::getInstance(
+                     settings.getInt( "DS_Port" ) ) ) ,
                  pidGraph( 3513 ) {
 
 	std::cout << "Constructor" << std::endl;
@@ -17,19 +19,19 @@ Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
     autonTimer = new Timer();
     displayTimer = new Timer();
     ev = new Elevator();
-        DriverStationDisplay<Robot>::getInstance( settings.getInt( "DS_Port" ) );
 
-    /* driverStation->addAutonMethod( "DriveForward Autonomous" ,
+
+    /* dsDisplay.addAutonMethod( "DriveForward Autonomous" ,
                                    &Robot::DriveForwardAuton ,
                                    this );
-    driverStation->addAutonMethod( "Right/Left Autonomous" ,
+    dsDisplay.addAutonMethod( "Right/Left Autonomous" ,
                                    &Robot::RightLeftAuton ,
                                    this );
-    driverStation->addAutonMethod( "MotionProfile" ,
+    dsDisplay.addAutonMethod( "MotionProfile" ,
                                    &Robot::AutonMotionProfile ,
                                    this );
-    driverStation->addAutonMethod( "Side Auton" , &Robot::SideAuton , this ); */
-    driverStation->addAutonMethod( "Noop Auton" , &Robot::NoopAuton , this );
+    dsDisplay.addAutonMethod( "Side Auton" , &Robot::SideAuton , this ); */
+    dsDisplay.addAutonMethod( "Noop Auton" , &Robot::NoopAuton , this );
 
     pidGraph.setSendInterval( 200 );
 
@@ -142,7 +144,7 @@ void Robot::Autonomous() {
     autonTimer->Reset();
     autonTimer->Start();
 
-    driverStation->execAutonomous();
+    dsDisplay.execAutonomous();
 
     autonTimer->Stop();
 }
@@ -223,26 +225,18 @@ void Robot::DS_PrintOut() {
 
         // userMessages->UpdateLCD();
 
-        driverStation->clear();
+        dsDisplay.clear();
 
-        DS::AddElementData( driverStation ,
-                            "LEFT_RPM" ,
-                            robotDrive->getLeftRate() );
-        DS::AddElementData( driverStation ,
-                            "RIGHT_RPM" ,
-                            robotDrive->getRightRate() );
-        DS::AddElementData( driverStation ,
-                            "LEFT_DIST" ,
-                            robotDrive->getLeftDist() );
-        DS::AddElementData( driverStation ,
-                            "RIGHT_DIST" ,
-                            robotDrive->getRightDist() );
+        dsDisplay.addElementData( "LEFT_RPM" , robotDrive->getLeftRate() );
+        dsDisplay.addElementData( "RIGHT_RPM" , robotDrive->getRightRate() );
+        dsDisplay.addElementData( "LEFT_DIST" , robotDrive->getLeftDist() );
+        dsDisplay.addElementData( "RIGHT_DIST", robotDrive->getRightDist() );
 
 
-        driverStation->sendToDS();
+        dsDisplay.sendToDS();
     }
 
-    driverStation->receiveFromDS();
+    dsDisplay.receiveFromDS();
 
  //   insight->receiveFromDS();
 }
