@@ -12,12 +12,12 @@
 #include <PIDController.h>
 
 template <class T>
-GearBox<T>::GearBox( unsigned int shifterChan ,
-                     unsigned int encA ,
-                     unsigned int encB ,
-                     unsigned int motor1 ,
-                     unsigned int motor2 ,
-                     unsigned int motor3 ) {
+GearBox<T>::GearBox( int shifterChan ,
+                     int encA ,
+                     int encB ,
+                     int motor1 ,
+                     int motor2 ,
+                     int motor3 ) {
     if ( encA != -1 && encB != -1 ) {
         m_encoder = new Encoder( encA , encB );
         m_pid = new PIDController( 0 , 0 , 0 , 0 , m_encoder , this );
@@ -59,7 +59,6 @@ GearBox<T>::GearBox( unsigned int shifterChan ,
         // m_pid->SetPercentTolerance( 5.f );
         m_pid->SetAbsoluteTolerance( 1 );
 
-        m_encoder->Start();
         m_pid->Enable();
     }
 }
@@ -68,8 +67,6 @@ template <class T>
 GearBox<T>::~GearBox() {
     if ( m_havePID ) {
         delete m_pid;
-
-        m_encoder->Stop();
         delete m_encoder;
     }
 
