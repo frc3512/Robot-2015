@@ -66,10 +66,16 @@ public:
     double getRate() const;
 
     // Reverses gearbox drive direction
-    void setReversed( bool reverse );
+    void setMotorReversed( bool reverse );
 
     // Returns motor reversal state of gearbox
-    bool isReversed() const;
+    bool isMotorReversed() const;
+
+    // Reverses gearbox drive direction
+    void setEncoderReversed( bool reverse );
+
+    // Returns motor reversal state of gearbox
+    bool isEncoderReversed() const;
 
     // Shifts gearbox to another gear if available
     void setGear( bool gear );
@@ -94,7 +100,8 @@ private:
 
     Solenoid* m_shifter;
 
-    bool m_isReversed;
+    bool m_isMotorReversed;
+    bool m_isEncoderReversed;
     bool m_havePID;
     bool m_targetGear;
 

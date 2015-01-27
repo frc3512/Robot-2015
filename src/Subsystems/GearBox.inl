@@ -12,12 +12,12 @@
 #include <PIDController.h>
 
 template <class T>
-GearBox<T>::GearBox( int shifterChan ,
-                     int encA ,
-                     int encB ,
-                     int motor1 ,
-                     int motor2 ,
-                     int motor3 ) {
+GearBox<T>::GearBox( unsigned int shifterChan ,
+                     unsigned int encA ,
+                     unsigned int encB ,
+                     unsigned int motor1 ,
+                     unsigned int motor2 ,
+                     unsigned int motor3 ) {
     if ( encA != -1 && encB != -1 ) {
         m_encoder = new Encoder( encA , encB );
         m_pid = new PIDController( 0 , 0 , 0 , 0 , m_encoder , this );
@@ -38,7 +38,8 @@ GearBox<T>::GearBox( int shifterChan ,
         m_shifter = nullptr;
     }
 
-    m_isReversed = false;
+    m_isMotorReversed = false;
+    m_isEncoderReversed = false;
 
     m_targetGear = false;
 
@@ -58,6 +59,7 @@ GearBox<T>::GearBox( int shifterChan ,
         // m_pid->SetPercentTolerance( 5.f );
         m_pid->SetAbsoluteTolerance( 1 );
 
+        m_encoder->Start();
         m_pid->Enable();
     }
 }
@@ -66,6 +68,8 @@ template <class T>
 GearBox<T>::~GearBox() {
     if ( m_havePID ) {
         delete m_pid;
+
+        m_encoder->Stop();
         delete m_encoder;
     }
 
@@ -118,7 +122,7 @@ void GearBox<T>::setManual( float value ) {
 
 template <class T>
 float GearBox<T>::getManual() const {
-    if ( !m_isReversed ) {
+    if ( !m_isMotorReversed ) {
         return m_motors[0]->Get();
     }
     else {
@@ -194,13 +198,23 @@ double GearBox<T>::getRate() const {
 }
 
 template <class T>
-void GearBox<T>::setReversed( bool reverse ) {
-    m_isReversed = reverse;
+void GearBox<T>::setMotorReversed( bool reverse ) {
+    m_isMotorReversed = reverse;
 }
 
 template <class T>
-bool GearBox<T>::isReversed() const {
-    return m_isReversed;
+bool GearBox<T>::isMotorReversed() const {
+    return m_isMotorReversed;
+}
+
+template <class T>
+void GearBox<T>::setEncoderReversed( bool reverse ) {
+    m_encoder->SetReverseDirection( reverse );
+}
+
+template <class T>
+bool GearBox<T>::isEncoderReversed() const {
+    return m_isEncoderReversed;
 }
 
 template <class T>
@@ -223,7 +237,7 @@ bool GearBox<T>::getGear() const {
 template <class T>
 void GearBox<T>::PIDWrite( float output ) {
     for ( unsigned int i = 0 ; i < m_motors.size() ; i++ ) {
-        if ( !m_isReversed ) {
+        if ( !m_isMotorReversed ) {
             m_motors[i]->Set( output );
         }
         else {
@@ -254,15 +268,12 @@ void GearBox<T>::updateGear() {
 
 template <class T>
 bool GearBox<T>::onTarget() {
-#if 0
-    if ( !m_havePID ) {
+    if ( m_havePID ) {
+        return m_pid->OnTarget();
+    }
+    else {
         return false;
     }
-
-    return fabs( m_pid->GetError() / 100.f ) <= m_pid->GetTolerance() && fabs(
-        m_pid->GetDeltaError() ) <= m_pid->GetTolerance();
-#endif
-    return m_pid->OnTarget();
 }
 
 template <class T>
