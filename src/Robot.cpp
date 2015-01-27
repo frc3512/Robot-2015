@@ -1,5 +1,6 @@
 #include "Robot.hpp"
 #include <cmath>
+#include "DriverStation.h"
 
 Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
                  drive1Buttons( 0 ) ,
@@ -79,15 +80,16 @@ void Robot::OperatorControl() {
 
     robotDrive->reloadPID();
 
+    while(IsEnabled() && IsOperatorControl()) {
         // DS_PrintOut();
 
         // arcade Drive
         if ( driveStick2->GetRawButton( 2 ) ) {
-            robotDrive->drive( driveStick1->GetY() , driveStick2->GetZ() ,
+            robotDrive->drive( driveStick1->GetY() , driveStick2->GetX() ,
                                true );
         }
         else {
-            robotDrive->drive( driveStick1->GetY() , driveStick2->GetZ() );
+            robotDrive->drive( driveStick1->GetY() , driveStick2->GetX() );
         }
 
         /*
@@ -107,25 +109,25 @@ void Robot::OperatorControl() {
         /* Trailing edge of trigger press */
         if(elevatorButtons.releasedButton(1)) {
         	// ...
-        	std::cout << ev->getElevatorGrab();
+        	//std::cout << ev->getElevatorGrab() << std::endl;
         	ev->elevatorGrab(!ev->getElevatorGrab());
         }
-        if(elevatorButtons.releasedButton(2)){
-        	std::cout << ev->getIntakeGrab();
+        if(elevatorButtons.releasedButton(5)){
+        	//std::cout << ev->getIntakeGrab() << std::endl;
         	ev->intakeGrab(!ev->getIntakeGrab());
     	}
-    	if(elevatorButtons.releasedButton(3)){
-    		std::cout << ev->getIntakeVer();
+    	if(elevatorButtons.releasedButton(6)){
+    		//std::cout << ev->getIntakeVer() << std::endl;
     		ev->intakeVer(!ev->getIntakeVer());
     	}
-    	if(elevatorButtons.releasedButton(4)){
-    		std::cout << ev->getIntakeWheels();
+    	if(elevatorButtons.releasedButton(3)){
+    		//std::cout << ev->getIntakeWheels() << std::endl;
     		ev->intakeWheels(Elevator::S_FORWARD);
-    	}else if(elevatorButtons.releasedButton(5)){
-    		std::cout << ev->getIntakeWheels();
+    	}else if(elevatorButtons.releasedButton(4)){
+    		//std::cout << ev->getIntakeWheels() << std::endl;
     		ev->intakeWheels(Elevator::S_REVERSED);
-    	}else if(elevatorButtons.releasedButton(0)){
-    		std::cout << ev->getIntakeWheels();
+    	}else{
+    		//std::cout << ev->getIntakeWheels() << std::endl;
     		ev->intakeWheels(Elevator::S_STOPPED);
     	}
 
@@ -136,8 +138,8 @@ void Robot::OperatorControl() {
 		DS_PrintOut();
 
 		Wait( 0.01 );
-
-    }
+	}
+}
 
 
 void Robot::Autonomous() {
