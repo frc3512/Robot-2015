@@ -1,7 +1,7 @@
 #ifndef SOCKET_CONNECTION_HPP
 #define SOCKET_CONNECTION_HPP
 
-#include <list>
+#include <vector>
 #include <string>
 #include <queue>
 
@@ -17,8 +17,9 @@ public:
 
     SocketConnection( int nfd );
     virtual ~SocketConnection();
+    SocketConnection( const SocketConnection& rhs ) = delete;
 
-    std::list<std::string> datasets;
+    std::vector<std::string> datasets;
     int fd;
     uint8_t selectflags;
 
@@ -32,9 +33,6 @@ public:
     std::string readbuf;
     size_t readbufoffset;
     bool readdone;
-
-private:
-    SocketConnection( const SocketConnection& rhs ) = delete;
 };
 
 #endif // SOCKET_CONNECTION_HPP

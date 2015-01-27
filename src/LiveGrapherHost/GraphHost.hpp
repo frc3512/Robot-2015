@@ -23,11 +23,12 @@
  *     }
  */
 
-#include <list>
+#include <vector>
 #include <string>
 #include <thread>
 #include <mutex>
 #include <atomic>
+#include <memory>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -93,20 +94,20 @@ private:
     int m_ipcfd_r;
     int m_ipcfd_w;
     int m_port;
-    std::list<std::string> m_graphList;
-    std::list<SocketConnection> m_connList;
+    std::vector<std::string> m_graphList;
+    std::vector<std::unique_ptr<SocketConnection>> m_connList;
 
     void sockets_threadmain();
 
     static int sockets_listen( int port , sa_family_t sin_family ,
             uint32_t s_addr );
     void sockets_accept( int listenfd );
-    int sockets_readh( SocketConnection& conn );
+    int sockets_readh( std::unique_ptr<SocketConnection>& conn );
     int sockets_readdoneh( char* inbuf , size_t bufsize ,
-            SocketConnection& conn );
-    int sockets_sendlist( SocketConnection& conn );
-    int sockets_writeh( SocketConnection& conn );
-    int sockets_queuewrite( SocketConnection& conn , char* buf ,
+            std::unique_ptr<SocketConnection>& conn );
+    int sockets_sendlist( std::unique_ptr<SocketConnection>& conn );
+    int sockets_writeh( std::unique_ptr<SocketConnection>& conn );
+    int sockets_queuewrite( std::unique_ptr<SocketConnection>& conn , char* buf ,
             size_t buflength );
     int socket_addgraph( std::string& dataset );
 };

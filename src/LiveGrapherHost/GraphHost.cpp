@@ -132,8 +132,8 @@ int GraphHost::graphData( float value , std::string dataset ) {
     socket_addgraph( dataset );
 
     // Send the point to connected clients
-    for ( SocketConnection& conn : m_connList ) {
-        for ( std::string& dataset_str : conn.datasets ) {
+    for ( auto& conn : m_connList ) {
+        for ( std::string& dataset_str : conn->datasets ) {
             if ( dataset_str == dataset ) {
                 // Send the value off
                 sockets_queuewrite( conn , (char*)&payload ,
@@ -191,18 +191,18 @@ void GraphHost::sockets_threadmain() {
 
         // Add the file descriptors to the list
         m_mutex.lock();
-        for ( SocketConnection& conn : m_connList ) {
-            if ( maxfd < conn.fd ) {
-                maxfd = conn.fd;
+        for ( auto& conn : m_connList ) {
+            if ( maxfd < conn->fd ) {
+                maxfd = conn->fd;
             }
-            if ( conn.selectflags & SocketConnection::Read ) {
-                FD_SET( conn.fd , &readfds );
+            if ( conn->selectflags & SocketConnection::Read ) {
+                FD_SET( conn->fd , &readfds );
             }
-            if ( conn.selectflags & SocketConnection::Write ) {
-                FD_SET( conn.fd , &writefds );
+            if ( conn->selectflags & SocketConnection::Write ) {
+                FD_SET( conn->fd , &writefds );
             }
-            if ( conn.selectflags & SocketConnection::Error ) {
-                FD_SET( conn.fd , &errorfds );
+            if ( conn->selectflags & SocketConnection::Error ) {
+                FD_SET( conn->fd , &errorfds );
             }
         }
         m_mutex.unlock();
@@ -219,18 +219,18 @@ void GraphHost::sockets_threadmain() {
         m_mutex.lock();
         auto conn = m_connList.begin();
         while ( conn != m_connList.end() ) {
-            if ( FD_ISSET( conn->fd , &readfds ) ) {
+            if ( FD_ISSET( (*conn)->fd , &readfds ) ) {
                 // Handle reading
                 if ( sockets_readh( *conn ) == -1 ) {
                     conn = m_connList.erase( conn );
                     continue;
                 }
             }
-            if ( FD_ISSET( conn->fd , &writefds ) ) {
+            if ( FD_ISSET( (*conn)->fd , &writefds ) ) {
                 // Handle writing
                 sockets_writeh( *conn );
             }
-            if ( FD_ISSET( conn->fd , &errorfds ) ) {
+            if ( FD_ISSET( (*conn)->fd , &errorfds ) ) {
                 // Handle errors
                 conn = m_connList.erase( conn );
                 continue;
@@ -324,8 +324,8 @@ void GraphHost::sockets_accept( int listenfd ) {
     clilen = sizeof(cli_addr);
 
     // Accept a new connection
-    new_fd = accept( listenfd , reinterpret_cast<struct sockaddr*>( &cli_addr ) ,
-            &clilen );
+    new_fd = accept( listenfd ,
+            reinterpret_cast<struct sockaddr*>( &cli_addr ) , &clilen );
 
     // Make sure that the file descriptor is valid
     if ( new_fd < 1 ) {
@@ -360,30 +360,30 @@ void GraphHost::sockets_accept( int listenfd ) {
 #endif
 
     // Add it to the list, this makes it a bit non-thread-safe
-    m_connList.emplace_back( new_fd );
+    m_connList.emplace_back( std::make_unique<SocketConnection>( new_fd ) );
 }
 
-int GraphHost::sockets_readh( SocketConnection& conn ) {
+int GraphHost::sockets_readh( std::unique_ptr<SocketConnection>& conn ) {
     int error;
 
-    if ( conn.readdone ) {
-        conn.readbufoffset = 0;
-        conn.readbuf = std::string( 16 , 0 );
-        conn.readdone = false;
+    if ( conn->readdone ) {
+        conn->readbufoffset = 0;
+        conn->readbuf = std::string( 16 , 0 );
+        conn->readdone = false;
     }
 
-    error = recv( conn.fd , &conn.readbuf[0] , conn.readbuf.length() -
-            conn.readbufoffset , 0 );
-    if ( error < 1 ) {
+    error = recv( conn->fd , &conn->readbuf[0] , conn->readbuf.length() -
+            conn->readbufoffset , 0 );
+    if ( error == 0 || (error == -1 && errno != EAGAIN) ) {
         // recv(3) failed, so return failure so socket is closed
         return -1;
     }
-    conn.readbufoffset += error;
+    conn->readbufoffset += error;
 
-    if ( conn.readbufoffset == conn.readbuf.length() ) {
-        sockets_readdoneh( &conn.readbuf[0] , conn.readbuf.length() , conn );
-        conn.readbufoffset = 0;
-        conn.readdone = true;
+    if ( conn->readbufoffset == conn->readbuf.length() ) {
+        sockets_readdoneh( &conn->readbuf[0] , conn->readbuf.length() , conn );
+        conn->readbufoffset = 0;
+        conn->readdone = true;
     }
 
     return 0;
@@ -391,22 +391,22 @@ int GraphHost::sockets_readh( SocketConnection& conn ) {
 
 // Recieves 16 byte buffers which will be freed upon return
 int GraphHost::sockets_readdoneh( char* inbuf , size_t bufsize ,
-        SocketConnection& conn ) {
+        std::unique_ptr<SocketConnection>& conn ) {
     inbuf[15] = 0;
     const char* graphstr = inbuf + 1;
 
     switch( inbuf[0] ) {
     case 'c':
         // Start sending data for the graph specified by graphstr
-        if ( std::find( conn.datasets.begin() , conn.datasets.end() , graphstr ) == conn.datasets.end() ) {
-            conn.datasets.push_back( graphstr );
+        if ( std::find( conn->datasets.begin() , conn->datasets.end() , graphstr ) == conn->datasets.end() ) {
+            conn->datasets.push_back( graphstr );
         }
         break;
     case 'd':
         // Stop sending data for the graph specified by graphstr
-        for ( auto i = conn.datasets.begin() ; i != conn.datasets.end() ; i++ ) {
+        for ( auto i = conn->datasets.begin() ; i != conn->datasets.end() ; i++ ) {
             if ( *i == graphstr ) {
-                conn.datasets.erase( i );
+                conn->datasets.erase( i );
                 break;
             }
         }
@@ -422,10 +422,10 @@ int GraphHost::sockets_readdoneh( char* inbuf , size_t bufsize ,
 }
 
 // Send to the client a list of available graphs
-int GraphHost::sockets_sendlist( SocketConnection& conn ) {
+int GraphHost::sockets_sendlist( std::unique_ptr<SocketConnection>& conn ) {
     struct graph_list_t replydg;
 
-    for ( auto i = m_graphList.begin() ; i != m_graphList.end() ; i++ ) {
+    for ( unsigned int i = 0 ; i < m_graphList.size() ; i++ ) {
         // Set up the response body, and queue it for sending
         std::memset( &replydg , 0 , sizeof(struct graph_list_t) );
 
@@ -433,7 +433,7 @@ int GraphHost::sockets_sendlist( SocketConnection& conn ) {
         replydg.type = 'l';
 
         // Is this the last element in the list?
-        if ( std::next(i) == m_graphList.end() ) {
+        if ( i+1 == m_graphList.size() ) {
             replydg.end = 1;
         }
         else {
@@ -441,7 +441,7 @@ int GraphHost::sockets_sendlist( SocketConnection& conn ) {
         }
 
         // Copy in the string
-        std::strcpy( replydg.dataset , i->c_str() );
+        std::strcpy( replydg.dataset , m_graphList[i].c_str() );
 
         // Queue the datagram for writing
         if ( sockets_queuewrite( conn , (char*)&replydg ,
@@ -454,33 +454,33 @@ int GraphHost::sockets_sendlist( SocketConnection& conn ) {
 }
 
 // Write queued data to a socket when the socket becomes ready
-int GraphHost::sockets_writeh( SocketConnection& conn ) {
+int GraphHost::sockets_writeh( std::unique_ptr<SocketConnection>& conn ) {
     while ( 1 ) {
         // Get another buffer to send
-        if ( conn.writedone ) {
+        if ( conn->writedone ) {
             // There are no more buffers in the queue
-            if ( conn.writequeue.empty() ) {
+            if ( conn->writequeue.empty() ) {
                 // Stop selecting on write
-                conn.selectflags &= ~SocketConnection::Write;
+                conn->selectflags &= ~SocketConnection::Write;
 
                 return 0;
             }
 
-            conn.writebuf = std::move( conn.writequeue.front() );
-            conn.writebufoffset = 0;
-            conn.writedone = false;
-            conn.writequeue.pop();
+            conn->writebuf = std::move( conn->writequeue.front() );
+            conn->writebufoffset = 0;
+            conn->writedone = false;
+            conn->writequeue.pop();
         }
 
         // These descriptors are ready for writing
-        conn.writebufoffset += send( conn.fd , &conn.writebuf[0] ,
-                conn.writebuf.length() - conn.writebufoffset , 0 );
+        conn->writebufoffset += send( conn->fd , &conn->writebuf[0] ,
+                conn->writebuf.length() - conn->writebufoffset , 0 );
 
         // Have we finished writing the buffer?
-        if ( conn.writebufoffset == conn.writebuf.length() ) {
+        if ( conn->writebufoffset == conn->writebuf.length() ) {
             // Reset the write buffer
-            conn.writebufoffset = 0;
-            conn.writedone = true;
+            conn->writebufoffset = 0;
+            conn->writedone = true;
         }
         else {
             // We haven't finished writing, keep selecting
@@ -495,12 +495,12 @@ int GraphHost::sockets_writeh( SocketConnection& conn ) {
 /* Queue a buffer for writing. Returns 0 on success, returns -1 if buffer
  * wasn't queued. Only one buffer can be queued for writing at a time.
  */
-int GraphHost::sockets_queuewrite( SocketConnection& conn , char* buf ,
+int GraphHost::sockets_queuewrite( std::unique_ptr<SocketConnection>& conn , char* buf ,
         size_t buflength ) {
-    conn.writequeue.push( std::string( buf , buflength ) );
+    conn->writequeue.push( std::string( buf , buflength ) );
 
     // Select on write
-    conn.selectflags |= SocketConnection::Write;
+    conn->selectflags |= SocketConnection::Write;
     write( m_ipcfd_w , "r" , 1 );
 
     return 0;
