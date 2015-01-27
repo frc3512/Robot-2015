@@ -34,8 +34,10 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile( maxWheelSpeed , 3.f ) ,
     m_rightFrontGrbx = new GearBox<CANTalon>( -1, -1, -1, 2 );
     m_rightBackGrbx = new GearBox<CANTalon>( -1, -1, -1, 3 );
 
-    m_rightFrontGrbx->setReversed( true );
+    /*m_rightFrontGrbx->setReversed( true );
     m_rightBackGrbx->setReversed( true );
+    m_leftFrontGrbx->setReversed( true );
+    m_leftBackGrbx->setReversed( true ); */
     m_isDefencive = ( false );
     // c = PI * 10.16cm [wheel diameter]
     // dPerP = c / pulses
@@ -77,7 +79,7 @@ void DriveTrain::drive( float throttle , float turn , bool isQuickTurn ) {
     /* Apply joystick deadband
      * (Negate turn since joystick X-axis is reversed)
      */
-    throttle = -applyDeadband( throttle );
+    throttle = applyDeadband( throttle );
     turn = applyDeadband( turn );
 
     double negInertia = turn - m_oldTurn;
