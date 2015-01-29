@@ -4,10 +4,8 @@
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
 
-#include <cmath>
 #include <Encoder.h>
 #include <Solenoid.h>
-#include <SpeedController.h>
 
 #include <PIDController.h>
 
@@ -19,8 +17,8 @@ GearBox<T>::GearBox( int shifterChan ,
                      int motor2 ,
                      int motor3 ) {
     if ( encA != -1 && encB != -1 ) {
-        m_encoder = new Encoder( encA , encB );
-        m_pid = new PIDController( 0 , 0 , 0 , 0 , m_encoder , this );
+        m_encoder = std::make_unique<Encoder>( encA, encB );
+        m_pid = std::make_unique<PIDController>( 0, 0, 0, 0, m_encoder, this );
 
         m_havePID = true;
     }
@@ -32,7 +30,7 @@ GearBox<T>::GearBox( int shifterChan ,
     }
 
     if ( shifterChan != -1 ) {
-        m_shifter = new Solenoid( shifterChan );
+        m_shifter = std::make_unique<Solenoid>( shifterChan );
     }
     else {
         m_shifter = nullptr;
@@ -41,22 +39,17 @@ GearBox<T>::GearBox( int shifterChan ,
     m_isMotorReversed = false;
     m_isEncoderReversed = false;
 
-    m_targetGear = false;
-
     // Create motor controllers of specified template type
-    if ( motor1 != -1 ) {
-        m_motors.push_back( new T( motor1 ) );
-    }
+    m_motors.emplace_back( std::make_unique<T>(motor1) );
     if ( motor2 != -1 ) {
-        m_motors.push_back( new T( motor2 ) );
+        m_motors.emplace_back( std::make_unique<T>(motor2) );
     }
     if ( motor3 != -1 ) {
-        m_motors.push_back( new T( motor3 ) );
+        m_motors.emplace_back( std::make_unique<T>(motor3) );
     }
     if ( m_havePID ) {
         m_encoder->SetPIDSourceParameter( Encoder::kDistance );
 
-        // m_pid->SetPercentTolerance( 5.f );
         m_pid->SetAbsoluteTolerance( 1 );
 
         m_pid->Enable();
@@ -65,20 +58,7 @@ GearBox<T>::GearBox( int shifterChan ,
 
 template <class T>
 GearBox<T>::~GearBox() {
-    if ( m_havePID ) {
-        delete m_pid;
-        delete m_encoder;
-    }
 
-    if ( m_shifter != nullptr ) {
-        delete m_shifter;
-    }
-
-    // Free motors
-    for ( unsigned int i = 0 ; i < m_motors.size() ; i++ ) {
-        delete m_motors[i];
-    }
-    m_motors.clear();
 }
 
 template <class T>
@@ -89,20 +69,6 @@ void GearBox<T>::setSetpoint( float setpoint ) {
         }
 
         m_pid->SetSetpoint( setpoint );
-    }
-    else {
-        // TODO emit warning since PID doesn't work (possibly through logger?)
-    }
-}
-
-template <class T>
-float GearBox<T>::getSetpoint() const {
-    if ( m_havePID ) {
-        return m_pid->GetSetpoint();
-    }
-    else {
-        // TODO emit warning since PID doesn't work (possibly through logger?)
-        return 0.f;
     }
 }
 
@@ -118,12 +84,17 @@ void GearBox<T>::setManual( float value ) {
 }
 
 template <class T>
-float GearBox<T>::getManual() const {
-    if ( !m_isMotorReversed ) {
-        return m_motors[0]->Get();
+float GearBox<T>::get() const {
+    if ( m_havePID && m_pid->IsEnabled() ) {
+        return m_motors[0]->GetSetpoint();
     }
     else {
-        return -m_motors[0]->Get();
+        if ( !m_isMotorReversed ) {
+            return m_motors[0]->Get();
+        }
+        else {
+            return -m_motors[0]->Get();
+        }
     }
 }
 
@@ -132,18 +103,12 @@ void GearBox<T>::setPID( float p , float i , float d ) {
     if ( m_havePID ) {
         m_pid->SetPID( p , i , d );
     }
-    else {
-        // TODO emit warning since PID doesn't work (possibly through logger?)
-    }
 }
 
 template <class T>
 void GearBox<T>::setF( float f ) {
     if ( m_havePID ) {
         m_pid->SetPID( m_pid->GetP() , m_pid->GetI() , m_pid->GetD() , f );
-    }
-    else {
-        // TODO emit warning since PID doesn't work (possibly through logger?)
     }
 }
 
@@ -155,8 +120,7 @@ void GearBox<T>::setDistancePerPulse( double distancePerPulse ) {
 }
 
 template <class T>
-void GearBox<T>::setPIDSourceParameter( PIDSource::PIDSourceParameter pidSource )
-{
+void GearBox<T>::setPIDSourceParameter( PIDSource::PIDSourceParameter pidSource ) {
     if ( m_havePID ) {
         m_encoder->SetPIDSourceParameter( pidSource );
     }
@@ -167,9 +131,6 @@ void GearBox<T>::resetEncoder() {
     if ( m_havePID ) {
         m_encoder->Reset();
     }
-    else {
-        // TODO emit warning since PID doesn't work (possibly through logger?)
-    }
 }
 
 template <class T>
@@ -178,7 +139,6 @@ double GearBox<T>::getDistance() const {
         return m_encoder->GetDistance();
     }
     else {
-        // TODO emit warning since PID doesn't work (possibly through logger?)
         return 0.f;
     }
 }
@@ -189,7 +149,6 @@ double GearBox<T>::getRate() const {
         return m_encoder->GetRate();
     }
     else {
-        // TODO emit warning since PID doesn't work (possibly through logger?)
         return 0.f;
     }
 }
@@ -217,7 +176,7 @@ bool GearBox<T>::isEncoderReversed() const {
 template <class T>
 void GearBox<T>::setGear( bool gear ) {
     if ( m_shifter != nullptr ) {
-        m_targetGear = gear;
+        m_shifter->Set( gear );
     }
 }
 
@@ -233,34 +192,14 @@ bool GearBox<T>::getGear() const {
 
 template <class T>
 void GearBox<T>::PIDWrite( float output ) {
-    for ( unsigned int i = 0 ; i < m_motors.size() ; i++ ) {
+    for ( auto& motor : m_motors ) {
         if ( !m_isMotorReversed ) {
-            m_motors[i]->Set( output );
+            motor->Set( output );
         }
         else {
-            m_motors[i]->Set( -output );
+            motor->Set( -output );
         }
     }
-
-    updateGear();
-}
-
-template <class T>
-void GearBox<T>::updateGear() {
-    if ( m_shifter == nullptr || m_targetGear == m_shifter->Get() ) {
-        return;
-    }
-
-    for ( unsigned int i = 0 ; i < m_motors.size() ; i++ ) {
-        if ( fabs( m_motors[i]->Get() ) < 0.12 ) {
-            return;
-        }
-    }
-
-    // if ( (m_pid->IsEnabled() && fabs(m_encoder->GetRate()) > 50) || !m_pid->IsEnabled()) {
-    m_shifter->Set( m_targetGear );
-
-    // }
 }
 
 template <class T>
@@ -278,4 +217,3 @@ void GearBox<T>::resetPID() {
     m_pid->Reset();
     m_pid->Enable();
 }
-

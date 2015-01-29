@@ -8,14 +8,14 @@
 #define GEARBOX_HPP
 
 #include <vector>
+#include <memory>
 #include <PIDOutput.h>
 #include <PIDSource.h>
-#include <iostream>
+#include <CANTalon.h>
 
 class Encoder;
 class PIDController;
 class Solenoid;
-class SpeedController;
 
 /* Notes:
  * The template type of this template class is only used for creating the right
@@ -38,13 +38,11 @@ public:
     // Enables PID controller automatically and sets its setpoint
     void setSetpoint( float setpoint );
 
-    // Returns setpoint of PID controller
-    float getSetpoint() const;
-
     // Disables PID controller and sets the motor speeds manually
     void setManual( float value );
 
-    float getManual() const;
+    // Returns current speed/position/voltage setting of motor controller(s)
+    float get() const;
 
     // Set P, I, and D terms for PID controller
     void setPID( float p , float i , float d );
@@ -83,32 +81,94 @@ public:
     // Gets current gearbox gear if available (false if not)
     bool getGear() const;
 
+    bool onTarget();
+
+    void resetPID();
+
+private:
     // Sets motor speed to 'output'
     void PIDWrite( float output );
 
-    // updates the gear to targetState if it is safe todo so.
-    void updateGear();
+    std::unique_ptr<PIDController> m_pid;
+    std::unique_ptr<Encoder> m_encoder;
+    std::unique_ptr<Solenoid> m_shifter;
+
+    bool m_isMotorReversed;
+    bool m_isEncoderReversed;
+    bool m_havePID;
+
+    std::vector<std::unique_ptr<T>> m_motors;
+};
+
+#include "GearBox.inl"
+
+template <>
+class GearBox<CANTalon> {
+public:
+    GearBox( int shifterChan, int motor1, int motor2 = -1, int motor3 = -1 );
+
+    // Enables PID controller automatically and sets its setpoint
+    void setSetpoint( float setpoint );
+
+    // Disables PID controller and sets the motor speeds manually
+    void setManual( float value );
+
+    // Returns current speed/position/voltage setting of motor controller(s)
+    float get();
+
+    // Set P, I, and D terms for PID controller
+    void setPID( float p, float i, float d );
+
+    // Set feed-forward term on PID controller
+    void setF( float f );
+
+    void setDistancePerPulse( double distancePerPulse );
+
+    // Determines whether encoder returns distance or rate from PIDGet()
+    void setControlMode( CANTalon::ControlMode ctrlMode = CANTalon::kPercentVbus );
+
+    // Resets encoder distance to 0
+    void resetEncoder();
+
+    // Calls respective functions of Encoder class internally
+    double getDistance();
+    double getRate();
+
+    // Reverses gearbox drive direction
+    void setMotorReversed( bool reverse );
+
+    // Returns motor reversal state of gearbox
+    bool isMotorReversed() const;
+
+    // Reverses gearbox drive direction
+    void setEncoderReversed( bool reverse );
+
+    // Returns motor reversal state of gearbox
+    bool isEncoderReversed() const;
+
+    // Shifts gearbox to another gear if available
+    void setGear( bool gear );
+
+    // Gets current gearbox gear if available (false if not)
+    bool getGear() const;
 
     bool onTarget();
 
     void resetPID();
 
-    PIDController* m_pid;
-
 private:
-    Encoder* m_encoder;
-
-    Solenoid* m_shifter;
+    std::unique_ptr<Solenoid> m_shifter;
 
     bool m_isMotorReversed;
     bool m_isEncoderReversed;
-    bool m_havePID;
-    bool m_targetGear;
 
-    std::vector<SpeedController*> m_motors;
+    // Conversion factor for setpoints with respect to encoder readings
+    double m_distancePerPulse;
+
+    std::vector<std::unique_ptr<CANTalon>> m_motors;
 };
 
-#include "GearBox.inl"
+#include "GearBoxCANTalon.inl"
 
 #endif // GEARBOX_HPP
 

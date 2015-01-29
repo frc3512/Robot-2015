@@ -34,10 +34,6 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile( maxWheelSpeed , 3.f ) ,
     m_rightFrontGrbx = new GearBox<CANTalon>( -1, -1, -1, 2 );
     m_rightBackGrbx = new GearBox<CANTalon>( -1, -1, -1, 3 );
 
-    /*m_rightFrontGrbx->setReversed( true );
-    m_rightBackGrbx->setReversed( true );
-    m_leftFrontGrbx->setReversed( true );
-    m_leftBackGrbx->setReversed( true ); */
     m_isDefencive = ( false );
     // c = PI * 10.16cm [wheel diameter]
     // dPerP = c / pulses
@@ -62,15 +58,10 @@ DriveTrain::~DriveTrain() {
 
 void DriveTrain::drive( float throttle , float turn , bool isQuickTurn ) {
     // Modified Cheesy Drive; base code courtesy of FRC Team 254
-	/* m_leftFrontGrbx->setManual( 1 );
-	m_rightFrontGrbx->setManual( 1 );
-	m_leftBackGrbx->setManual( 1 );
-	m_rightBackGrbx->setManual( 1 );
-	return; */
 
     if ( m_isDefencive == true ) {
-        throttle = throttle * -1;
-        turn = turn * -1;
+        throttle *= -1;
+        turn *= -1;
     }
     // Limit values to [-1 .. 1]
     throttle = limit( throttle , 1.f );
@@ -203,9 +194,6 @@ void DriveTrain::drive( float throttle , float turn , bool isQuickTurn ) {
     	m_leftBackGrbx->setManual( 0.0 );
     	m_rightBackGrbx->setManual( 0.0 );
     }
-
-    // std::cout << "left PWM:" << leftPwm << std::endl;
-    // std::cout << "right PWM:" << rightPwm << std::endl;
 }
 
 void DriveTrain::setDeadband( float band ) {
@@ -248,13 +236,13 @@ void DriveTrain::setRightSetpoint( double setpt ) {
 }
 
 void DriveTrain::setLeftManual( float value ) {
-    m_leftFrontGrbx->PIDWrite( value );
-    m_leftBackGrbx->PIDWrite( value );
+    m_leftFrontGrbx->setManual( value );
+    m_leftBackGrbx->setManual( value );
 }
 
 void DriveTrain::setRightManual( float value ) {
-    m_rightFrontGrbx->PIDWrite( value );
-    m_rightBackGrbx->PIDWrite( value );
+    m_rightFrontGrbx->setManual( value );
+    m_rightBackGrbx->setManual( value );
 }
 
 double DriveTrain::getLeftDist() {
@@ -278,13 +266,13 @@ double DriveTrain::getRightRate() {
 }
 
 double DriveTrain::getLeftSetpoint() {
-    return m_leftFrontGrbx->getSetpoint();
-    return m_leftBackGrbx->getSetpoint();
+    return m_leftFrontGrbx->get();
+    return m_leftBackGrbx->get();
 }
 
 double DriveTrain::getRightSetpoint() {
-    return m_rightFrontGrbx->getSetpoint();
-    return m_rightBackGrbx->getSetpoint();
+    return m_rightFrontGrbx->get();
+    return m_rightBackGrbx->get();
 }
 
 void DriveTrain::setGear( bool gear ) {
