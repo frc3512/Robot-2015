@@ -31,6 +31,7 @@ public:
 	void stopped(bool state);
 	void intakeWheels ( IntakeMotorState state );
 	IntakeMotorState getIntakeWheels();
+	void setIntakeMotorState(float value);
 
 
 private:
@@ -41,6 +42,8 @@ private:
 	Solenoid *m_intakeVertical;
 	Solenoid *m_intakeGrabber;
 	CANTalon *m_intakeWheels;
+	CANTalon *m_liftmotor_0;
+	CANTalon *m_liftmotor_1;
 };
 
 #endif /* SRC_ELEVATOR_H_ */

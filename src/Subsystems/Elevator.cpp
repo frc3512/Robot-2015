@@ -11,7 +11,10 @@ Elevator::Elevator() {
 	m_grabSolenoid = new Solenoid(1);
 	m_intakeVertical = new Solenoid(2);
 	m_intakeGrabber = new Solenoid(3);
-	m_intakeWheels = new CANTalon(4);
+	m_intakeWheels = new CANTalon(6);
+
+	m_liftmotor_0 = new CANTalon(4);
+	m_liftmotor_1 = new CANTalon(5);
 }
 
 Elevator::~Elevator() {
@@ -57,4 +60,9 @@ void Elevator::intakeWheels(IntakeMotorState state) {
 
 Elevator::IntakeMotorState Elevator::getIntakeWheels() {
 	return m_intakeState;
+}
+
+void Elevator::setIntakeMotorState(float value) {
+	m_liftmotor_0->Set(value);
+	m_liftmotor_1->Set(value);
 }

@@ -106,6 +106,8 @@ void Robot::OperatorControl() {
         		shootStick->GetTrigger();
 		*/
 
+        ev->setIntakeMotorState(shootStick->GetY());
+
         /* Trailing edge of trigger press */
         if(elevatorButtons.releasedButton(1)) {
         	// ...
