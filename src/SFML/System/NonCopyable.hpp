@@ -65,7 +65,7 @@ private:
     /// produce an error if the first protection was inefficient.
     ///
     ////////////////////////////////////////////////////////////
-    NonCopyable( const NonCopyable& );
+    NonCopyable(const NonCopyable&);
 
     ////////////////////////////////////////////////////////////
     /// \brief Disabled assignment operator
@@ -77,7 +77,7 @@ private:
     /// produce an error if the first protection was inefficient.
     ///
     ////////////////////////////////////////////////////////////
-    NonCopyable& operator=( const NonCopyable& );
+    NonCopyable& operator=(const NonCopyable&);
 };
 } // namespace sf
 

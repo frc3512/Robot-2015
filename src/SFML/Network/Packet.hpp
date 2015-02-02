@@ -41,8 +41,8 @@ typedef basic_string<wchar_t> wstring;
 #include <vector>
 #include <cstdint>
 
-uint64_t htonll( uint64_t value );
-uint64_t ntohll( uint64_t value );
+uint64_t htonll(uint64_t value);
+uint64_t ntohll(uint64_t value);
 
 namespace sf {
 class TcpSocket;
@@ -55,7 +55,7 @@ class UdpSocket;
 ////////////////////////////////////////////////////////////
 class Packet {
     // A bool-like type that cannot be converted to integer or pointer types
-    typedef bool (Packet::* BoolType)( std::size_t );
+    typedef bool (Packet::* BoolType)(std::size_t);
 
 public:
     Packet();
@@ -63,7 +63,7 @@ public:
     virtual ~Packet();
 
     // Append data to the end of the packet
-    void append( const void* data , std::size_t sizeInBytes );
+    void append(const void* data, std::size_t sizeInBytes);
 
     // Empty the packet
     void clear();
@@ -129,38 +129,38 @@ public:
     operator BoolType() const;
 
     // Overloads of operator >> to read data from the packet
-    Packet& operator>>( bool&           data );
-    Packet& operator>>( int8_t&         data );
-    Packet& operator>>( uint8_t&        data );
-    Packet& operator>>( int16_t&        data );
-    Packet& operator>>( uint16_t&       data );
-    Packet& operator>>( int32_t&        data );
-    Packet& operator>>( uint32_t&       data );
-    Packet& operator>>( int64_t&        data );
-    Packet& operator>>( uint64_t&       data );
-    Packet& operator>>( float&          data );
-    Packet& operator>>( double&         data );
-    Packet& operator>>( char*           data );
-    Packet& operator>>( std::string&    data );
-    Packet& operator>>( wchar_t*        data );
-    Packet& operator>>( std::wstring&   data );
+    Packet& operator>>(bool&           data);
+    Packet& operator>>(int8_t&         data);
+    Packet& operator>>(uint8_t&        data);
+    Packet& operator>>(int16_t&        data);
+    Packet& operator>>(uint16_t&       data);
+    Packet& operator>>(int32_t&        data);
+    Packet& operator>>(uint32_t&       data);
+    Packet& operator>>(int64_t&        data);
+    Packet& operator>>(uint64_t&       data);
+    Packet& operator>>(float&          data);
+    Packet& operator>>(double&         data);
+    Packet& operator>>(char*           data);
+    Packet& operator>>(std::string&    data);
+    Packet& operator>>(wchar_t*        data);
+    Packet& operator>>(std::wstring&   data);
 
     // Overloads of operator << to write data into the packet
-    Packet& operator<<( bool data );
-    Packet& operator<<( int8_t data );
-    Packet& operator<<( uint8_t data );
-    Packet& operator<<( int16_t data );
-    Packet& operator<<( uint16_t data );
-    Packet& operator<<( int32_t data );
-    Packet& operator<<( uint32_t data );
-    Packet& operator<<( int64_t data );
-    Packet& operator<<( uint64_t data );
-    Packet& operator<<( float data );
-    Packet& operator<<( double data );
-    Packet& operator<<( const char*           data );
-    Packet& operator<<( const std::string&    data );
-    Packet& operator<<( const wchar_t*        data );
-    Packet& operator<<( const std::wstring&   data );
+    Packet& operator<<(bool data);
+    Packet& operator<<(int8_t data);
+    Packet& operator<<(uint8_t data);
+    Packet& operator<<(int16_t data);
+    Packet& operator<<(uint16_t data);
+    Packet& operator<<(int32_t data);
+    Packet& operator<<(uint32_t data);
+    Packet& operator<<(int64_t data);
+    Packet& operator<<(uint64_t data);
+    Packet& operator<<(float data);
+    Packet& operator<<(double data);
+    Packet& operator<<(const char*           data);
+    Packet& operator<<(const std::string&    data);
+    Packet& operator<<(const wchar_t*        data);
+    Packet& operator<<(const std::wstring&   data);
 
 protected:
     friend class TcpSocket;
@@ -184,7 +184,7 @@ protected:
     /// \see onReceive
     ///
     ////////////////////////////////////////////////////////////
-    virtual const void* onSend( std::size_t& size );
+    virtual const void* onSend(std::size_t& size);
 
     ////////////////////////////////////////////////////////////
     /// \brief Called after the packet is received over the network
@@ -203,18 +203,18 @@ protected:
     /// \see onSend
     ///
     ////////////////////////////////////////////////////////////
-    virtual void onReceive( const void* data , std::size_t size );
+    virtual void onReceive(const void* data, std::size_t size);
 
 private:
     // Disallow comparisons between packets
-    bool operator==( const Packet& right ) const;
-    bool operator!=( const Packet& right ) const;
+    bool operator==(const Packet& right) const;
+    bool operator!=(const Packet& right) const;
 
     /* Returns 'true' if the packet can extract a given number of bytes
      *
      * This function updates accordingly the state of the packet.
      */
-    bool checkSize( std::size_t size );
+    bool checkSize(std::size_t size);
 
     std::vector<char> m_packetData;    ///< Data stored in the packet
     std::size_t m_readPos; ///< Current reading position in the packet

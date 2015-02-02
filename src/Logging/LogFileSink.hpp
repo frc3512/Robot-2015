@@ -16,14 +16,14 @@
  */
 class LogFileSink : public LogSinkBase {
 public:
-    LogFileSink( std::string filename );
+    LogFileSink(std::string filename);
     virtual ~LogFileSink();
 
     /*!
      *  Write an event to the logfile.
      *  \param event The event to log.
      */
-    void logEvent( LogEvent event );
+    void logEvent(LogEvent event);
 
 private:
     std::ofstream m_logfile;

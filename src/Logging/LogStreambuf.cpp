@@ -7,7 +7,7 @@
 
 #include "LogStreambuf.hpp"
 
-LogStreambuf::LogStreambuf( Logger* logger ) {
+LogStreambuf::LogStreambuf(Logger* logger) {
     // TODO Auto-generated constructor stub
     m_logger = logger;
     m_level = LogEvent::VERBOSE_NONE;
@@ -17,13 +17,13 @@ LogStreambuf::~LogStreambuf() {
     // TODO Auto-generated destructor stub
 }
 
-void LogStreambuf::setLevel( LogEvent::VerbosityLevel level ) {
+void LogStreambuf::setLevel(LogEvent::VerbosityLevel level) {
     m_level = level;
 }
 
 int LogStreambuf::sync() {
-    if ( m_level != LogEvent::VERBOSE_NONE ) {
-        m_logger->logEvent( LogEvent( m_buf , m_level ) );
+    if (m_level != LogEvent::VERBOSE_NONE) {
+        m_logger->logEvent(LogEvent(m_buf, m_level));
     }
 
     m_buf = "";
@@ -32,8 +32,8 @@ int LogStreambuf::sync() {
     return 0;
 }
 
-std::streamsize LogStreambuf::xsputn( const char* s , std::streamsize n ) {
-    m_buf += std::string( s , n );
+std::streamsize LogStreambuf::xsputn(const char* s, std::streamsize n) {
+    m_buf += std::string(s, n);
 
     return n;
 }

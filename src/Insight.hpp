@@ -25,7 +25,7 @@ class Insight {
 public:
     virtual ~Insight();
 
-    static Insight* getInstance( unsigned short dsPort );
+    static Insight* getInstance(unsigned short dsPort);
 
     // Receives control commands from Driver Station and processes them
     const std::string receiveFromDS();
@@ -34,14 +34,14 @@ public:
     bool hasNewData() const;
 
     // Provides access to target data
-    const std::pair<char , char>& getTarget( size_t i );
+    const std::pair<char, char>& getTarget(size_t i);
     size_t getNumTargets() const;
 
 private:
-    Insight( unsigned short portNumber );
+    Insight(unsigned short portNumber);
 
-    Insight( const Insight& );
-    Insight& operator=( const Insight& );
+    Insight(const Insight&);
+    Insight& operator=(const Insight&);
 
     static Insight* m_insight;
 
@@ -52,7 +52,7 @@ private:
     char m_recvBuffer[256]; // buffer for Insight packets
     size_t m_recvAmount; // holds number of bytes received from Driver Station
 
-    std::vector<std::pair<char , char>> m_targets;
+    std::vector<std::pair<char, char>> m_targets;
     bool m_hasNewData;
 
     // Allows class to clean itself up when the robot task exits

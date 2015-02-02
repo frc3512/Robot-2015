@@ -5,11 +5,11 @@
 // =============================================================================
 
 template <class T>
-T DriveTrain::limit( T value , T limit ) {
-    if ( value > limit ) {
+T DriveTrain::limit(T value, T limit) {
+    if (value > limit) {
         return limit;
     }
-    else if ( value < -limit ) {
+    else if (value < -limit) {
         return -limit;
     }
     else {

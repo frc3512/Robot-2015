@@ -30,10 +30,10 @@ public:
     void Autonomous();
     void Disabled();
     void Test();
-    bool testDriveTrain( bool shifterState ,
-                         bool direction ,
-                         float lowerBound ,
-                         float upperBound );
+    bool testDriveTrain(bool shifterState,
+                        bool direction,
+                        float lowerBound,
+                        float upperBound);
     void calibrateTalons();
 
     bool checkReflectiveStrips();
@@ -69,7 +69,7 @@ private:
     GraphHost pidGraph;
 
     Insight* insight;
-    DriverStation *ds;
+    DriverStation* ds;
     Elevator* ev;
     Logger* logger1;
     LogFileSink* logFileSink;

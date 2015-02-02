@@ -21,10 +21,10 @@ public:
     /* Drives robot with given speed and turn values [-1..1].
      * This is a convenience function for use in Operator Control.
      */
-    void drive( float throttle , float turn , bool isQuickTurn = false );
+    void drive(float throttle, float turn, bool isQuickTurn = false);
 
     // Sets joystick deadband
-    void setDeadband( float band );
+    void setDeadband(float band);
 
     // Set encoder distances to 0
     void resetEncoders();
@@ -33,12 +33,12 @@ public:
     void reloadPID();
 
     // Set wheel setpoints (see GearBox::setSetpoint(float))
-    void setLeftSetpoint( double setpt );
-    void setRightSetpoint( double setpt );
+    void setLeftSetpoint(double setpt);
+    void setRightSetpoint(double setpt);
 
     // Directly set wheel speeds [0..1] (see GearBox::setManual(float))
-    void setLeftManual( float value );
-    void setRightManual( float value );
+    void setLeftManual(float value);
+    void setRightManual(float value);
 
     // Returns encoder distances
     double getLeftDist();
@@ -53,13 +53,13 @@ public:
     double getRightSetpoint();
 
     // Shifts internal gearboxes
-    void setGear( bool gear );
+    void setGear(bool gear);
 
     // Returns gear of internal gearboxes (true assumed to be high gear
     // TODO check if 'true' is high gear
     bool getGear() const;
 
-    void setDefencive( bool defencive );
+    void setDefencive(bool defencive);
 
     bool getDefencive();
 
@@ -86,11 +86,11 @@ private:
     /* Zeroes value if its inside deadband range, and rescales values outside
      * of it
      */
-    float applyDeadband( float value );
+    float applyDeadband(float value);
 
     // Limits 'value' to within +- 'limit' (limit should be positive)
     template <class T>
-    T limit( T value , T limit );
+    T limit(T value, T limit);
 };
 
 #include "DriveTrain.inl"

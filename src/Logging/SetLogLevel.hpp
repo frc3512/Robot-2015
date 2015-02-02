@@ -25,10 +25,10 @@ public:
      *  \param level The verbosity level to use for
      *  the next message.
      */
-    SetLogLevel( LogEvent::VerbosityLevel level );
+    SetLogLevel(LogEvent::VerbosityLevel level);
     virtual ~SetLogLevel();
 
-    friend LogStream& operator<<( LogStream& os , const SetLogLevel& in );
+    friend LogStream& operator<<(LogStream& os, const SetLogLevel& in);
 
 private:
     int m_level;

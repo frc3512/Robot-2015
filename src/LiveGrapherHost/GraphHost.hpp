@@ -36,14 +36,14 @@
 
 #include "SocketConnection.hpp"
 
-struct [[gnu::packed]] graph_payload_t {
+struct[[gnu::packed]] graph_payload_t{
     char type; // Set to 'd' to identify this as a graph payload packet
     char dataset[15];
     uint64_t x;
     float y;
 };
 
-struct [[gnu::packed]] graph_list_t {
+struct[[gnu::packed]] graph_list_t{
     char type;
     char dataset[15];
     char end;
@@ -52,7 +52,7 @@ struct [[gnu::packed]] graph_list_t {
 
 class GraphHost {
 public:
-    GraphHost( int port );
+    GraphHost(int port);
     virtual ~GraphHost();
 
     /* * Send data (y value) for a given dataset to remote client
@@ -61,12 +61,12 @@ public:
      *       -1 = host not running
      *       0 = data sent successfully
      */
-    int graphData( float value , std::string dataset );
+    int graphData(float value, std::string dataset);
 
     /* Sets time interval after which data is sent to graph (milliseconds per
      * sample)
      */
-    void setSendInterval( uint32_t milliseconds );
+    void setSendInterval(uint32_t milliseconds);
 
     /* Returns true if the time between the last data transmission is greater
      * than the sending interval time
@@ -99,17 +99,18 @@ private:
 
     void sockets_threadmain();
 
-    static int sockets_listen( int port , sa_family_t sin_family ,
-            uint32_t s_addr );
-    void sockets_accept( int listenfd );
-    int sockets_readh( std::unique_ptr<SocketConnection>& conn );
-    int sockets_readdoneh( char* inbuf , size_t bufsize ,
-            std::unique_ptr<SocketConnection>& conn );
-    int sockets_sendlist( std::unique_ptr<SocketConnection>& conn );
-    int sockets_writeh( std::unique_ptr<SocketConnection>& conn );
-    int sockets_queuewrite( std::unique_ptr<SocketConnection>& conn , char* buf ,
-            size_t buflength );
-    int socket_addgraph( std::string& dataset );
+    static int sockets_listen(int port, sa_family_t sin_family,
+                              uint32_t s_addr);
+    void sockets_accept(int listenfd);
+    int sockets_readh(std::unique_ptr<SocketConnection>& conn);
+    int sockets_readdoneh(char* inbuf, size_t bufsize,
+                          std::unique_ptr<SocketConnection>& conn);
+    int sockets_sendlist(std::unique_ptr<SocketConnection>& conn);
+    int sockets_writeh(std::unique_ptr<SocketConnection>& conn);
+    int sockets_queuewrite(std::unique_ptr<SocketConnection>& conn, char* buf,
+                           size_t buflength);
+    int socket_addgraph(std::string& dataset);
 };
 
 #endif // GRAPHHOST_HPP
+

@@ -54,14 +54,14 @@
 class DriverStationDisplay : public sf::Packet {
 public:
     enum StatusLight {
-        active ,
-        standby ,
+        active,
+        standby,
         inactive
     };
 
     virtual ~DriverStationDisplay();
 
-    static DriverStationDisplay& getInstance( unsigned short dsPort );
+    static DriverStationDisplay& getInstance(unsigned short dsPort);
 
     // Empties internal packet of data
     void clear();
@@ -70,16 +70,16 @@ public:
      * packet to be sent to the Driver Station. If the pointer is nullptr, this
      * class's internal packet is sent instead.
      */
-    void sendToDS( sf::Packet* userData = nullptr );
+    void sendToDS(sf::Packet* userData = nullptr);
 
     // Receives control commands from Driver Station and processes them
     const std::string receiveFromDS();
 
     // Add and remove autonomous functions
     template <class T>
-    void addAutonMethod( const std::string& methodName ,
-                         void (T::* function)() ,
-                         T* object );
+    void addAutonMethod(const std::string & methodName,
+                        void (T::* function)(),
+                        T * object);
     void deleteAllMethods();
 
     // Runs autonomous function currently selected
@@ -96,20 +96,20 @@ public:
      * compile time. floats and doubles are converted to strings because VxWorks
      * messes up floats over the network.
      */
-    void addElementData( std::string ID , StatusLight data );
-    void addElementData( std::string ID , bool data );
-    void addElementData( std::string ID , int8_t data );
-    void addElementData( std::string ID , int32_t data );
-    void addElementData( std::string ID , uint32_t data );
-    void addElementData( std::string ID , std::string data );
-    void addElementData( std::string ID , float data );
-    void addElementData( std::string ID , double data );
+    void addElementData(std::string ID, StatusLight data);
+    void addElementData(std::string ID, bool data);
+    void addElementData(std::string ID, int8_t data);
+    void addElementData(std::string ID, int32_t data);
+    void addElementData(std::string ID, uint32_t data);
+    void addElementData(std::string ID, std::string data);
+    void addElementData(std::string ID, float data);
+    void addElementData(std::string ID, double data);
 
 private:
-    DriverStationDisplay( unsigned short portNumber );
+    DriverStationDisplay(unsigned short portNumber);
 
-    DriverStationDisplay( const DriverStationDisplay& );
-    DriverStationDisplay& operator=( const DriverStationDisplay& ) = delete;
+    DriverStationDisplay(const DriverStationDisplay&);
+    DriverStationDisplay& operator=(const DriverStationDisplay&) = delete;
 
     sf::UdpSocket m_socket; // socket for sending data to Driver Station
     sf::IpAddress m_dsIP; // IP address of Driver Station

@@ -1,9 +1,9 @@
-//=============================================================================
-//File Name: BezierTrapezoidProfile.hpp
-//Description: Provides trapezoidal velocity control and follows a given Bézier
+// =============================================================================
+// File Name: BezierTrapezoidProfile.hpp
+// Description: Provides trapezoidal velocity control and follows a given Bézier
 //             curve
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 /* Implementation of trapezoid motion profile translated to C++; base Java code
  * courtesy of FRC Team 254; modifications for Bézier curve by FRC Team 3512.
@@ -23,7 +23,7 @@
 
 class BezierTrapezoidProfile : public TrapezoidProfile {
 public:
-    BezierTrapezoidProfile( double maxV , double timeToMaxV );
+    BezierTrapezoidProfile(double maxV, double timeToMaxV);
     virtual ~BezierTrapezoidProfile();
 
     /* curTime is current time
@@ -36,7 +36,7 @@ public:
      *
      * returns updated uncompensated setpoint (see double getMidSetpoint())
      */
-    double updateSetpoint( double curTime , double curSource = 0.0 );
+    double updateSetpoint(double curTime, double curSource = 0.0);
 
     /* Returns uncompensated setpoint for use in control of systems other than
      * the drive train
@@ -52,10 +52,10 @@ public:
      *
      * returns starting setpoint
      */
-    double setGoal( const BezierCurve& curve , double t );
+    double setGoal(const BezierCurve& curve, double t);
 
     // Sets distance between two sides of drive train
-    void setWidth( double width );
+    void setWidth(double width);
 
 private:
     // The robot follows this by turning in the motion profile
@@ -70,13 +70,14 @@ private:
      * curSource is the current position
      * t initializes m_lastTime
      */
-    double setGoal( double t , double goal , double curSource = 0.0 );
+    double setGoal(double t, double goal, double curSource = 0.0);
 
     /* t is time elapsed since start of motion
      * v is current setpoint velocity of middle of robot
      */
-    double getLeftVelocity( double t , double v ) const;
-    double getRightVelocity( double t , double v ) const;
+    double getLeftVelocity(double t, double v) const;
+    double getRightVelocity(double t, double v) const;
 };
 
 #endif // BEZIER_TRAPEZOID_PROFILE_HPP
+

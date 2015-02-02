@@ -2,51 +2,50 @@
 #include <cmath>
 #include "DriverStation.h"
 
-Robot::Robot() : settings( "/home/lvuser/RobotSettings.txt" ) ,
-                 drive1Buttons( 0 ) ,
-                 drive2Buttons( 1 ) ,
-                 elevatorButtons( 2 ) ,
-                 dsDisplay( DriverStationDisplay::getInstance(
-                     settings.getInt( "DS_Port" ) ) ) ,
-                 pidGraph( 3513 ) {
-
-	std::cout << "Constructor" << std::endl;
+Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
+                 drive1Buttons(0),
+                 drive2Buttons(1),
+                 elevatorButtons(2),
+                 dsDisplay(DriverStationDisplay::getInstance(
+                               settings.getInt("DS_Port"))),
+                 pidGraph(3513) {
+    std::cout << "Constructor" << std::endl;
 
     robotDrive = new DriveTrain();
 
-    driveStick1 = new Joystick( 0 );
-    driveStick2 = new Joystick( 1 );
-    shootStick = new Joystick( 2 );
+    driveStick1 = new Joystick(0);
+    driveStick2 = new Joystick(1);
+    shootStick = new Joystick(2);
     autonTimer = new Timer();
     displayTimer = new Timer();
     ev = new Elevator();
 
 
     /* dsDisplay.addAutonMethod( "DriveForward Autonomous" ,
-                                   &Robot::DriveForwardAuton ,
-                                   this );
-    dsDisplay.addAutonMethod( "Right/Left Autonomous" ,
-                                   &Robot::RightLeftAuton ,
-                                   this );
-    dsDisplay.addAutonMethod( "MotionProfile" ,
-                                   &Robot::AutonMotionProfile ,
-                                   this );
-    dsDisplay.addAutonMethod( "Side Auton" , &Robot::SideAuton , this ); */
-    dsDisplay.addAutonMethod( "Noop Auton" , &Robot::NoopAuton , this );
+     *                              &Robot::DriveForwardAuton ,
+     *                              this );
+     *  dsDisplay.addAutonMethod( "Right/Left Autonomous" ,
+     *                              &Robot::RightLeftAuton ,
+     *                              this );
+     *  dsDisplay.addAutonMethod( "MotionProfile" ,
+     *                              &Robot::AutonMotionProfile ,
+     *                              this );
+     *  dsDisplay.addAutonMethod( "Side Auton" , &Robot::SideAuton , this ); */
+    dsDisplay.addAutonMethod("Noop Auton", &Robot::NoopAuton, this);
 
-    pidGraph.setSendInterval( 200 );
+    pidGraph.setSendInterval(200);
 
-    insight = Insight::getInstance( settings.getInt( "Insight_Port" ) );
+    insight = Insight::getInstance(settings.getInt("Insight_Port"));
 
     logger1 = new Logger();
-    ls = new LogStream( logger1 );
-    logFileSink = new LogFileSink( "/home/admin/LogFile.txt" );
+    ls = new LogStream(logger1);
+    logFileSink = new LogFileSink("/home/admin/LogFile.txt");
     logServerSink = new LogServerSink();
-    logger1->addLogSink( logFileSink );
-    logger1->addLogSink( logServerSink );
-    logFileSink->setVerbosityLevels( LogEvent::VERBOSE_ALL );
-    logServerSink->setVerbosityLevels( LogEvent::VERBOSE_ALL );
-    logServerSink->startServer( 4097 );
+    logger1->addLogSink(logFileSink);
+    logger1->addLogSink(logServerSink);
+    logFileSink->setVerbosityLevels(LogEvent::VERBOSE_ALL);
+    logServerSink->setVerbosityLevels(LogEvent::VERBOSE_ALL);
+    logServerSink->startServer(4097);
     displayTimer->Start();
 }
 
@@ -66,81 +65,82 @@ Robot::~Robot() {
     delete logServerSink;
 }
 void Robot::calibrateTalons() {
-    robotDrive->drive( 1 , 0 );
-    Wait( 3.0 );
-    robotDrive->drive( 0 , 0 );
-    Wait( 3.0 );
-    robotDrive->drive( -1 , 0 );
-    Wait( 3.0 );
-    robotDrive->drive( 0 , 0 );
-    Wait( 3.0 );
+    robotDrive->drive(1, 0);
+    Wait(3.0);
+    robotDrive->drive(0, 0);
+    Wait(3.0);
+    robotDrive->drive(-1, 0);
+    Wait(3.0);
+    robotDrive->drive(0, 0);
+    Wait(3.0);
 }
 
 void Robot::OperatorControl() {
-
     robotDrive->reloadPID();
 
-    while(IsEnabled() && IsOperatorControl()) {
+    while (IsEnabled() && IsOperatorControl()) {
         // DS_PrintOut();
 
         // arcade Drive
-        if ( driveStick2->GetRawButton( 2 ) ) {
-            robotDrive->drive( driveStick1->GetY() , driveStick2->GetX() ,
-                               true );
+        if (driveStick2->GetRawButton(2)) {
+            robotDrive->drive(driveStick1->GetY(), driveStick2->GetX(),
+                              true);
         }
         else {
-            robotDrive->drive( driveStick1->GetY() , driveStick2->GetX() );
+            robotDrive->drive(driveStick1->GetY(), driveStick2->GetX());
         }
 
         /*
-        CurrentState = ds->GetStickButton(0,1);
-
-        		if(CurrentState != LastState && CurrentState == true){
-        			std::cout << ev->;
-        			ev->(!ev->);
-        		}
-        		LastState = CurrentState;
-
-        		ds->GetStickButton(1,1);
-
-        		shootStick->GetTrigger();
-		*/
+         *  CurrentState = ds->GetStickButton(0,1);
+         *
+         *       if(CurrentState != LastState && CurrentState == true){
+         *           std::cout << ev->;
+         *           ev->(!ev->);
+         *       }
+         *       LastState = CurrentState;
+         *
+         *       ds->GetStickButton(1,1);
+         *
+         *       shootStick->GetTrigger();
+         */
 
         ev->setIntakeMotorState(shootStick->GetY());
 
         /* Trailing edge of trigger press */
-        if(elevatorButtons.releasedButton(1)) {
-        	// ...
-        	//std::cout << ev->getElevatorGrab() << std::endl;
-        	ev->elevatorGrab(!ev->getElevatorGrab());
+        if (elevatorButtons.releasedButton(1)) {
+            // ...
+            // std::cout << ev->getElevatorGrab() << std::endl;
+            ev->elevatorGrab(!ev->getElevatorGrab());
         }
-        if(elevatorButtons.releasedButton(5)){
-        	//std::cout << ev->getIntakeGrab() << std::endl;
-        	ev->intakeGrab(!ev->getIntakeGrab());
-    	}
-    	if(elevatorButtons.releasedButton(6)){
-    		//std::cout << ev->getIntakeVer() << std::endl;
-    		ev->intakeVer(!ev->getIntakeVer());
-    	}
-    	if(elevatorButtons.releasedButton(3)){
-    		//std::cout << ev->getIntakeWheels() << std::endl;
-    		ev->intakeWheels(Elevator::S_FORWARD);
-    	}else if(elevatorButtons.releasedButton(4)){
-    		//std::cout << ev->getIntakeWheels() << std::endl;
-    		ev->intakeWheels(Elevator::S_REVERSED);
-    	}else{
-    		//std::cout << ev->getIntakeWheels() << std::endl;
-    		ev->intakeWheels(Elevator::S_STOPPED);
-    	}
+        if (elevatorButtons.releasedButton(5)) {
+            // std::cout << ev->getIntakeGrab() << std::endl;
+            ev->intakeGrab(!ev->getIntakeGrab());
+        }
+        if (elevatorButtons.releasedButton(6)) {
+            // std::cout << ev->getIntakeVer() << std::endl;
+            ev->intakeVer(!ev->getIntakeVer());
+        }
+        if (elevatorButtons.releasedButton(3)) {
+            // std::cout << ev->getIntakeWheels() << std::endl;
+            ev->intakeWheels(Elevator::S_FORWARD);
+        }
+        else if (elevatorButtons.releasedButton(4)) {
+            // std::cout << ev->getIntakeWheels() << std::endl;
+            ev->intakeWheels(Elevator::S_REVERSED);
+        }
+        else {
+            // std::cout << ev->getIntakeWheels() << std::endl;
+            ev->intakeWheels(Elevator::S_STOPPED);
+        }
 
-		drive1Buttons.updateButtons();
-		drive2Buttons.updateButtons();
-		elevatorButtons.updateButtons();
+        drive1Buttons.updateButtons();
+        drive2Buttons.updateButtons();
+        elevatorButtons.updateButtons();
 
-		DS_PrintOut();
+        DS_PrintOut();
 
-		Wait( 0.01 );
-	}
+        Wait(0.01);
+    }
 }
 
 
@@ -154,21 +154,17 @@ void Robot::Autonomous() {
 }
 
 void Robot::Disabled() {
-
-
-  //  while ( IsDisabled() ) {
+    //  while ( IsDisabled() ) {
 
 
     //    DS_PrintOut();
 
-      //  logServerSink->acceptor( false );
-        // Wait( 0.1 );
-  //  }
-	}
+    //  logServerSink->acceptor( false );
+    // Wait( 0.1 );
+    //  }
+}
 
 void Robot::Test() {
-
-
     /* calibrateTalons();
      *
      *  mainCompressor->Start();
@@ -181,23 +177,23 @@ void Robot::Test() {
      *  robotDrive->drive( 0 , 0 ); */
 }
 
-bool Robot::testDriveTrain( bool shifterState ,
-                            bool direction ,
-                            float lowerBound ,
-                            float upperBound ) {
+bool Robot::testDriveTrain(bool shifterState,
+                           bool direction,
+                           float lowerBound,
+                           float upperBound) {
     Timer timer;
     timer.Start();
 
     // Converts direction (1 or 0) to 1 or -1 respectively
-    int i = static_cast<int>( direction ) * 2 - 1;
+    int i = static_cast<int>(direction) * 2 - 1;
 
-    robotDrive->setGear( shifterState );
+    robotDrive->setGear(shifterState);
 
-    while ( !timer.HasPeriodPassed( 3.0 ) ) {
-        robotDrive->drive( i , 0 );
-        Wait( 0.1 );
-        if ( !( lowerBound < robotDrive->getLeftRate() &&
-                robotDrive->getLeftRate() < upperBound ) ) {
+    while (!timer.HasPeriodPassed(3.0)) {
+        robotDrive->drive(i, 0);
+        Wait(0.1);
+        if (!(lowerBound < robotDrive->getLeftRate() &&
+              robotDrive->getLeftRate() < upperBound)) {
             return false;
         }
     }
@@ -206,15 +202,15 @@ bool Robot::testDriveTrain( bool shifterState ,
 }
 
 void Robot::DS_PrintOut() {
-    if ( pidGraph.hasIntervalPassed() ) {
-        pidGraph.graphData( robotDrive->getLeftDist() , "Left PID" );
-        pidGraph.graphData( robotDrive->getLeftSetpoint() , "Left Setpoint" );
+    if (pidGraph.hasIntervalPassed()) {
+        pidGraph.graphData(robotDrive->getLeftDist(), "Left PID");
+        pidGraph.graphData(robotDrive->getLeftSetpoint(), "Left Setpoint");
 
 
         pidGraph.resetInterval();
     }
 
-    if ( displayTimer->HasPeriodPassed( 0.5 ) ) {
+    if (displayTimer->HasPeriodPassed(0.5)) {
         // (*ls) << SetLogLevel(LogEvent::VERBOSE_INFO) << kinect->GetArmScale().second << std::flush;
         // logServerSink->acceptor(false);
 
@@ -231,10 +227,10 @@ void Robot::DS_PrintOut() {
 
         dsDisplay.clear();
 
-        dsDisplay.addElementData( "LEFT_RPM" , robotDrive->getLeftRate() );
-        dsDisplay.addElementData( "RIGHT_RPM" , robotDrive->getRightRate() );
-        dsDisplay.addElementData( "LEFT_DIST" , robotDrive->getLeftDist() );
-        dsDisplay.addElementData( "RIGHT_DIST", robotDrive->getRightDist() );
+        dsDisplay.addElementData("LEFT_RPM", robotDrive->getLeftRate());
+        dsDisplay.addElementData("RIGHT_RPM", robotDrive->getRightRate());
+        dsDisplay.addElementData("LEFT_DIST", robotDrive->getLeftDist());
+        dsDisplay.addElementData("RIGHT_DIST", robotDrive->getRightDist());
 
 
         dsDisplay.sendToDS();
@@ -242,8 +238,8 @@ void Robot::DS_PrintOut() {
 
     dsDisplay.receiveFromDS();
 
- //   insight->receiveFromDS();
+    //   insight->receiveFromDS();
 }
 
-START_ROBOT_CLASS( Robot );
+START_ROBOT_CLASS(Robot);
 

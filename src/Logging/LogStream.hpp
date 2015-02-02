@@ -39,7 +39,7 @@ public:
      *  \param logger The logger class instance to log
      *  messages to.
      */
-    LogStream( Logger* logger );
+    LogStream(Logger* logger);
     virtual ~LogStream();
 
     /*!
@@ -48,7 +48,7 @@ public:
      *  \param level The verbosity level with which to
      *  log the current message.
      */
-    void setLevel( LogEvent::VerbosityLevel level );
+    void setLevel(LogEvent::VerbosityLevel level);
 
 private:
     Logger* m_logger;

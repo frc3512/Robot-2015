@@ -37,13 +37,13 @@ struct SocketSelector::SocketSelectorImpl {
 
 
 SocketSelector::SocketSelector() :
-    m_impl( new SocketSelectorImpl ) {
+    m_impl(new SocketSelectorImpl) {
     clear();
 }
 
 
-SocketSelector::SocketSelector( const SocketSelector& copy ) :
-    m_impl( new SocketSelectorImpl( *copy.m_impl ) ) {
+SocketSelector::SocketSelector(const SocketSelector& copy) :
+    m_impl(new SocketSelectorImpl(*copy.m_impl)) {
 }
 
 
@@ -52,66 +52,66 @@ SocketSelector::~SocketSelector() {
 }
 
 
-void SocketSelector::add( Socket& socket ) {
+void SocketSelector::add(Socket& socket) {
     int handle = socket.getHandle();
-    if ( handle != -1 ) {
-        FD_SET( handle , &m_impl->AllSockets );
+    if (handle != -1) {
+        FD_SET(handle, &m_impl->AllSockets);
 
-        int size = static_cast<int>( handle );
-        if ( size > m_impl->MaxSocket ) {
+        int size = static_cast<int>(handle);
+        if (size > m_impl->MaxSocket) {
             m_impl->MaxSocket = size;
         }
     }
 }
 
 
-void SocketSelector::remove( Socket& socket ) {
-    FD_CLR( socket.getHandle() , &m_impl->AllSockets );
-    FD_CLR( socket.getHandle() , &m_impl->SocketsReady );
+void SocketSelector::remove(Socket& socket) {
+    FD_CLR(socket.getHandle(), &m_impl->AllSockets);
+    FD_CLR(socket.getHandle(), &m_impl->SocketsReady);
 }
 
 
 void SocketSelector::clear() {
-    FD_ZERO( &m_impl->AllSockets );
-    FD_ZERO( &m_impl->SocketsReady );
+    FD_ZERO(&m_impl->AllSockets);
+    FD_ZERO(&m_impl->SocketsReady);
 
     m_impl->MaxSocket = 0;
 }
 
 
-bool SocketSelector::wait( std::chrono::seconds timeout ) {
+bool SocketSelector::wait(std::chrono::seconds timeout) {
     // Setup the timeout
     timeval time;
     time.tv_sec =
-        std::chrono::duration_cast<std::chrono::seconds>( timeout ).count();
+        std::chrono::duration_cast<std::chrono::seconds>(timeout).count();
     time.tv_usec = std::chrono::duration_cast<std::chrono::microseconds>(
-        timeout ).count() % 1000000;
+        timeout).count() % 1000000;
 
     // Initialize the set that will contain the sockets that are ready
     m_impl->SocketsReady = m_impl->AllSockets;
 
     // Wait until one of the sockets is ready for reading, or timeout is reached
-    int count = select( m_impl->MaxSocket + 1 ,
-                        &m_impl->SocketsReady ,
-                        nullptr ,
-                        nullptr ,
-                        timeout.count() != 0 ? &time : nullptr );
+    int count = select(m_impl->MaxSocket + 1,
+                       &m_impl->SocketsReady,
+                       nullptr,
+                       nullptr,
+                       timeout.count() != 0 ? &time : nullptr);
 
     return count > 0;
 }
 
 
 ////////////////////////////////////////////////////////////
-bool SocketSelector::isReady( Socket& socket ) const {
-    return FD_ISSET( socket.getHandle() , &m_impl->SocketsReady ) != 0;
+bool SocketSelector::isReady(Socket& socket) const {
+    return FD_ISSET(socket.getHandle(), &m_impl->SocketsReady) != 0;
 }
 
 
 ////////////////////////////////////////////////////////////
-SocketSelector& SocketSelector::operator=( const SocketSelector& right ) {
-    SocketSelector temp( right );
+SocketSelector& SocketSelector::operator=(const SocketSelector& right) {
+    SocketSelector temp(right);
 
-    std::swap( m_impl , temp.m_impl );
+    std::swap(m_impl, temp.m_impl);
 
     return *this;
 }

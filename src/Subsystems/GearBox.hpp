@@ -30,31 +30,31 @@ class Solenoid;
 template <class T>
 class GearBox : public PIDOutput {
 public:
-    GearBox( int shifterChan , int encA , int encB ,
-             int motor1 , int motor2 = -1 ,
-             int motor3 = -1 );
+    GearBox(int shifterChan, int encA, int encB,
+            int motor1, int motor2 = -1,
+            int motor3 = -1);
     virtual ~GearBox();
 
     // Enables PID controller automatically and sets its setpoint
-    void setSetpoint( float setpoint );
+    void setSetpoint(float setpoint);
 
     // Disables PID controller and sets the motor speeds manually
-    void setManual( float value );
+    void setManual(float value);
 
     // Returns current speed/position/voltage setting of motor controller(s)
     float get() const;
 
     // Set P, I, and D terms for PID controller
-    void setPID( float p , float i , float d );
+    void setPID(float p, float i, float d);
 
     // Set feed-forward term on PID controller
-    void setF( float f );
+    void setF(float f);
 
     // Calls Encoder::SetDistancePerPulse internally
-    void setDistancePerPulse( double distancePerPulse );
+    void setDistancePerPulse(double distancePerPulse);
 
     // Determines whether encoder returns distance or rate from PIDGet()
-    void setPIDSourceParameter( PIDSource::PIDSourceParameter pidSource );
+    void setPIDSourceParameter(PIDSource::PIDSourceParameter pidSource);
 
     // Resets encoder distance to 0
     void resetEncoder();
@@ -64,19 +64,19 @@ public:
     double getRate() const;
 
     // Reverses gearbox drive direction
-    void setMotorReversed( bool reverse );
+    void setMotorReversed(bool reverse);
 
     // Returns motor reversal state of gearbox
     bool isMotorReversed() const;
 
     // Reverses gearbox drive direction
-    void setEncoderReversed( bool reverse );
+    void setEncoderReversed(bool reverse);
 
     // Returns motor reversal state of gearbox
     bool isEncoderReversed() const;
 
     // Shifts gearbox to another gear if available
-    void setGear( bool gear );
+    void setGear(bool gear);
 
     // Gets current gearbox gear if available (false if not)
     bool getGear() const;
@@ -87,7 +87,7 @@ public:
 
 private:
     // Sets motor speed to 'output'
-    void PIDWrite( float output );
+    void PIDWrite(float output);
 
     std::unique_ptr<PIDController> m_pid;
     std::unique_ptr<Encoder> m_encoder;
@@ -105,27 +105,28 @@ private:
 template <>
 class GearBox<CANTalon> {
 public:
-    GearBox( int shifterChan, int motor1, int motor2 = -1, int motor3 = -1 );
+    GearBox(int shifterChan, int motor1, int motor2 = -1, int motor3 = -1);
 
     // Enables PID controller automatically and sets its setpoint
-    void setSetpoint( float setpoint );
+    void setSetpoint(float setpoint);
 
     // Disables PID controller and sets the motor speeds manually
-    void setManual( float value );
+    void setManual(float value);
 
     // Returns current speed/position/voltage setting of motor controller(s)
     float get();
 
     // Set P, I, and D terms for PID controller
-    void setPID( float p, float i, float d );
+    void setPID(float p, float i, float d);
 
     // Set feed-forward term on PID controller
-    void setF( float f );
+    void setF(float f);
 
-    void setDistancePerPulse( double distancePerPulse );
+    void setDistancePerPulse(double distancePerPulse);
 
     // Determines whether encoder returns distance or rate from PIDGet()
-    void setControlMode( CANTalon::ControlMode ctrlMode = CANTalon::kPercentVbus );
+    void setControlMode(CANTalon::ControlMode ctrlMode =
+                            CANTalon::kPercentVbus);
 
     // Resets encoder distance to 0
     void resetEncoder();
@@ -135,19 +136,19 @@ public:
     double getRate();
 
     // Reverses gearbox drive direction
-    void setMotorReversed( bool reverse );
+    void setMotorReversed(bool reverse);
 
     // Returns motor reversal state of gearbox
     bool isMotorReversed() const;
 
     // Reverses gearbox drive direction
-    void setEncoderReversed( bool reverse );
+    void setEncoderReversed(bool reverse);
 
     // Returns motor reversal state of gearbox
     bool isEncoderReversed() const;
 
     // Shifts gearbox to another gear if available
-    void setGear( bool gear );
+    void setGear(bool gear);
 
     // Gets current gearbox gear if available (false if not)
     bool getGear() const;

@@ -10,15 +10,15 @@
 #include <PIDController.h>
 
 template <class T>
-GearBox<T>::GearBox( int shifterChan ,
-                     int encA ,
-                     int encB ,
-                     int motor1 ,
-                     int motor2 ,
-                     int motor3 ) {
-    if ( encA != -1 && encB != -1 ) {
-        m_encoder = std::make_unique<Encoder>( encA, encB );
-        m_pid = std::make_unique<PIDController>( 0, 0, 0, 0, m_encoder, this );
+GearBox<T>::GearBox(int shifterChan,
+                    int encA,
+                    int encB,
+                    int motor1,
+                    int motor2,
+                    int motor3) {
+    if (encA != -1 && encB != -1) {
+        m_encoder = std::make_unique<Encoder>(encA, encB);
+        m_pid = std::make_unique<PIDController>(0, 0, 0, 0, m_encoder, this);
 
         m_havePID = true;
     }
@@ -29,8 +29,8 @@ GearBox<T>::GearBox( int shifterChan ,
         m_havePID = false;
     }
 
-    if ( shifterChan != -1 ) {
-        m_shifter = std::make_unique<Solenoid>( shifterChan );
+    if (shifterChan != -1) {
+        m_shifter = std::make_unique<Solenoid>(shifterChan);
     }
     else {
         m_shifter = nullptr;
@@ -40,17 +40,17 @@ GearBox<T>::GearBox( int shifterChan ,
     m_isEncoderReversed = false;
 
     // Create motor controllers of specified template type
-    m_motors.emplace_back( std::make_unique<T>(motor1) );
-    if ( motor2 != -1 ) {
-        m_motors.emplace_back( std::make_unique<T>(motor2) );
+    m_motors.emplace_back(std::make_unique<T>(motor1));
+    if (motor2 != -1) {
+        m_motors.emplace_back(std::make_unique<T>(motor2));
     }
-    if ( motor3 != -1 ) {
-        m_motors.emplace_back( std::make_unique<T>(motor3) );
+    if (motor3 != -1) {
+        m_motors.emplace_back(std::make_unique<T>(motor3));
     }
-    if ( m_havePID ) {
-        m_encoder->SetPIDSourceParameter( Encoder::kDistance );
+    if (m_havePID) {
+        m_encoder->SetPIDSourceParameter(Encoder::kDistance);
 
-        m_pid->SetAbsoluteTolerance( 1 );
+        m_pid->SetAbsoluteTolerance(1);
 
         m_pid->Enable();
     }
@@ -58,38 +58,37 @@ GearBox<T>::GearBox( int shifterChan ,
 
 template <class T>
 GearBox<T>::~GearBox() {
-
 }
 
 template <class T>
-void GearBox<T>::setSetpoint( float setpoint ) {
-    if ( m_havePID ) {
-        if ( !m_pid->IsEnabled() ) {
+void GearBox<T>::setSetpoint(float setpoint) {
+    if (m_havePID) {
+        if (!m_pid->IsEnabled()) {
             m_pid->Enable();
         }
 
-        m_pid->SetSetpoint( setpoint );
+        m_pid->SetSetpoint(setpoint);
     }
 }
 
 template <class T>
-void GearBox<T>::setManual( float value ) {
-    if ( m_havePID ) {
-        if ( m_pid->IsEnabled() ) {
+void GearBox<T>::setManual(float value) {
+    if (m_havePID) {
+        if (m_pid->IsEnabled()) {
             m_pid->Disable();
         }
     }
 
-    PIDWrite( value );
+    PIDWrite(value);
 }
 
 template <class T>
 float GearBox<T>::get() const {
-    if ( m_havePID && m_pid->IsEnabled() ) {
+    if (m_havePID && m_pid->IsEnabled()) {
         return m_motors[0]->GetSetpoint();
     }
     else {
-        if ( !m_isMotorReversed ) {
+        if (!m_isMotorReversed) {
             return m_motors[0]->Get();
         }
         else {
@@ -99,43 +98,44 @@ float GearBox<T>::get() const {
 }
 
 template <class T>
-void GearBox<T>::setPID( float p , float i , float d ) {
-    if ( m_havePID ) {
-        m_pid->SetPID( p , i , d );
+void GearBox<T>::setPID(float p, float i, float d) {
+    if (m_havePID) {
+        m_pid->SetPID(p, i, d);
     }
 }
 
 template <class T>
-void GearBox<T>::setF( float f ) {
-    if ( m_havePID ) {
-        m_pid->SetPID( m_pid->GetP() , m_pid->GetI() , m_pid->GetD() , f );
+void GearBox<T>::setF(float f) {
+    if (m_havePID) {
+        m_pid->SetPID(m_pid->GetP(), m_pid->GetI(), m_pid->GetD(), f);
     }
 }
 
 template <class T>
-void GearBox<T>::setDistancePerPulse( double distancePerPulse ) {
-    if ( m_havePID ) {
-        m_encoder->SetDistancePerPulse( distancePerPulse );
+void GearBox<T>::setDistancePerPulse(double distancePerPulse) {
+    if (m_havePID) {
+        m_encoder->SetDistancePerPulse(distancePerPulse);
     }
 }
 
 template <class T>
-void GearBox<T>::setPIDSourceParameter( PIDSource::PIDSourceParameter pidSource ) {
-    if ( m_havePID ) {
-        m_encoder->SetPIDSourceParameter( pidSource );
+void GearBox<T>::setPIDSourceParameter(PIDSource::PIDSourceParameter pidSource)
+{
+    if (m_havePID) {
+        m_encoder->SetPIDSourceParameter(pidSource);
     }
 }
 
 template <class T>
 void GearBox<T>::resetEncoder() {
-    if ( m_havePID ) {
+    if (m_havePID) {
         m_encoder->Reset();
     }
 }
 
 template <class T>
 double GearBox<T>::getDistance() const {
-    if ( m_havePID ) {
+    if (m_havePID) {
         return m_encoder->GetDistance();
     }
     else {
@@ -145,7 +145,7 @@ double GearBox<T>::getDistance() const {
 
 template <class T>
 double GearBox<T>::getRate() const {
-    if ( m_havePID ) {
+    if (m_havePID) {
         return m_encoder->GetRate();
     }
     else {
@@ -154,7 +154,7 @@ double GearBox<T>::getRate() const {
 }
 
 template <class T>
-void GearBox<T>::setMotorReversed( bool reverse ) {
+void GearBox<T>::setMotorReversed(bool reverse) {
     m_isMotorReversed = reverse;
 }
 
@@ -164,8 +164,8 @@ bool GearBox<T>::isMotorReversed() const {
 }
 
 template <class T>
-void GearBox<T>::setEncoderReversed( bool reverse ) {
-    m_encoder->SetReverseDirection( reverse );
+void GearBox<T>::setEncoderReversed(bool reverse) {
+    m_encoder->SetReverseDirection(reverse);
 }
 
 template <class T>
@@ -174,15 +174,15 @@ bool GearBox<T>::isEncoderReversed() const {
 }
 
 template <class T>
-void GearBox<T>::setGear( bool gear ) {
-    if ( m_shifter != nullptr ) {
-        m_shifter->Set( gear );
+void GearBox<T>::setGear(bool gear) {
+    if (m_shifter != nullptr) {
+        m_shifter->Set(gear);
     }
 }
 
 template <class T>
 bool GearBox<T>::getGear() const {
-    if ( m_shifter != nullptr ) {
+    if (m_shifter != nullptr) {
         return m_shifter->Get();
     }
     else {
@@ -191,20 +191,20 @@ bool GearBox<T>::getGear() const {
 }
 
 template <class T>
-void GearBox<T>::PIDWrite( float output ) {
-    for ( auto& motor : m_motors ) {
-        if ( !m_isMotorReversed ) {
-            motor->Set( output );
+void GearBox<T>::PIDWrite(float output) {
+    for (auto& motor : m_motors) {
+        if (!m_isMotorReversed) {
+            motor->Set(output);
         }
         else {
-            motor->Set( -output );
+            motor->Set(-output);
         }
     }
 }
 
 template <class T>
 bool GearBox<T>::onTarget() {
-    if ( m_havePID ) {
+    if (m_havePID) {
         return m_pid->OnTarget();
     }
     else {
@@ -217,3 +217,4 @@ void GearBox<T>::resetPID() {
     m_pid->Reset();
     m_pid->Enable();
 }
+

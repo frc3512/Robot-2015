@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 
-SocketConnection::SocketConnection( int nfd ) {
+SocketConnection::SocketConnection(int nfd) {
     fd = nfd;
     selectflags = Read | Error;
 
@@ -14,5 +14,6 @@ SocketConnection::SocketConnection( int nfd ) {
 }
 
 SocketConnection::~SocketConnection() {
-    close( fd );
+    close(fd);
 }
+

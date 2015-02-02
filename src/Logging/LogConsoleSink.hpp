@@ -23,7 +23,7 @@ public:
      *  Write an event to standard output.
      *  \param event The event to log.
      */
-    void logEvent( LogEvent event );
+    void logEvent(LogEvent event);
 };
 
 #endif /* LOGCONSOLESINK_H_ */

@@ -20,10 +20,10 @@
  */
 class LogStreambuf : public std::streambuf {
 public:
-    LogStreambuf( Logger* logger );
+    LogStreambuf(Logger* logger);
     virtual ~LogStreambuf();
 
-    std::streamsize xsputn( const char* s , std::streamsize n );
+    std::streamsize xsputn(const char* s, std::streamsize n);
 
     /*!
      *  Called when the stream is flushed. This can occur when
@@ -43,7 +43,7 @@ public:
      *  the stream (causing the sync() function to be called).
      *  \see sync()
      */
-    void setLevel( LogEvent::VerbosityLevel level );
+    void setLevel(LogEvent::VerbosityLevel level);
 
 private:
     std::string m_buf;

@@ -15,7 +15,7 @@ struct AutonMethod {
     std::string name;
     std::function<void()> function;
 
-    AutonMethod( const std::string& methodName , std::function<void()> func ) {
+    AutonMethod(const std::string& methodName, std::function<void()> func) {
         name = methodName;
         function = func;
     }
@@ -26,18 +26,18 @@ public:
     virtual ~AutonContainer();
 
     // Add and remove autonomous functions
-    void addMethod( const std::string& methodName ,
-                    std::function<void()> func );
+    void addMethod(const std::string& methodName,
+                   std::function<void()> func);
     void deleteAllMethods();
 
     // Returns number of routines currently held
     size_t size();
 
     // Returns name of specific autonomous function
-    const std::string& name( size_t pos );
+    const std::string& name(size_t pos);
 
     // Run specific autonomous function
-    void execAutonomous( size_t pos );
+    void execAutonomous(size_t pos);
 
 private:
     // Contains function pointers to the autonomous functions

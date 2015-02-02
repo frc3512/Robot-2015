@@ -45,8 +45,8 @@ public:
     /* The address can be either a decimal address (192.168.1.56) or a network
      * name ("localhost")
      */
-    IpAddress( const std::string& address );
-    IpAddress( const char* address );
+    IpAddress(const std::string& address);
+    IpAddress(const char* address);
 
     /* Construct the address from 4 bytes
      *
@@ -54,7 +54,7 @@ public:
      * IpAddress("a.b.c.d"), but safer as it doesn't have to
      * parse a string to get the address components.
      */
-    IpAddress( uint8_t byte0 , uint8_t byte1 , uint8_t byte2 , uint8_t byte3 );
+    IpAddress(uint8_t byte0, uint8_t byte1, uint8_t byte2, uint8_t byte3);
 
     ////////////////////////////////////////////////////////////
     /// \brief Construct the address from a 32-bits integer
@@ -69,7 +69,7 @@ public:
     /// \see toInteger
     ///
     ////////////////////////////////////////////////////////////
-    explicit IpAddress( uint32_t address );
+    explicit IpAddress(uint32_t address);
 
     ////////////////////////////////////////////////////////////
     /// \brief Get a string representation of the address
@@ -125,21 +125,21 @@ private:
     uint32_t m_address;
 };
 
-bool operator==( const IpAddress& left , const IpAddress& right );
+bool operator==(const IpAddress& left, const IpAddress& right);
 
-bool operator!=( const IpAddress& left , const IpAddress& right );
+bool operator!=(const IpAddress& left, const IpAddress& right);
 
-bool operator<( const IpAddress& left , const IpAddress& right );
+bool operator<(const IpAddress& left, const IpAddress& right);
 
-bool operator>( const IpAddress& left , const IpAddress& right );
+bool operator>(const IpAddress& left, const IpAddress& right);
 
-bool operator<=( const IpAddress& left , const IpAddress& right );
+bool operator<=(const IpAddress& left, const IpAddress& right);
 
-bool operator>=( const IpAddress& left , const IpAddress& right );
+bool operator>=(const IpAddress& left, const IpAddress& right);
 
-std::istream& operator>>( std::istream& stream , IpAddress& address );
+std::istream& operator>>(std::istream& stream, IpAddress& address);
 
-std::ostream& operator<<( std::ostream& stream , const IpAddress& address );
+std::ostream& operator<<(std::ostream& stream, const IpAddress& address);
 } // namespace sf
 
 

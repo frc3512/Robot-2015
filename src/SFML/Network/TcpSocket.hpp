@@ -111,9 +111,9 @@ public:
     /// \see disconnect
     ///
     ////////////////////////////////////////////////////////////
-    Status connect( const IpAddress& remoteAddress ,
-                    unsigned short remotePort ,
-                    std::chrono::seconds timeout = std::chrono::seconds(0) );
+    Status connect(const IpAddress& remoteAddress,
+                   unsigned short remotePort,
+                   std::chrono::seconds timeout = std::chrono::seconds(0));
 
     ////////////////////////////////////////////////////////////
     /// \brief Disconnect the socket from its remote peer
@@ -139,7 +139,7 @@ public:
     /// \see receive
     ///
     ////////////////////////////////////////////////////////////
-    Status send( const void* data , std::size_t size );
+    Status send(const void* data, std::size_t size);
 
     ////////////////////////////////////////////////////////////
     /// \brief Receive raw data from the remote peer
@@ -157,7 +157,7 @@ public:
     /// \see send
     ///
     ////////////////////////////////////////////////////////////
-    Status receive( void* data , std::size_t size , std::size_t& received );
+    Status receive(void* data, std::size_t size, std::size_t& received);
 
     ////////////////////////////////////////////////////////////
     /// \brief Send a formatted packet of data to the remote peer
@@ -171,7 +171,7 @@ public:
     /// \see receive
     ///
     ////////////////////////////////////////////////////////////
-    Status send( Packet& packet );
+    Status send(Packet& packet);
 
     ////////////////////////////////////////////////////////////
     /// \brief Receive a formatted packet of data from the remote peer
@@ -187,7 +187,7 @@ public:
     /// \see send
     ///
     ////////////////////////////////////////////////////////////
-    Status receive( Packet& packet );
+    Status receive(Packet& packet);
 
 private:
 

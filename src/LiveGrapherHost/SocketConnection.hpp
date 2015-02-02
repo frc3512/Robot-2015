@@ -10,14 +10,14 @@
 class SocketConnection {
 public:
     enum selector {
-        Read = 1 ,
-        Write = 2 ,
+        Read = 1,
+        Write = 2,
         Error = 4
     };
 
-    SocketConnection( int nfd );
+    SocketConnection(int nfd);
     virtual ~SocketConnection();
-    SocketConnection( const SocketConnection& rhs ) = delete;
+    SocketConnection(const SocketConnection& rhs) = delete;
 
     std::vector<std::string> datasets;
     int fd;
@@ -36,3 +36,4 @@ public:
 };
 
 #endif // SOCKET_CONNECTION_HPP
+

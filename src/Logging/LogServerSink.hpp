@@ -23,14 +23,14 @@ public:
      *  Write an event to the logfile.
      *  \param event The event to log.
      */
-    void logEvent( LogEvent event );
+    void logEvent(LogEvent event);
 
-    int startServer( unsigned short port );
+    int startServer(unsigned short port);
 
-    int acceptor( bool blocking );
+    int acceptor(bool blocking);
 
 private:
-    int tcpListen( unsigned short port );
+    int tcpListen(unsigned short port);
     int acceptConnectionBlocking();
     int acceptConnectionNonBlocking();
 

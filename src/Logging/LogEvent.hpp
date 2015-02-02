@@ -21,12 +21,12 @@
 class LogEvent {
 public:
     enum _VerbosityLevel {
-        VERBOSE_NONE = 0x00 ,
-        VERBOSE_ERROR = 0x01 ,
-        VERBOSE_WARN = 0x02 ,
-        VERBOSE_INFO = 0x04 ,
-        VERBOSE_DEBUG = 0x08 ,
-        VERBOSE_USER = 0x10 ,
+        VERBOSE_NONE = 0x00,
+        VERBOSE_ERROR = 0x01,
+        VERBOSE_WARN = 0x02,
+        VERBOSE_INFO = 0x04,
+        VERBOSE_DEBUG = 0x08,
+        VERBOSE_USER = 0x10,
         VERBOSE_ALL =
             VERBOSE_ERROR |
             VERBOSE_WARN |
@@ -50,7 +50,7 @@ public:
      *  \param data The string describing the event
      *  \param level The event's verbosity level
      */
-    LogEvent( std::string data , VerbosityLevel level );
+    LogEvent(std::string data, VerbosityLevel level);
 
     /*!
      *  Create an event with a specified description
@@ -59,7 +59,7 @@ public:
      *  \param level The event's verbosity level
      *  \param timestamp The time at which the event occurred
      */
-    LogEvent( std::string data , VerbosityLevel level , time_t timestamp );
+    LogEvent(std::string data, VerbosityLevel level, time_t timestamp);
 
     virtual ~LogEvent();
 
@@ -127,7 +127,7 @@ public:
      *  string.
      *  \return A string describing the specified verbosity level
      */
-    static std::string verbosityLevelString( VerbosityLevel level );
+    static std::string verbosityLevelString(VerbosityLevel level);
 
     /*!
      *  Returns a single character representing the specified
@@ -142,7 +142,7 @@ public:
      *  string.
      *  \return A string describing the specified verbosity level
      */
-    static char verbosityLevelChar( VerbosityLevel level );
+    static char verbosityLevelChar(VerbosityLevel level);
 
     /*!
      *  Called by the Logger class. Sets the initial time used by
@@ -150,7 +150,7 @@ public:
      *  \param initial The initial time on which to base relative
      *  timestamps.
      */
-    void setInitialTime( time_t initial );
+    void setInitialTime(time_t initial);
 
 private:
     VerbosityLevel m_level;

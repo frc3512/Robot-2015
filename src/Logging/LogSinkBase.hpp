@@ -32,7 +32,7 @@ public:
      *  that of the class (see testVerbosityLevel).
      *  \param event The event
      */
-    virtual void logEvent( LogEvent event ) = 0;
+    virtual void logEvent(LogEvent event) = 0;
 
     /*!
      *  Set the verbosity levels for which we will
@@ -40,7 +40,7 @@ public:
      *  \param levels A bitfield describing the verbosity
      *  levels.
      */
-    void setVerbosityLevels( LogEvent::VerbosityLevel levels );
+    void setVerbosityLevels(LogEvent::VerbosityLevel levels);
 
     /*!
      *  Get the verbosity levels for which we are
@@ -55,7 +55,7 @@ public:
      *  \param levels A bitfield describing the verbosity
      *  levels.
      */
-    void enableVerbosityLevels( LogEvent::VerbosityLevel levels );
+    void enableVerbosityLevels(LogEvent::VerbosityLevel levels);
 
     /*!
      *  Stop accepting events of the specified verbosity
@@ -63,7 +63,7 @@ public:
      *  \param levels A bitfield describing the verbosity
      *  levels.
      */
-    void disableVerbosityLevels( LogEvent::VerbosityLevel levels );
+    void disableVerbosityLevels(LogEvent::VerbosityLevel levels);
 
     /*!
      *  Determines whether or not we accept events of a
@@ -73,7 +73,7 @@ public:
      *  \return A boolean describing whether we accept
      *  events of the specified verbosity level.
      */
-    bool testVerbosityLevel( LogEvent::VerbosityLevel levels );
+    bool testVerbosityLevel(LogEvent::VerbosityLevel levels);
 
 private:
     LogEvent::VerbosityLevel m_verbosity;

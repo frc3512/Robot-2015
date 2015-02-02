@@ -59,9 +59,9 @@ public:
 
     // Status codes that may be returned by socket functions
     enum Status {
-        Done ,         // The socket has sent / received the data
-        NotReady ,     // The socket is not ready to send / receive data yet
-        Disconnected , // The TCP socket has been disconnected
+        Done,         // The socket has sent / received the data
+        NotReady,     // The socket is not ready to send / receive data yet
+        Disconnected, // The TCP socket has been disconnected
         Error         // An unexpected error happened
     };
 
@@ -83,7 +83,7 @@ public:
      * 'true' = blocking
      * 'false = non-blocking
      */
-    void setBlocking( bool blocking );
+    void setBlocking(bool blocking);
 
     /* Tell whether the socket is in blocking or non-blocking mode
      * Returns 'true' if the socket is blocking, 'false' otherwise
@@ -93,12 +93,12 @@ public:
 protected:
     // Types of protocols that the socket can use
     enum Type {
-        Tcp , // TCP protocol
+        Tcp, // TCP protocol
         Udp  // UDP protocol
     };
 
     // This constructor can only be accessed by derived classes.
-    Socket( Type sockType );
+    Socket(Type sockType);
 
     // Return the handle of the socket
     int getHandle() const;
@@ -107,7 +107,7 @@ protected:
     void create();
 
     // Create the internal representation of the socket from a socket handle
-    void create( int handle );
+    void create(int handle);
 
     // Close the socket gracefully
     void close();
@@ -118,7 +118,7 @@ protected:
      *     port    Target port
      * Returns sockaddr_in ready to be used by socket functions
      */
-    static sockaddr_in createAddress( uint32_t address , unsigned short port );
+    static sockaddr_in createAddress(uint32_t address, unsigned short port);
 
     // Returns status corresponding to the last socket error
     static Socket::Status getErrorStatus();

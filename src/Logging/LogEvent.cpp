@@ -9,15 +9,14 @@
 #include <sstream>
 #include <iomanip>
 
-LogEvent::LogEvent( std::string data , VerbosityLevel level ) {
+LogEvent::LogEvent(std::string data, VerbosityLevel level) {
     m_level = level;
-    m_timestamp = time( nullptr );
+    m_timestamp = time(nullptr);
     m_buffer = data;
     m_initialTime = 0;
 }
 
-LogEvent::LogEvent( std::string data , VerbosityLevel level ,
-                    time_t timestamp ) {
+LogEvent::LogEvent(std::string data, VerbosityLevel level, time_t timestamp) {
     m_level = level;
     m_timestamp = timestamp;
     m_buffer = data;
@@ -37,7 +36,7 @@ time_t LogEvent::getAbsoluteTimestamp() {
 }
 
 time_t LogEvent::getRelativeTimestamp() {
-    if ( m_initialTime == 0 ) {
+    if (m_initialTime == 0) {
         return 0;
     }
 
@@ -51,37 +50,37 @@ std::string LogEvent::getData() {
 std::string LogEvent::toFormattedString() {
     std::stringstream ss;
 
-    ss << std::left << "[" << std::setw( 8 )
+    ss << std::left << "[" << std::setw(8)
        << getRelativeTimestamp() << " "
-       << verbosityLevelChar( getVerbosityLevel() )
+       << verbosityLevelChar(getVerbosityLevel())
        << "] " << getData() << "\n";
 
     return ss.str();
 }
 
-std::string LogEvent::verbosityLevelString( VerbosityLevel levels ) {
+std::string LogEvent::verbosityLevelString(VerbosityLevel levels) {
     std::string level_str;
 
     /* if(level == VERBOSE_ALL)
      *   return "VERBOSE_ALL"; */
 
-    if ( levels & VERBOSE_ERROR ) {
+    if (levels & VERBOSE_ERROR) {
         level_str += "ERROR ";
     }
 
-    if ( levels & VERBOSE_WARN ) {
+    if (levels & VERBOSE_WARN) {
         level_str += "WARN ";
     }
 
-    if ( levels & VERBOSE_INFO ) {
+    if (levels & VERBOSE_INFO) {
         level_str += "INFO ";
     }
 
-    if ( levels & VERBOSE_DEBUG ) {
+    if (levels & VERBOSE_DEBUG) {
         level_str += "DEBUG ";
     }
 
-    if ( levels & VERBOSE_USER ) {
+    if (levels & VERBOSE_USER) {
         level_str += "USER ";
     }
 
@@ -107,8 +106,8 @@ std::string LogEvent::verbosityLevelString( VerbosityLevel levels ) {
      */
 }
 
-char LogEvent::verbosityLevelChar( VerbosityLevel level ) {
-    switch ( level ) {
+char LogEvent::verbosityLevelChar(VerbosityLevel level) {
+    switch (level) {
     case VERBOSE_ERROR:
         return 'E';
     case VERBOSE_WARN:
@@ -126,7 +125,7 @@ char LogEvent::verbosityLevelChar( VerbosityLevel level ) {
     }
 }
 
-void LogEvent::setInitialTime( time_t initial ) {
+void LogEvent::setInitialTime(time_t initial) {
     m_initialTime = initial;
 }
 

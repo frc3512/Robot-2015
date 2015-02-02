@@ -34,7 +34,7 @@ public:
      *  (See LogSinkBase::TestVerbosityLevel)
      *  \param event The event to log
      */
-    void logEvent( LogEvent event );
+    void logEvent(LogEvent event);
 
     /*!
      *  Registers a sink for log events with the logging
@@ -44,13 +44,13 @@ public:
      *  be sent to the sink.
      *  \param sink The sink class instance to register
      */
-    void addLogSink( LogSinkBase* sink );
+    void addLogSink(LogSinkBase* sink);
 
     /*!
      *  De-registers a sink from the logging engine.
      *  \param sink The sink to de-register
      */
-    void removeLogSink( LogSinkBase* sink );
+    void removeLogSink(LogSinkBase* sink);
 
     /*!
      *  Returns a list of currently registered sinks.
@@ -70,7 +70,7 @@ public:
      *  This initial time is used to calculate an
      *  event's relative time.
      */
-    void setInitialTime( time_t time );
+    void setInitialTime(time_t time);
 
 private:
     LogSinkBaseList m_sinkList;

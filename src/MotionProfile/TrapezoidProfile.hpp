@@ -1,8 +1,8 @@
-//=============================================================================
-//File Name: TrapezoidProfile.hpp
-//Description: Provides trapezoidal velocity control
-//Author: FRC Team 3512, Spartatroniks
-//=============================================================================
+// =============================================================================
+// File Name: TrapezoidProfile.hpp
+// Description: Provides trapezoidal velocity control
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 /* Implementation of trapezoid motion profile translated to C++; base Java code
  * courtesy of FRC Team 254
@@ -22,7 +22,7 @@
 
 class TrapezoidProfile : public ProfileBase {
 public:
-    TrapezoidProfile( double maxV , double timeToMaxV );
+    TrapezoidProfile(double maxV, double timeToMaxV);
     virtual ~TrapezoidProfile();
 
     /* If distance:
@@ -35,23 +35,23 @@ public:
      *
      * curTime is current time
      */
-    double updateSetpoint( double curTime , double curSource = 0.0 );
+    double updateSetpoint(double curTime, double curSource = 0.0);
 
     /* goal is a distance to which to travel
      * curSource is the current position
      * t initializes m_lastTime
      */
-    double setGoal( double t , double goal , double curSource = 0.0 );
+    double setGoal(double t, double goal, double curSource = 0.0);
 
     bool atGoal();
 
-    void setMaxVelocity( double v );
-    void setTimeToMaxV( double timeToMaxV );
+    void setMaxVelocity(double v);
+    void setTimeToMaxV(double timeToMaxV);
 
     void resetTime();
 
     // Tells algorithm whether to use distance or velocity as setpoint
-    void setMode( SetpointMode mode );
+    void setMode(SetpointMode mode);
     SetpointMode getMode();
 
 protected:
@@ -71,3 +71,4 @@ protected:
 };
 
 #endif // TRAPEZOID_PROFILE_HPP
+

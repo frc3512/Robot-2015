@@ -79,7 +79,7 @@ public:
     /// \see accept, close
     ///
     ////////////////////////////////////////////////////////////
-    Status listen( unsigned short port );
+    Status listen(unsigned short port);
 
     ////////////////////////////////////////////////////////////
     /// \brief Stop listening and close the socket
@@ -105,7 +105,7 @@ public:
     /// \see listen
     ///
     ////////////////////////////////////////////////////////////
-    Status accept( TcpSocket& socket );
+    Status accept(TcpSocket& socket);
 };
 } // namespace sf
 

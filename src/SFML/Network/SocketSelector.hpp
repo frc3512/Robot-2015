@@ -57,7 +57,7 @@ public:
     /// \param copy Instance to copy
     ///
     ////////////////////////////////////////////////////////////
-    SocketSelector( const SocketSelector& copy );
+    SocketSelector(const SocketSelector& copy);
 
     ////////////////////////////////////////////////////////////
     /// \brief Destructor
@@ -78,7 +78,7 @@ public:
     /// \see remove, clear
     ///
     ////////////////////////////////////////////////////////////
-    void add( Socket& socket );
+    void add(Socket& socket);
 
     ////////////////////////////////////////////////////////////
     /// \brief Remove a socket from the selector
@@ -91,7 +91,7 @@ public:
     /// \see add, clear
     ///
     ////////////////////////////////////////////////////////////
-    void remove( Socket& socket );
+    void remove(Socket& socket);
 
     ////////////////////////////////////////////////////////////
     /// \brief Remove all the sockets stored in the selector
@@ -121,7 +121,7 @@ public:
     /// \see isReady
     ///
     ////////////////////////////////////////////////////////////
-    bool wait( std::chrono::seconds timeout = std::chrono::seconds(0) );
+    bool wait(std::chrono::seconds timeout = std::chrono::seconds(0));
 
     ////////////////////////////////////////////////////////////
     /// \brief Test a socket to know if it is ready to receive data
@@ -140,7 +140,7 @@ public:
     /// \see isReady
     ///
     ////////////////////////////////////////////////////////////
-    bool isReady( Socket& socket ) const;
+    bool isReady(Socket& socket) const;
 
     ////////////////////////////////////////////////////////////
     /// \brief Overload of assignment operator
@@ -150,7 +150,7 @@ public:
     /// \return Reference to self
     ///
     ////////////////////////////////////////////////////////////
-    SocketSelector& operator=( const SocketSelector& right );
+    SocketSelector& operator=(const SocketSelector& right);
 
 private:
 

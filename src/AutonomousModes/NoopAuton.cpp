@@ -2,8 +2,8 @@
 #include <Timer.h>
 
 void Robot::NoopAuton() {
-    while ( IsAutonomous() ) {
-        Wait( 0.01 );
+    while (IsAutonomous()) {
+        Wait(0.01);
     }
 }
 

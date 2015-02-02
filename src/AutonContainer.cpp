@@ -10,9 +10,9 @@ AutonContainer::~AutonContainer() {
     deleteAllMethods();
 }
 
-void AutonContainer::addMethod( const std::string& methodName ,
-                                std::function<void()> func ) {
-    m_functionList.push_back( AutonMethod( methodName , func ) );
+void AutonContainer::addMethod(const std::string& methodName,
+                               std::function<void()> func) {
+    m_functionList.push_back(AutonMethod(methodName, func));
 }
 
 void AutonContainer::deleteAllMethods() {
@@ -23,11 +23,11 @@ size_t AutonContainer::size() {
     return m_functionList.size();
 }
 
-const std::string& AutonContainer::name( size_t pos ) {
+const std::string& AutonContainer::name(size_t pos) {
     return m_functionList[pos].name;
 }
 
-void AutonContainer::execAutonomous( size_t pos ) {
+void AutonContainer::execAutonomous(size_t pos) {
     // Retrieves correct autonomous routine
     AutonMethod* auton = &m_functionList[pos];
 

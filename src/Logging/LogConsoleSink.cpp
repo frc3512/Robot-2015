@@ -16,7 +16,7 @@ LogConsoleSink::~LogConsoleSink() {
     // TODO Auto-generated destructor stub
 }
 
-void LogConsoleSink::logEvent( LogEvent event ) {
+void LogConsoleSink::logEvent(LogEvent event) {
     std::cout << event.toFormattedString();
 }
 
