@@ -11,8 +11,8 @@ args() {
 }
 
 format() {
-  find src -type f -name \*.cpp -o -name \*.hpp -o -name \*.inl | uncrustify -c uncrustify.cfg -F - -l CPP --replace --no-backup
-  find src -type f -name \*.c -o -name \*.h | uncrustify -c uncrustify.cfg -F - -l C --replace --no-backup
+  find $PWD -not \( $i -name .svn -prune -o -name .hg -prune -o -name .git -prune -o -name ".*" -prune -o -name Makefile -prune \) ! -type d -name \*.cpp -o -name \*.hpp -o -name \*.inl | uncrustify -c uncrustify.cfg -F - -l CPP --replace --no-backup
+  find $PWD -not \( $i -name .svn -prune -o -name .hg -prune -o -name .git -prune -o -name ".*" -prune -o -name Makefile -prune \) ! -type d -name \*.c -o -name \*.h | uncrustify -c uncrustify.cfg -F - -l C --replace --no-backup
 }
 
 if [ $# = 0 ] ; then
