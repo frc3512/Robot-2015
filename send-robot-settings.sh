@@ -5,7 +5,7 @@ PASSWD=''
 
 # Add file names here to send them
 FILESRC=('RobotSettings.txt' 'GUISettings.txt')
-PATHDEST=('/' '/')
+PATHDEST=('/home/lvuser' '/home/lvuser')
 FILEDEST=('RobotSettings.txt' 'GUISettings.txt')
 
 # script: login
