@@ -12,13 +12,32 @@ Elevator::Elevator() {
     m_intakeVertical = new Solenoid(2);
     m_intakeGrabber = new Solenoid(3);
     m_intakeWheels = new CANTalon(6);
+    m_settings = new Settings("/home/lvuser/RobotSettings.txt");
+    m_intakeState = S_STOPPED;
+    m_manual = false;
 
-    m_liftmotor_0 = new CANTalon(4);
-    m_liftmotor_1 = new CANTalon(5);
+    m_liftmotors = new GearBox<CANTalon> (-1, 4, 5);
+    m_liftmotors->setDistancePerPulse(360);
+    reloadPID();
+
 }
 
 Elevator::~Elevator() {
     // TODO Auto-generated destructor stub
+}
+
+void Elevator::reloadPID() {
+    m_settings->update();
+
+    float p = 0.f;
+    float i = 0.f;
+    float d = 0.f;
+
+    // Set shooter rotator PID
+    p = m_settings->getFloat( "PID_ARM_ROTATE_P" );
+    i = m_settings->getFloat( "PID_ARM_ROTATE_I" );
+    d = m_settings->getFloat( "PID_ARM_ROTATE_D" );
+    m_liftmotors->setPID( p , i , d );
 }
 
 void Elevator::elevatorGrab(bool state) {
@@ -64,7 +83,23 @@ Elevator::IntakeMotorState Elevator::getIntakeWheels() {
 }
 
 void Elevator::setIntakeMotorState(float value) {
-    m_liftmotor_0->Set(value);
-    m_liftmotor_1->Set(value);
+	if(m_manual == true) {
+		m_liftmotors->setManual(value);
+	}
+
 }
 
+void Elevator::setManualMode(bool on) {
+	m_manual = on;
+}
+
+bool Elevator::getManualMode() {
+	return m_manual;
+}
+
+void Elevator::setHeight(float height) {
+	if(m_manual == false) {
+		m_liftmotors->setSetpoint(height);
+	}
+
+}

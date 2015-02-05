@@ -9,6 +9,8 @@
 #define SRC_ELEVATOR_H_
 
 #include "WPILib.h"
+#include "GearBox.hpp"
+#include "../Settings.hpp"
 
 class Elevator {
 public:
@@ -32,6 +34,10 @@ public:
     void intakeWheels(IntakeMotorState state);
     IntakeMotorState getIntakeWheels();
     void setIntakeMotorState(float value);
+    void reloadPID();
+    void setManualMode(bool on);
+    bool getManualMode();
+    void setHeight(float height);
 
 
 private:
@@ -42,8 +48,10 @@ private:
     Solenoid* m_intakeVertical;
     Solenoid* m_intakeGrabber;
     CANTalon* m_intakeWheels;
-    CANTalon* m_liftmotor_0;
-    CANTalon* m_liftmotor_1;
+    GearBox<CANTalon>* m_liftmotors;
+    Settings* m_settings;
+    bool m_manual;
+
 };
 
 #endif /* SRC_ELEVATOR_H_ */
