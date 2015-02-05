@@ -6,6 +6,8 @@
  */
 
 #include "Elevator.hpp"
+#include "Solenoid.h"
+#include "CANTalon.h"
 
 Elevator::Elevator() {
     m_grabSolenoid = new Solenoid(1);
@@ -16,8 +18,14 @@ Elevator::Elevator() {
     m_intakeState = S_STOPPED;
     m_manual = false;
 
-    m_liftmotors = new GearBox<CANTalon>(-1, 4, 5);
-    m_liftmotors->setDistancePerPulse(360);
+    m_liftGrbx = new GearBox<CANTalon>(-1, 4, 5);
+    /* gear ratio is 48 driver to 26 driven from output of gearbox (where
+     * encoder shaft is located), therefore:
+     * distance per pulse = 26/48/(number of pulses per revolution)
+     *                    = 26/48/360
+     *                    = 26/(48*360)
+     */
+    m_liftGrbx->setDistancePerPulse(26 / (48 * 360));
     reloadPID();
 }
 
@@ -27,49 +35,34 @@ Elevator::~Elevator() {
     delete m_intakeGrabber;
     delete m_intakeWheels;
     delete m_settings;
-    delete m_liftmotors;
-    // TODO Auto-generated destructor stub
-}
-
-void Elevator::reloadPID() {
-    m_settings->update();
-
-    float p = 0.f;
-    float i = 0.f;
-    float d = 0.f;
-
-    // Set shooter rotator PID
-    p = m_settings->getFloat("PID_ARM_ROTATE_P");
-    i = m_settings->getFloat("PID_ARM_ROTATE_I");
-    d = m_settings->getFloat("PID_ARM_ROTATE_D");
-    m_liftmotors->setPID(p, i, d);
+    delete m_liftGrbx;
 }
 
 void Elevator::elevatorGrab(bool state) {
     m_grabSolenoid->Set(state);
 }
 
-void Elevator::intakeGrab(bool state) {
-    m_intakeGrabber->Set(state);
-}
-
-void Elevator::intakeVer(bool state) {
-    m_intakeVertical->Set(state);
-}
-
 bool Elevator::getElevatorGrab() {
     return m_grabSolenoid->Get();
+}
+
+void Elevator::intakeGrab(bool state) {
+    m_intakeGrabber->Set(state);
 }
 
 bool Elevator::getIntakeGrab() {
     return m_intakeGrabber->Get();
 }
 
-bool Elevator::getIntakeVer() {
+void Elevator::stowIntake(bool state) {
+    m_intakeVertical->Set(state);
+}
+
+bool Elevator::isIntakeStowed() {
     return m_intakeVertical->Get();
 }
 
-void Elevator::intakeWheels(IntakeMotorState state) {
+void Elevator::setIntakeDirection(IntakeMotorState state) {
     m_intakeState = state;
 
     if (state == S_STOPPED) {
@@ -83,13 +76,16 @@ void Elevator::intakeWheels(IntakeMotorState state) {
     }
 }
 
-Elevator::IntakeMotorState Elevator::getIntakeWheels() {
+Elevator::IntakeMotorState Elevator::getIntakeDirection() {
     return m_intakeState;
 }
 
-void Elevator::setIntakeMotorState(float value) {
+void Elevator::stop(bool state) {
+}
+
+void Elevator::setManualLiftSpeed(float value) {
     if (m_manual == true) {
-        m_liftmotors->setManual(value);
+        m_liftGrbx->setManual(value);
     }
 }
 
@@ -103,7 +99,21 @@ bool Elevator::getManualMode() {
 
 void Elevator::setHeight(float height) {
     if (m_manual == false) {
-        m_liftmotors->setSetpoint(height);
+        m_liftGrbx->setSetpoint(height);
     }
+}
+
+void Elevator::reloadPID() {
+    m_settings->update();
+
+    float p = 0.f;
+    float i = 0.f;
+    float d = 0.f;
+
+    // Set shooter rotator PID
+    p = m_settings->getFloat("PID_ELEVATOR_P");
+    i = m_settings->getFloat("PID_ELEVATOR_I");
+    d = m_settings->getFloat("PID_ELEVATOR_D");
+    m_liftGrbx->setPID(p, i, d);
 }
 
