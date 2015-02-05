@@ -16,19 +16,18 @@ Elevator::Elevator() {
     m_intakeState = S_STOPPED;
     m_manual = false;
 
-    m_liftmotors = new GearBox<CANTalon> (-1, 4, 5);
+    m_liftmotors = new GearBox<CANTalon>(-1, 4, 5);
     m_liftmotors->setDistancePerPulse(360);
     reloadPID();
-
 }
 
 Elevator::~Elevator() {
-	delete m_grabSolenoid;
-	delete m_intakeVertical;
-	delete m_intakeGrabber;
-	delete m_intakeWheels;
-	delete m_settings;
-	delete m_liftmotors;
+    delete m_grabSolenoid;
+    delete m_intakeVertical;
+    delete m_intakeGrabber;
+    delete m_intakeWheels;
+    delete m_settings;
+    delete m_liftmotors;
     // TODO Auto-generated destructor stub
 }
 
@@ -40,10 +39,10 @@ void Elevator::reloadPID() {
     float d = 0.f;
 
     // Set shooter rotator PID
-    p = m_settings->getFloat( "PID_ARM_ROTATE_P" );
-    i = m_settings->getFloat( "PID_ARM_ROTATE_I" );
-    d = m_settings->getFloat( "PID_ARM_ROTATE_D" );
-    m_liftmotors->setPID( p , i , d );
+    p = m_settings->getFloat("PID_ARM_ROTATE_P");
+    i = m_settings->getFloat("PID_ARM_ROTATE_I");
+    d = m_settings->getFloat("PID_ARM_ROTATE_D");
+    m_liftmotors->setPID(p, i, d);
 }
 
 void Elevator::elevatorGrab(bool state) {
@@ -89,23 +88,22 @@ Elevator::IntakeMotorState Elevator::getIntakeWheels() {
 }
 
 void Elevator::setIntakeMotorState(float value) {
-	if(m_manual == true) {
-		m_liftmotors->setManual(value);
-	}
-
+    if (m_manual == true) {
+        m_liftmotors->setManual(value);
+    }
 }
 
 void Elevator::setManualMode(bool on) {
-	m_manual = on;
+    m_manual = on;
 }
 
 bool Elevator::getManualMode() {
-	return m_manual;
+    return m_manual;
 }
 
 void Elevator::setHeight(float height) {
-	if(m_manual == false) {
-		m_liftmotors->setSetpoint(height);
-	}
-
+    if (m_manual == false) {
+        m_liftmotors->setSetpoint(height);
+    }
 }
+

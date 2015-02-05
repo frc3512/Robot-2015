@@ -105,17 +105,17 @@ void Robot::OperatorControl() {
          */
 
         /* Manual state machine */
-        if(elevatorButtons.releasedButton(2)) {
-        	ev->setManualMode(!ev->getManualMode());
+        if (elevatorButtons.releasedButton(2)) {
+            ev->setManualMode(!ev->getManualMode());
         }
 
         /* Automatic preset buttons (7-12) */
-        if(elevatorButtons.releasedButton(7)) {
-			ev->setHeight(0);
-		}
-        if(elevatorButtons.releasedButton(8)) {
-			ev->setHeight(10);
-		}
+        if (elevatorButtons.releasedButton(7)) {
+            ev->setHeight(0);
+        }
+        if (elevatorButtons.releasedButton(8)) {
+            ev->setHeight(10);
+        }
 
         /* Set manual value */
         ev->setIntakeMotorState(shootStick->GetY());

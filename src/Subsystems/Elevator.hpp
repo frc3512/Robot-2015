@@ -51,7 +51,6 @@ private:
     GearBox<CANTalon>* m_liftmotors;
     Settings* m_settings;
     bool m_manual;
-
 };
 
 #endif /* SRC_ELEVATOR_H_ */
