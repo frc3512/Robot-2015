@@ -23,6 +23,12 @@ Elevator::Elevator() {
 }
 
 Elevator::~Elevator() {
+	delete m_grabSolenoid;
+	delete m_intakeVertical;
+	delete m_intakeGrabber;
+	delete m_intakeWheels;
+	delete m_settings;
+	delete m_liftmotors;
     // TODO Auto-generated destructor stub
 }
 
