@@ -29,7 +29,6 @@ Elevator::~Elevator() {
 	delete m_intakeWheels;
 	delete m_settings;
 	delete m_liftmotors;
-    // TODO Auto-generated destructor stub
 }
 
 void Elevator::reloadPID() {
@@ -40,9 +39,9 @@ void Elevator::reloadPID() {
     float d = 0.f;
 
     // Set shooter rotator PID
-    p = m_settings->getFloat( "PID_ARM_ROTATE_P" );
-    i = m_settings->getFloat( "PID_ARM_ROTATE_I" );
-    d = m_settings->getFloat( "PID_ARM_ROTATE_D" );
+    p = m_settings->getFloat( "PID_ELEVATOR_P" );
+    i = m_settings->getFloat( "PID_ELEVATOR_I" );
+    d = m_settings->getFloat( "PID_ELEVATOR_D" );
     m_liftmotors->setPID( p , i , d );
 }
 
