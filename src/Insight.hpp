@@ -15,17 +15,11 @@
 #include <utility>
 #include <cstdint>
 
-class InsightInit {
-public:
-    InsightInit();
-    ~InsightInit();
-};
-
 class Insight {
 public:
     virtual ~Insight();
 
-    static Insight* getInstance(unsigned short dsPort);
+    static Insight& getInstance(unsigned short dsPort);
 
     // Receives control commands from Driver Station and processes them
     const std::string receiveFromDS();
@@ -41,9 +35,7 @@ private:
     Insight(unsigned short portNumber);
 
     Insight(const Insight&);
-    Insight& operator=(const Insight&);
-
-    static Insight* m_insight;
+    Insight& operator=(const Insight&) = delete;
 
     sf::UdpSocket m_socket;
 
@@ -54,10 +46,6 @@ private:
 
     std::vector<std::pair<char, char>> m_targets;
     bool m_hasNewData;
-
-    // Allows class to clean itself up when the robot task exits
-    friend class InsightInit;
-    static InsightInit deleter;
 };
 
 #endif // INSIGHT_HPP

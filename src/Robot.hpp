@@ -29,19 +29,8 @@ public:
     void OperatorControl();
     void Autonomous();
     void Disabled();
-    void Test();
-    bool testDriveTrain(bool shifterState,
-                        bool direction,
-                        float lowerBound,
-                        float upperBound);
-    void calibrateTalons();
 
-    bool checkReflectiveStrips();
-
-    void RightLeftAuton();
     void AutonMotionProfile();
-    void DriveForwardAuton();
-    void SideAuton();
     void NoopAuton();
 
     void DS_PrintOut();
@@ -64,12 +53,11 @@ private:
 
     // Used for sending data to the Driver Station
     DriverStationDisplay& dsDisplay;
+    Insight& insight;
 
     // The LiveGrapher host
     GraphHost pidGraph;
 
-    Insight* insight;
-    DriverStation* ds;
     Elevator* ev;
     Logger* logger1;
     LogFileSink* logFileSink;

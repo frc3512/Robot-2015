@@ -7,25 +7,13 @@
 #include "Insight.hpp"
 #include <cstring>
 
-Insight* Insight::m_insight = nullptr;
-
-InsightInit::InsightInit() {
-}
-
-InsightInit::~InsightInit() {
-    delete Insight::m_insight;
-}
-
 Insight::~Insight() {
     m_socket.unbind();
 }
 
-Insight* Insight::getInstance(unsigned short dsPort) {
-    if (m_insight == nullptr) {
-        m_insight = new Insight(dsPort);
-    }
-
-    return m_insight;
+Insight& Insight::getInstance(unsigned short dsPort) {
+    static Insight insight(dsPort);
+    return insight;
 }
 
 const std::string Insight::receiveFromDS() {
