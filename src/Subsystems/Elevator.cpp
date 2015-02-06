@@ -35,7 +35,7 @@ Elevator::~Elevator() {
 	delete m_intakeGrabber;
 	delete m_intakeWheels;
 	delete m_settings;
-	delete m_liftmotors;
+	delete m_liftGrbx;
 }
 
 void Elevator::elevatorGrab(bool state) {
