@@ -1,3 +1,4 @@
+#include <Subsystems/ElevatorAutomatic.hpp>
 #include "Robot.hpp"
 #include <cmath>
 #include "DriverStation.h"
@@ -18,6 +19,7 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
     autonTimer = new Timer;
     displayTimer = new Timer;
     ev = new Elevator;
+    elevatorAutomatic = new ElevatorAutomatic(ev);
 
     dsDisplay.addAutonMethod("MotionProfile",
                              &Robot::AutonMotionProfile,
@@ -97,11 +99,12 @@ void Robot::OperatorControl() {
             // std::cout << ev->getIntakeVer() << std::endl;
             ev->stowIntake(!ev->isIntakeStowed());
         }
-        if (elevatorButtons.releasedButton(3)) {
+
+        if (shootStick->GetPOV() == 0) {
             // std::cout << ev->getIntakeWheels() << std::endl;
             ev->setIntakeDirection(Elevator::S_FORWARD);
         }
-        else if (elevatorButtons.releasedButton(4)) {
+        else if (shootStick->GetPOV() == 180) {
             // std::cout << ev->getIntakeWheels() << std::endl;
             ev->setIntakeDirection(Elevator::S_REVERSED);
         }

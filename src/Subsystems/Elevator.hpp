@@ -54,6 +54,8 @@ public:
 
     void reloadPID();
 
+    bool onTarget();
+
 private:
     Solenoid* m_grabSolenoid;
 

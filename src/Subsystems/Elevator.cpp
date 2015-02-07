@@ -117,3 +117,6 @@ void Elevator::reloadPID() {
     m_liftGrbx->setPID(p, i, d);
 }
 
+bool Elevator::onTarget() {
+	return m_liftGrbx->onTarget();
+}

@@ -8,6 +8,7 @@
 
 #include "Subsystems/DriveTrain.hpp"
 #include "Subsystems/Elevator.hpp"
+#include "Subsystems/ElevatorAutomatic.hpp"
 #include "ButtonTracker.hpp"
 #include "Settings.hpp"
 
@@ -59,6 +60,7 @@ private:
     GraphHost pidGraph;
 
     Elevator* ev;
+    ElevatorAutomatic* elevatorAutomatic;
     Logger* logger1;
     LogFileSink* logFileSink;
     LogServerSink* logServerSink;
