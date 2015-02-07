@@ -11,15 +11,14 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                                settings.getInt("DS_Port"))),
                  insight(Insight::getInstance(settings.getInt("Insight_Port"))),
                  pidGraph(3513) {
-    robotDrive = new DriveTrain;
+    robotDrive = std::make_unique<DriveTrain>();
 
-    driveStick1 = new Joystick(0);
-    driveStick2 = new Joystick(1);
-    shootStick = new Joystick(2);
-    autonTimer = new Timer;
-    displayTimer = new Timer;
-    ev = new Elevator;
-    elevatorAutomatic = new ElevatorAutomatic(ev);
+    driveStick1 = std::make_unique<Joystick>(0);
+    driveStick2 = std::make_unique<Joystick>(1);
+    shootStick = std::make_unique<Joystick>(2);
+    autonTimer = std::make_unique<Timer>();
+    displayTimer = std::make_unique<Timer>();
+    ev = std::make_unique<ElevatorAutomatic>();
 
     dsDisplay.addAutonMethod("MotionProfile",
                              &Robot::AutonMotionProfile,
@@ -29,29 +28,23 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
     pidGraph.setSendInterval(200);
 
     logger1 = new Logger;
-    ls = new LogStream(logger1);
+    ls = std::make_unique<LogStream>(logger1);
+
     logFileSink = new LogFileSink("/home/admin/LogFile.txt");
-    logServerSink = new LogServerSink;
-    logger1->addLogSink(logFileSink);
-    logger1->addLogSink(logServerSink);
     logFileSink->setVerbosityLevels(LogEvent::VERBOSE_ALL);
+
+    logServerSink = new LogServerSink;
     logServerSink->setVerbosityLevels(LogEvent::VERBOSE_ALL);
     logServerSink->startServer(4097);
+
+    logger1->addLogSink(logFileSink);
+    logger1->addLogSink(logServerSink);
+
     displayTimer->Start();
 }
 
 Robot::~Robot() {
-    delete robotDrive;
-
-    delete driveStick1;
-    delete driveStick2;
-    delete shootStick;
-
-    delete autonTimer;
-    delete displayTimer;
-    delete ev;
     delete logger1;
-    delete ls;
     delete logFileSink;
     delete logServerSink;
 }

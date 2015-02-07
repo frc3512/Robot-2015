@@ -1,13 +1,14 @@
 #ifndef _ROBOT_HPP
 #define _ROBOT_HPP
 
+#include <memory>
+
 #include <SampleRobot.h>
 #include <Joystick.h>
 #include <Solenoid.h>
 #include <Timer.h>
 
 #include "Subsystems/DriveTrain.hpp"
-#include "Subsystems/Elevator.hpp"
 #include "Subsystems/ElevatorAutomatic.hpp"
 #include "ButtonTracker.hpp"
 #include "Settings.hpp"
@@ -39,18 +40,18 @@ public:
 private:
     Settings settings;
 
-    DriveTrain* robotDrive;
+    std::unique_ptr<DriveTrain> robotDrive;
 
-    Joystick* driveStick1;
-    Joystick* driveStick2;
-    Joystick* shootStick;
+    std::unique_ptr<Joystick> driveStick1;
+    std::unique_ptr<Joystick> driveStick2;
+    std::unique_ptr<Joystick> shootStick;
 
     ButtonTracker drive1Buttons;
     ButtonTracker drive2Buttons;
     ButtonTracker elevatorButtons;
 
-    Timer* autonTimer;
-    Timer* displayTimer;
+    std::unique_ptr<Timer> autonTimer;
+    std::unique_ptr<Timer> displayTimer;
 
     // Used for sending data to the Driver Station
     DriverStationDisplay& dsDisplay;
@@ -59,12 +60,11 @@ private:
     // The LiveGrapher host
     GraphHost pidGraph;
 
-    Elevator* ev;
-    ElevatorAutomatic* elevatorAutomatic;
+    std::unique_ptr<ElevatorAutomatic> ev;
     Logger* logger1;
     LogFileSink* logFileSink;
     LogServerSink* logServerSink;
-    LogStream* ls;
+    std::unique_ptr<LogStream> ls;
 };
 
 #endif // _ROBOT_HPP

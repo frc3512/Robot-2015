@@ -9,23 +9,21 @@
 #define SRC_SUBSYSTEMS_ELEVATORAUTOMATIC_HPP_
 
 #include "Elevator.hpp"
-#include "Timer.h"
+#include <Timer.h>
 
-class ElevatorAutomatic {
+class ElevatorAutomatic : public Elevator {
 public:
     enum ElevatorState {
         STATE_IDLE,
-        STATE_BUTTON_DONE,
-        STATE_INITIAL_SEEK_DONE,
-        STATE_INITIAL_SEEK,
-        STATE_SECOND_SEEK,
-        STATE_GRAB,
-        STATE_THIRD_SEEK,
+        STATE_WAIT_INITIAL_HEIGHT,
+        STATE_SEEK_DROP_TOTES,
         STATE_RELEASE,
-        STATE_FOURTH_SEEK
+        STATE_SEEK_GROUND,
+        STATE_GRAB,
+        STATE_SEEK_HALF_TOTE
     };
 
-    ElevatorAutomatic(Elevator* elevator);
+    ElevatorAutomatic();
     virtual ~ElevatorAutomatic();
 
     void updateState();
@@ -37,9 +35,9 @@ private:
 
     const float m_toteHeights[5] {100, 150, 180, 200, 210};
 
-    Elevator* m_elevator;
+    std::unique_ptr<Elevator> m_elevator;
     ElevatorState m_state;
-    Timer* m_timer;
+    std::unique_ptr<Timer> m_grabTimer;
     int m_ntotes;
 };
 

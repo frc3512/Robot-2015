@@ -10,15 +10,15 @@
 #include "CANTalon.h"
 
 Elevator::Elevator() {
-    m_grabSolenoid = new Solenoid(1);
-    m_intakeVertical = new Solenoid(2);
-    m_intakeGrabber = new Solenoid(3);
-    m_intakeWheels = new CANTalon(6);
-    m_settings = new Settings("/home/lvuser/RobotSettings.txt");
+    m_grabSolenoid = std::make_unique<Solenoid>(1);
+    m_intakeVertical = std::make_unique<Solenoid>(2);
+    m_intakeGrabber = std::make_unique<Solenoid>(3);
+    m_intakeWheels = std::make_unique<CANTalon>(6);
+    m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
     m_intakeState = S_STOPPED;
     m_manual = false;
 
-    m_liftGrbx = new GearBox<CANTalon>(-1, 4, 5);
+    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 4, 5);
     /* gear ratio is 48 driver to 26 driven from output of gearbox (where
      * encoder shaft is located), therefore:
      * distance per pulse = 26/48/(number of pulses per revolution)
@@ -30,12 +30,6 @@ Elevator::Elevator() {
 }
 
 Elevator::~Elevator() {
-    delete m_grabSolenoid;
-    delete m_intakeVertical;
-    delete m_intakeGrabber;
-    delete m_intakeWheels;
-    delete m_settings;
-    delete m_liftGrbx;
 }
 
 void Elevator::elevatorGrab(bool state) {
@@ -101,6 +95,10 @@ void Elevator::setHeight(float height) {
     if (m_manual == false) {
         m_liftGrbx->setSetpoint(height);
     }
+}
+
+float Elevator::getHeight() {
+    return m_liftGrbx->get();
 }
 
 void Elevator::reloadPID() {
