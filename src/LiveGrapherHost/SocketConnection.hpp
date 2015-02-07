@@ -15,25 +15,41 @@ public:
         Error = 4
     };
 
-    SocketConnection(int nfd);
+    SocketConnection(int nfd, int ipcWriteSock);
     virtual ~SocketConnection();
-    SocketConnection(const SocketConnection& rhs) = delete;
+    SocketConnection(SocketConnection&&) = default;
+    SocketConnection& operator=(SocketConnection&&) = default;
 
-    std::vector<std::string> datasets;
+    int readh();
+    int readdoneh(std::string& buf);
+    int sendlist();
+    int writeh();
+    template <class T>
+    int queuewrite(T& buf);
+
+    // Contains all graphs
+    static std::vector<std::string> graphNames;
+
     int fd;
     uint8_t selectflags;
+    std::vector<std::string> datasets;
+
+private:
+    int m_ipcfd_w;
 
     // Write buffer currently being written
-    std::string writebuf; // The buffer that needs to be written into the socket
-    size_t writebufoffset; // How much has been written so far
-    bool writedone;
-    std::queue<std::string> writequeue;
+    std::string m_writebuf; // The buffer that needs to be written into the socket
+    size_t m_writebufoffset; // How much has been written so far
+    bool m_writedone;
+    std::queue<std::string> m_writequeue;
 
     // Read buffer currently being read
-    std::string readbuf;
-    size_t readbufoffset;
-    bool readdone;
+    std::string m_readbuf;
+    size_t m_readbufoffset;
+    bool m_readdone;
 };
+
+#include "SocketConnection.inl"
 
 #endif // SOCKET_CONNECTION_HPP
 
