@@ -7,7 +7,7 @@
 #include "AutonContainer.hpp"
 
 AutonMethod::AutonMethod(const std::string& methodName,
-        std::function<void()> func) {
+                         std::function<void()> func) {
     name = methodName;
     function = func;
 }
@@ -36,5 +36,4 @@ void AutonContainer::execAutonomous(size_t pos) {
     // Runs the routine
     (auton.function)();
 }
-
 
