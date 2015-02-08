@@ -1,3 +1,9 @@
+// =============================================================================
+// File Name: GraphHost.cpp
+// Description: The host for the LiveGrapher real-time graphing application
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
+
 #include "GraphHost.hpp"
 #include <chrono>
 

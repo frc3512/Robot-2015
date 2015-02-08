@@ -27,26 +27,10 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
 
     pidGraph.setSendInterval(200);
 
-    logger1 = new Logger;
-    ls = std::make_unique<LogStream>(logger1);
-
-    logFileSink = new LogFileSink("/home/admin/LogFile.txt");
-    logFileSink->setVerbosityLevels(LogEvent::VERBOSE_ALL);
-
-    logServerSink = new LogServerSink;
-    logServerSink->setVerbosityLevels(LogEvent::VERBOSE_ALL);
-    logServerSink->startServer(4097);
-
-    logger1->addLogSink(logFileSink);
-    logger1->addLogSink(logServerSink);
-
     displayTimer->Start();
 }
 
 Robot::~Robot() {
-    delete logger1;
-    delete logFileSink;
-    delete logServerSink;
 }
 
 void Robot::OperatorControl() {

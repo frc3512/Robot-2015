@@ -1,12 +1,11 @@
-/*
- * ElevatorAutomatic.hpp
- *
- *  Created on: Feb 6, 2015
- *      Author: amelia
- */
+// =============================================================================
+// File Name: ElevatorAutomatic.hpp
+// Description: Implements elevator auto-stacking
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
-#ifndef SRC_SUBSYSTEMS_ELEVATORAUTOMATIC_HPP_
-#define SRC_SUBSYSTEMS_ELEVATORAUTOMATIC_HPP_
+#ifndef ELEVATOR_AUTOMATIC_HPP
+#define ELEVATOR_AUTOMATIC_HPP
 
 #include "Elevator.hpp"
 #include <Timer.h>
@@ -41,5 +40,5 @@ private:
     int m_ntotes;
 };
 
-#endif /* SRC_SUBSYSTEMS_ELEVATORAUTOMATIC_HPP_ */
+#endif // ELEVATOR_AUTOMATIC_HPP
 
