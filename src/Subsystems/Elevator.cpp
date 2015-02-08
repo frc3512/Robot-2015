@@ -13,12 +13,13 @@ Elevator::Elevator() {
     m_grabSolenoid = std::make_unique<Solenoid>(1);
     m_intakeVertical = std::make_unique<Solenoid>(2);
     m_intakeGrabber = std::make_unique<Solenoid>(3);
-    m_intakeWheels = std::make_unique<CANTalon>(6);
+    m_intakeWheelLeft = std::make_unique<CANTalon>(6);
+    m_intakeWheelRight = std::make_unique<CANTalon>(2);
     m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
     m_intakeState = S_STOPPED;
     m_manual = false;
 
-    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 4, 5);
+    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 3, 7);
     /* gear ratio is 48 driver to 26 driven from output of gearbox (where
      * encoder shaft is located), therefore:
      * distance per pulse = 26/48/(number of pulses per revolution)
@@ -60,13 +61,16 @@ void Elevator::setIntakeDirection(IntakeMotorState state) {
     m_intakeState = state;
 
     if (state == S_STOPPED) {
-        m_intakeWheels->Set(0);
+        m_intakeWheelLeft->Set(0);
+        m_intakeWheelRight->Set(0);
     }
     else if (state == S_FORWARD) {
-        m_intakeWheels->Set(1);
+        m_intakeWheelLeft->Set(1);
+        m_intakeWheelRight->Set(-1);
     }
     else if (state == S_REVERSED) {
-        m_intakeWheels->Set(-1);
+        m_intakeWheelLeft->Set(-1);
+        m_intakeWheelRight->Set(1);
     }
 }
 

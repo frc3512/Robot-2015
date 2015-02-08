@@ -66,7 +66,8 @@ private:
     IntakeMotorState m_intakeState;
     std::unique_ptr<Solenoid> m_intakeVertical;
     std::unique_ptr<Solenoid> m_intakeGrabber;
-    std::unique_ptr<CANTalon> m_intakeWheels;
+    std::unique_ptr<CANTalon> m_intakeWheelLeft;
+    std::unique_ptr<CANTalon> m_intakeWheelRight;
     std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
     std::unique_ptr<Settings> m_settings;
     bool m_manual;

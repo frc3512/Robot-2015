@@ -29,10 +29,10 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
     m_quickStopAccumulator = 0.f;
     m_negInertiaAccumulator = 0.f;
 
-    m_leftFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 0);
-    m_leftBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 1);
-    m_rightFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 2);
-    m_rightBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 3);
+    m_leftFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 1);
+    m_leftBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 4);
+    m_rightFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 5);
+    m_rightBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 8);
 
     m_isDefencive = (false);
     // c = PI * 10.16cm [wheel diameter]
