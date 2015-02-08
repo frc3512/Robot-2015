@@ -6,8 +6,10 @@
 
 #include "AutonContainer.hpp"
 
-AutonContainer::~AutonContainer() {
-    deleteAllMethods();
+AutonMethod::AutonMethod(const std::string& methodName,
+        std::function<void()> func) {
+    name = methodName;
+    function = func;
 }
 
 void AutonContainer::addMethod(const std::string& methodName,
@@ -29,9 +31,10 @@ const std::string& AutonContainer::name(size_t pos) {
 
 void AutonContainer::execAutonomous(size_t pos) {
     // Retrieves correct autonomous routine
-    AutonMethod* auton = &m_functionList[pos];
+    auto& auton = m_functionList[pos];
 
     // Runs the routine
-    (auton->function)();
+    (auton.function)();
 }
+
 
