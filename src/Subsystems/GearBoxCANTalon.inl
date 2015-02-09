@@ -57,14 +57,19 @@ inline void GearBox<CANTalon>::setSetpoint(float setpoint) {
 }
 
 inline void GearBox<CANTalon>::setManual(float value) {
-    for (auto& motor : m_motors) {
-        motor->SetControlMode(CANTalon::kPercentVbus);
-
-        if (!m_isMotorReversed) {
-            motor->Set(value);
+    for (unsigned int i = 0; i < m_motors.size(); i++) {
+        if (i == 0) {
+            m_motors[i]->SetControlMode(CANTalon::kPercentVbus);
         }
         else {
-            motor->Set(-value);
+            m_motors[i]->SetControlMode(CANTalon::kFollower);
+        }
+
+        if (!m_isMotorReversed) {
+            m_motors[i]->Set(value);
+        }
+        else {
+            m_motors[i]->Set(-value);
         }
     }
 }

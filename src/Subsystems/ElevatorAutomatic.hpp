@@ -8,6 +8,8 @@
 #define ELEVATOR_AUTOMATIC_HPP
 
 #include "Elevator.hpp"
+#include <vector>
+#include <memory>
 #include <Timer.h>
 
 class ElevatorAutomatic : public Elevator {
@@ -32,7 +34,7 @@ public:
 private:
     void stateChanged(ElevatorState oldState, ElevatorState newState);
 
-    const float m_toteHeights[5] {100, 150, 180, 200, 210};
+    const std::vector<float> m_toteHeights{0, 12, 24, 36, 210};
 
     std::unique_ptr<Elevator> m_elevator;
     ElevatorState m_state;

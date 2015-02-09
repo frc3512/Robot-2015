@@ -64,29 +64,22 @@ void Robot::OperatorControl() {
 
         /* Trailing edge of trigger press */
         if (elevatorButtons.releasedButton(1)) {
-            // ...
-            // std::cout << ev->getElevatorGrab() << std::endl;
             ev->elevatorGrab(!ev->getElevatorGrab());
         }
         if (elevatorButtons.releasedButton(5)) {
-            // std::cout << ev->getIntakeGrab() << std::endl;
             ev->intakeGrab(!ev->getIntakeGrab());
         }
         if (elevatorButtons.releasedButton(6)) {
-            // std::cout << ev->getIntakeVer() << std::endl;
             ev->stowIntake(!ev->isIntakeStowed());
         }
 
         if (shootStick->GetPOV() == 0) {
-            // std::cout << ev->getIntakeWheels() << std::endl;
             ev->setIntakeDirection(Elevator::S_FORWARD);
         }
         else if (shootStick->GetPOV() == 180) {
-            // std::cout << ev->getIntakeWheels() << std::endl;
             ev->setIntakeDirection(Elevator::S_REVERSED);
         }
         else {
-            // std::cout << ev->getIntakeWheels() << std::endl;
             ev->setIntakeDirection(Elevator::S_STOPPED);
         }
 
@@ -132,7 +125,6 @@ void Robot::DS_PrintOut() {
         dsDisplay.addElementData("RIGHT_RPM", robotDrive->getRightRate());
         dsDisplay.addElementData("LEFT_DIST", robotDrive->getLeftDist());
         dsDisplay.addElementData("RIGHT_DIST", robotDrive->getRightDist());
-
 
         dsDisplay.sendToDS();
     }
