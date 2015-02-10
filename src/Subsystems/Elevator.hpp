@@ -58,6 +58,7 @@ public:
 
     bool onTarget();
 
+
 private:
     std::unique_ptr<Solenoid> m_grabSolenoid;
 

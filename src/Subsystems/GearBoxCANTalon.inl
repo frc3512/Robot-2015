@@ -98,7 +98,7 @@ inline void GearBox<CANTalon>::resetEncoder() {
 }
 
 inline double GearBox<CANTalon>::getDistance() {
-    return m_motors[0]->GetEncPosition();
+    return m_motors[0]->GetEncPosition() / m_distancePerPulse;
 }
 
 inline double GearBox<CANTalon>::getRate() {

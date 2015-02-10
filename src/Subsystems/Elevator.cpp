@@ -101,7 +101,7 @@ void Elevator::setHeight(float height) {
 }
 
 float Elevator::getHeight() {
-    return m_liftGrbx->get();
+    return m_liftGrbx->getDistance();
 }
 
 void Elevator::reloadPID() {

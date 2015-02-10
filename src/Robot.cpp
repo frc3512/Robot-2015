@@ -59,6 +59,9 @@ void Robot::OperatorControl() {
             ev->setHeight(10);
         }
 
+        /* Print the height for debugging */
+        std::cout << "Height=" << ev->getHeight() << std::endl;
+
         /* Set manual value */
         ev->setManualLiftSpeed(shootStick->GetY());
 
