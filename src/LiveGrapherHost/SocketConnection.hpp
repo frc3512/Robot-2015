@@ -1,3 +1,9 @@
+// =============================================================================
+// File Name: SocketConnection.hpp
+// Description: Wrapper around graph client socket descriptors
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
+
 #ifndef SOCKET_CONNECTION_HPP
 #define SOCKET_CONNECTION_HPP
 

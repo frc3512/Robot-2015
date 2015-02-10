@@ -1,12 +1,11 @@
-/*
- * Elevator.h
- *
- *  Created on: Jan 16, 2015
- *      Author: acf
- */
+// =============================================================================
+// File Name: Elevator.hpp
+// Description: Provides an interface for the robot's elevator
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
-#ifndef SRC_ELEVATOR_H_
-#define SRC_ELEVATOR_H_
+#ifndef ELEVATOR_HPP
+#define ELEVATOR_HPP
 
 class Solenoid;
 class CANTalon;
@@ -73,5 +72,5 @@ private:
     bool m_manual;
 };
 
-#endif /* SRC_ELEVATOR_H_ */
+#endif // ELEVATOR_HPP
 

@@ -1,14 +1,15 @@
-/*
- * ElevatorAutomatic.hpp
- *
- *  Created on: Feb 6, 2015
- *      Author: amelia
- */
+// =============================================================================
+// File Name: ElevatorAutomatic.hpp
+// Description: Implements elevator auto-stacking
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
-#ifndef SRC_SUBSYSTEMS_ELEVATORAUTOMATIC_HPP_
-#define SRC_SUBSYSTEMS_ELEVATORAUTOMATIC_HPP_
+#ifndef ELEVATOR_AUTOMATIC_HPP
+#define ELEVATOR_AUTOMATIC_HPP
 
 #include "Elevator.hpp"
+#include <vector>
+#include <memory>
 #include <Timer.h>
 
 class ElevatorAutomatic : public Elevator {
@@ -33,7 +34,7 @@ public:
 private:
     void stateChanged(ElevatorState oldState, ElevatorState newState);
 
-    const float m_toteHeights[5] {100, 150, 180, 200, 210};
+    const std::vector<float> m_toteHeights{0, 12, 24, 36, 210};
 
     std::unique_ptr<Elevator> m_elevator;
     ElevatorState m_state;
@@ -41,5 +42,5 @@ private:
     int m_ntotes;
 };
 
-#endif /* SRC_SUBSYSTEMS_ELEVATORAUTOMATIC_HPP_ */
+#endif // ELEVATOR_AUTOMATIC_HPP
 

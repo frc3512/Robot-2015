@@ -15,16 +15,11 @@ struct AutonMethod {
     std::string name;
     std::function<void()> function;
 
-    AutonMethod(const std::string& methodName, std::function<void()> func) {
-        name = methodName;
-        function = func;
-    }
+    AutonMethod(const std::string& methodName, std::function<void()> func);
 };
 
 class AutonContainer {
 public:
-    virtual ~AutonContainer();
-
     // Add and remove autonomous functions
     void addMethod(const std::string& methodName,
                    std::function<void()> func);

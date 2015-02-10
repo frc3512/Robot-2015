@@ -1,9 +1,8 @@
-/*
- * Elevator.cpp
- *
- *  Created on: Jan 16, 2015
- *      Author: acf
- */
+// =============================================================================
+// File Name: Elevator.cpp
+// Description: Provides an interface for the robot's elevator
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #include "Elevator.hpp"
 #include "Solenoid.h"

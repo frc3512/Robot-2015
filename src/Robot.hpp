@@ -1,5 +1,5 @@
-#ifndef _ROBOT_HPP
-#define _ROBOT_HPP
+#ifndef ROBOT_HPP
+#define ROBOT_HPP
 
 #include <memory>
 
@@ -16,13 +16,6 @@
 #include "DriverStationDisplay.hpp"
 #include "LiveGrapherHost/GraphHost.hpp"
 #include "Insight.hpp"
-
-#include "Logging/LogConsoleSink.hpp"
-#include "Logging/LogFileSink.hpp"
-#include "Logging/Logger.hpp"
-#include "Logging/LogServerSink.hpp"
-#include "Logging/LogStream.hpp"
-#include "Logging/SetLogLevel.hpp"
 
 class Robot : public SampleRobot {
 public:
@@ -61,11 +54,7 @@ private:
     GraphHost pidGraph;
 
     std::unique_ptr<ElevatorAutomatic> ev;
-    Logger* logger1;
-    LogFileSink* logFileSink;
-    LogServerSink* logServerSink;
-    std::unique_ptr<LogStream> ls;
 };
 
-#endif // _ROBOT_HPP
+#endif // ROBOT_HPP
 

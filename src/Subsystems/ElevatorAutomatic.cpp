@@ -1,9 +1,8 @@
-/*
- * ElevatorAutomatic.cpp
- *
- *  Created on: Feb 6, 2015
- *      Author: amelia
- */
+// =============================================================================
+// File Name: ElevatorAutomatic.cpp
+// Description: Provides an interface for the robot's elevator
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
 
 #include "Subsystems/ElevatorAutomatic.hpp"
 
