@@ -104,6 +104,15 @@ float Elevator::getHeight() {
     return m_liftGrbx->getDistance();
 }
 
+float Elevator::getSetpoint() {
+    if (!m_manual) {
+        return m_liftGrbx->get();
+    }
+    else {
+        return 0;
+    }
+}
+
 void Elevator::reloadPID() {
     m_settings->update();
 

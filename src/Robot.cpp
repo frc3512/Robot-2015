@@ -124,10 +124,8 @@ void Robot::DS_PrintOut() {
     if (displayTimer->HasPeriodPassed(0.5)) {
         dsDisplay.clear();
 
-        dsDisplay.addElementData("LEFT_RPM", robotDrive->getLeftRate());
-        dsDisplay.addElementData("RIGHT_RPM", robotDrive->getRightRate());
-        dsDisplay.addElementData("LEFT_DIST", robotDrive->getLeftDist());
-        dsDisplay.addElementData("RIGHT_DIST", robotDrive->getRightDist());
+        dsDisplay.addElementData("EV_HEIGHT", ev->getHeight());
+        dsDisplay.addElementData("EV_SETPOINT", ev->getSetpoint());
 
         dsDisplay.sendToDS();
     }

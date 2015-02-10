@@ -51,11 +51,14 @@ inline void GearBox<CANTalon>::setSetpoint(float setpoint) {
     m_motors[0]->SetControlMode(CANTalon::kPosition);
 
     if (!m_isMotorReversed) {
-        m_motors[0]->Set(setpoint / m_distancePerPulse);
+        m_setpoint = setpoint / m_distancePerPulse;
     }
     else {
-        m_motors[0]->Set(-setpoint / m_distancePerPulse);
+        m_setpoint = -setpoint / m_distancePerPulse;
     }
+
+    m_motors[0]->Set(m_setpoint);
+
 }
 
 inline void GearBox<CANTalon>::setManual(float value) {
@@ -74,6 +77,17 @@ inline void GearBox<CANTalon>::setManual(float value) {
 }
 
 inline float GearBox<CANTalon>::get() {
+    if (m_motors[0]->GetControlMode() != CANTalon::kPercentVbus) {
+        return m_setpoint * m_distancePerPulse;
+    }
+    else {
+        if (!m_isMotorReversed) {
+            return m_motors[0]->Get();
+        }
+        else {
+            return -m_motors[0]->Get();
+        }
+    }
     return m_motors[0]->Get() * m_distancePerPulse;
 }
 

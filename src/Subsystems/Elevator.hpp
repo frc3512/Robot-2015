@@ -51,8 +51,11 @@ public:
     // Sets setpoint for elevator PID controller
     void setHeight(float height);
 
-    // Get setpoint from PID controller
+    // Gets the current height as integrated from the encoder
     float getHeight();
+
+    // Get setpoint from PID controller
+    float getSetpoint();
 
     void reloadPID();
 

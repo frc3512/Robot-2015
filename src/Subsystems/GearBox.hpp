@@ -166,6 +166,9 @@ private:
     // Conversion factor for setpoints with respect to encoder readings
     double m_distancePerPulse;
 
+    // Store the setpoint, because CANTalon won't give it to us
+    float m_setpoint;
+
     std::vector<std::unique_ptr<CANTalon>> m_motors;
 };
 
