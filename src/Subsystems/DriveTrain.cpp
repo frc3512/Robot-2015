@@ -34,6 +34,9 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
     m_rightFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 5);
     m_rightBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 8);
 
+    m_leftFrontGrbx->setMotorReversed(true);
+    m_leftBackGrbx->setMotorReversed(true);
+
     m_isDefencive = (false);
     // c = PI * 10.16cm [wheel diameter]
     // dPerP = c / pulses
@@ -58,6 +61,8 @@ DriveTrain::~DriveTrain() {
 
 void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
     // Modified Cheesy Drive; base code courtesy of FRC Team 254
+
+	throttle *= -1;
 
     if (m_isDefencive == true) {
         throttle *= -1;

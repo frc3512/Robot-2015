@@ -93,11 +93,11 @@ void Robot::OperatorControl() {
             ev->stowIntake(!ev->isIntakeStowed());
         }
 
-        if (shootStick->GetPOV() == 0) {
+        if (shootStick->GetPOV() == 180) {
             // std::cout << ev->getIntakeWheels() << std::endl;
             ev->setIntakeDirection(Elevator::S_FORWARD);
         }
-        else if (shootStick->GetPOV() == 180) {
+        else if (shootStick->GetPOV() == 0) {
             // std::cout << ev->getIntakeWheels() << std::endl;
             ev->setIntakeDirection(Elevator::S_REVERSED);
         }
