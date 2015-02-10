@@ -18,7 +18,7 @@ Elevator::Elevator() {
     m_intakeState = S_STOPPED;
     m_manual = false;
 
-    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 3, 7);
+    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 7, 3);
     /* gear ratio is 48 driver to 26 driven from output of gearbox (where
      * encoder shaft is located), therefore:
      * distance per pulse = 26/48/(number of pulses per revolution)

@@ -60,7 +60,7 @@ void Robot::OperatorControl() {
         }
 
         /* Print the height for debugging */
-        std::cout << "Height=" << ev->getHeight() << std::endl;
+        //std::cout << "Height=" << ev->getHeight() << std::endl;
 
         /* Set manual value */
         ev->setManualLiftSpeed(shootStick->GetY());
@@ -115,8 +115,8 @@ void Robot::Disabled() {
 
 void Robot::DS_PrintOut() {
     if (pidGraph.hasIntervalPassed()) {
-        pidGraph.graphData(robotDrive->getLeftDist(), "Left PID");
-        pidGraph.graphData(robotDrive->getLeftSetpoint(), "Left Setpoint");
+        pidGraph.graphData(robotDrive->getLeftDist(), "Elevator distance");
+        pidGraph.graphData(robotDrive->getLeftSetpoint(), "Elevator setpoint");
 
         pidGraph.resetInterval();
     }
