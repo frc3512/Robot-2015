@@ -34,25 +34,27 @@ inline GearBox<CANTalon>::GearBox(int shifterChan,
     for (unsigned int i = 0; i < m_motors.size(); i++) {
         if (i == 0) {
             m_motors[i]->SetControlMode(CANTalon::kPercentVbus);
+            m_motors[i]->SetFeedbackDevice(CANTalon::QuadEncoder);
+            m_motors[i]->EnableControl();
         }
         else {
+            // Use all other CANTalons as slaves
             m_motors[i]->SetControlMode(CANTalon::kFollower);
+
+            // Set first CANTalon as master
+            m_motors[i]->Set(motor1);
         }
-        m_motors[i]->SetFeedbackDevice(CANTalon::QuadEncoder);
-        m_motors[i]->EnableControl();
     }
 }
 
 inline void GearBox<CANTalon>::setSetpoint(float setpoint) {
-    for (auto& motor : m_motors) {
-        motor->SetControlMode(CANTalon::kPosition);
+    m_motors[0]->SetControlMode(CANTalon::kPosition);
 
-        if (!m_isMotorReversed) {
-            motor->Set(setpoint / m_distancePerPulse);
-        }
-        else {
-            motor->Set(-setpoint / m_distancePerPulse);
-        }
+    if (!m_isMotorReversed) {
+        m_motors[0]->Set(setpoint / m_distancePerPulse);
+    }
+    else {
+        m_motors[0]->Set(-setpoint / m_distancePerPulse);
     }
 }
 
@@ -61,16 +63,13 @@ inline void GearBox<CANTalon>::setManual(float value) {
         if (i == 0) {
             m_motors[i]->SetControlMode(CANTalon::kPercentVbus);
         }
-        else {
-            m_motors[i]->SetControlMode(CANTalon::kFollower);
-        }
+    }
 
-        if (!m_isMotorReversed) {
-            m_motors[i]->Set(value);
-        }
-        else {
-            m_motors[i]->Set(-value);
-        }
+    if (!m_isMotorReversed) {
+        m_motors[0]->Set(value);
+    }
+    else {
+        m_motors[0]->Set(-value);
     }
 }
 
@@ -79,15 +78,11 @@ inline float GearBox<CANTalon>::get() {
 }
 
 inline void GearBox<CANTalon>::setPID(float p, float i, float d) {
-    for (auto& motor : m_motors) {
-        motor->SetPID(p, i, d);
-    }
+    m_motors[0]->SetPID(p, i, d);
 }
 
 inline void GearBox<CANTalon>::setF(float f) {
-    for (auto& motor : m_motors) {
-        motor->SetF(f);
-    }
+    m_motors[0]->SetF(f);
 }
 
 inline void GearBox<CANTalon>::setDistancePerPulse(double distancePerPulse) {
@@ -95,15 +90,11 @@ inline void GearBox<CANTalon>::setDistancePerPulse(double distancePerPulse) {
 }
 
 inline void GearBox<CANTalon>::setControlMode(CANTalon::ControlMode ctrlMode) {
-    for (auto& motor : m_motors) {
-        motor->SetControlMode(ctrlMode);
-    }
+    m_motors[0]->SetControlMode(ctrlMode);
 }
 
 inline void GearBox<CANTalon>::resetEncoder() {
-    for (auto& motor : m_motors) {
-        motor->SetNumberOfQuadIdxRises(0);
-    }
+    m_motors[0]->SetNumberOfQuadIdxRises(0);
 }
 
 inline double GearBox<CANTalon>::getDistance() {
@@ -123,9 +114,7 @@ inline bool GearBox<CANTalon>::isMotorReversed() const {
 }
 
 inline void GearBox<CANTalon>::setEncoderReversed(bool reverse) {
-    for (auto& motor : m_motors) {
-        motor->SetSensorDirection(reverse);
-    }
+    m_motors[0]->SetSensorDirection(reverse);
 }
 
 inline bool GearBox<CANTalon>::isEncoderReversed() const {
@@ -152,8 +141,6 @@ inline bool GearBox<CANTalon>::onTarget() {
 }
 
 inline void GearBox<CANTalon>::resetPID() {
-    for (auto& motor : m_motors) {
-        motor->ClearIaccum();
-    }
+    m_motors[0]->ClearIaccum();
 }
 
