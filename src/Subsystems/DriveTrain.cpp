@@ -62,7 +62,7 @@ DriveTrain::~DriveTrain() {
 void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
     // Modified Cheesy Drive; base code courtesy of FRC Team 254
 
-	throttle *= -1;
+    throttle *= -1;
 
     if (m_isDefencive == true) {
         throttle *= -1;
