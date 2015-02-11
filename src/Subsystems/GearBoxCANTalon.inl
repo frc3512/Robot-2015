@@ -58,7 +58,6 @@ inline void GearBox<CANTalon>::setSetpoint(float setpoint) {
     }
 
     m_motors[0]->Set(m_setpoint);
-
 }
 
 inline void GearBox<CANTalon>::setManual(float value) {

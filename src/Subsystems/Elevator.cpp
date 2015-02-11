@@ -97,7 +97,6 @@ bool Elevator::getManualMode() {
 void Elevator::setHeight(float height) {
     if (m_manual == false) {
         m_liftGrbx->setSetpoint(height);
-        std::cout << "height=" << height << std::endl;
     }
 }
 
@@ -120,12 +119,15 @@ void Elevator::reloadPID() {
     float p = 0.f;
     float i = 0.f;
     float d = 0.f;
+    float f = 0.f;
 
     // Set shooter rotator PID
     p = m_settings->getFloat("PID_ELEVATOR_P");
     i = m_settings->getFloat("PID_ELEVATOR_I");
     d = m_settings->getFloat("PID_ELEVATOR_D");
+    f = m_settings->getFloat("PID_ELEVATOR_F");
     m_liftGrbx->setPID(p, i, d);
+    m_liftGrbx->setF(f);
 }
 
 bool Elevator::onTarget() {

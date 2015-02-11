@@ -91,7 +91,7 @@ void GearBox<T>::setManual(float value) {
 template <class T>
 float GearBox<T>::get() const {
     if (m_havePID && m_pid->IsEnabled()) {
-        return m_motors[0]->GetSetpoint();
+        return m_pid->GetSetpoint();
     }
     else {
         if (!m_isMotorReversed) {

@@ -3,6 +3,9 @@
 #include <cmath>
 #include "DriverStation.h"
 
+#include <unistd.h>
+#include <signal.h>
+
 Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  drive1Buttons(0),
                  drive2Buttons(1),
@@ -11,6 +14,8 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                                settings.getInt("DS_Port"))),
                  insight(Insight::getInstance(settings.getInt("Insight_Port"))),
                  pidGraph(3513) {
+    signal(SIGINT, [] (int sig) { exit(0); });
+
     robotDrive = std::make_unique<DriveTrain>();
 
     driveStick1 = std::make_unique<Joystick>(0);
@@ -25,7 +30,7 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                              this);
     dsDisplay.addAutonMethod("Noop Auton", &Robot::NoopAuton, this);
 
-    pidGraph.setSendInterval(200);
+    pidGraph.setSendInterval(10);
 
     displayTimer->Start();
 }
@@ -35,6 +40,7 @@ Robot::~Robot() {
 
 void Robot::OperatorControl() {
     robotDrive->reloadPID();
+    ev->reloadPID();
 
     while (IsEnabled() && IsOperatorControl()) {
         // arcade Drive
@@ -58,9 +64,6 @@ void Robot::OperatorControl() {
         if (elevatorButtons.releasedButton(8)) {
             ev->setHeight(0.5);
         }
-
-        /* Print the height for debugging */
-        //std::cout << "Height=" << ev->getHeight() << std::endl;
 
         /* Set manual value */
         ev->setManualLiftSpeed(shootStick->GetY());
@@ -126,8 +129,6 @@ void Robot::DS_PrintOut() {
 
         dsDisplay.addElementData("EV_HEIGHT", ev->getHeight());
         dsDisplay.addElementData("EV_SETPOINT", ev->getSetpoint());
-
-        std::cout << "EV_HEIGHT=" << ev->getHeight() << std::endl;
 
         dsDisplay.sendToDS();
     }
