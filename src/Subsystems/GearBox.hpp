@@ -89,9 +89,9 @@ private:
     // Sets motor speed to 'output'
     void PIDWrite(float output);
 
-    std::unique_ptr<PIDController> m_pid;
-    std::unique_ptr<Encoder> m_encoder;
-    std::unique_ptr<Solenoid> m_shifter;
+    PIDController* m_pid;
+    Encoder* m_encoder;
+    Solenoid* m_shifter;
 
     bool m_isMotorReversed;
     bool m_isEncoderReversed;
@@ -101,6 +101,8 @@ private:
 };
 
 #include "GearBox.inl"
+
+#if 0
 
 template <>
 class GearBox<CANTalon> {
@@ -173,6 +175,8 @@ private:
 };
 
 #include "GearBoxCANTalon.inl"
+
+#endif
 
 #endif // GEARBOX_HPP
 

@@ -56,7 +56,7 @@ void Robot::OperatorControl() {
             ev->setHeight(0);
         }
         if (elevatorButtons.releasedButton(8)) {
-            ev->setHeight(10);
+            ev->setHeight(0.5);
         }
 
         /* Print the height for debugging */
@@ -115,8 +115,8 @@ void Robot::Disabled() {
 
 void Robot::DS_PrintOut() {
     if (pidGraph.hasIntervalPassed()) {
-        pidGraph.graphData(robotDrive->getLeftDist(), "Elevator distance");
-        pidGraph.graphData(robotDrive->getLeftSetpoint(), "Elevator setpoint");
+        pidGraph.graphData(ev->getHeight(), "Distance (EV)");
+        pidGraph.graphData(ev->getSetpoint(), "Setpoint (EV)");
 
         pidGraph.resetInterval();
     }
@@ -126,6 +126,8 @@ void Robot::DS_PrintOut() {
 
         dsDisplay.addElementData("EV_HEIGHT", ev->getHeight());
         dsDisplay.addElementData("EV_SETPOINT", ev->getSetpoint());
+
+        std::cout << "EV_HEIGHT=" << ev->getHeight() << std::endl;
 
         dsDisplay.sendToDS();
     }

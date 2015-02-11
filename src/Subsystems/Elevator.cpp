@@ -16,16 +16,16 @@ Elevator::Elevator() {
     m_intakeWheelRight = std::make_unique<CANTalon>(2);
     m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
     m_intakeState = S_STOPPED;
-    m_manual = false;
+    m_manual = true;
 
-    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 7, 3);
+    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 2, 3, 3, 7);
     /* gear ratio is 48 driver to 26 driven from output of gearbox (where
      * encoder shaft is located), therefore:
      * distance per pulse = 26/48/(number of pulses per revolution)
      *                    = 26/48/360
      *                    = 26/(48*360)
      */
-    m_liftGrbx->setDistancePerPulse(26 / (48 * 360));
+    m_liftGrbx->setDistancePerPulse(26.0 / (48.0 * 360.0));
     reloadPID();
 }
 
@@ -97,6 +97,7 @@ bool Elevator::getManualMode() {
 void Elevator::setHeight(float height) {
     if (m_manual == false) {
         m_liftGrbx->setSetpoint(height);
+        std::cout << "height=" << height << std::endl;
     }
 }
 
