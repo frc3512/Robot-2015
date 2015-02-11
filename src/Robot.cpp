@@ -3,9 +3,6 @@
 #include <cmath>
 #include "DriverStation.h"
 
-#include <unistd.h>
-#include <signal.h>
-
 Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  drive1Buttons(0),
                  drive2Buttons(1),
@@ -14,8 +11,6 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                                settings.getInt("DS_Port"))),
                  insight(Insight::getInstance(settings.getInt("Insight_Port"))),
                  pidGraph(3513) {
-    signal(SIGINT, [] (int sig) { exit(0); });
-
     robotDrive = std::make_unique<DriveTrain>();
 
     driveStick1 = std::make_unique<Joystick>(0);

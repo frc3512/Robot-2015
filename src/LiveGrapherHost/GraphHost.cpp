@@ -286,6 +286,10 @@ int GraphHost::socket_listen(int port, uint32_t s_addr) {
             throw -1;
         }
 
+        // Allow rebinding to the socket later if the connection is interrupted
+        int optval = 1;
+        setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+
         // Zero out the serv_addr struct
         std::memset(&serv_addr, 0, sizeof(struct sockaddr_in));
 
