@@ -17,8 +17,9 @@ GearBox<T>::GearBox(int shifterChan,
                     int motor2,
                     int motor3) {
     if (encA != -1 && encB != -1) {
-        m_encoder = new Encoder(encA, encB);
-        m_pid = new PIDController(0, 0, 0, 0, m_encoder, this);
+        m_encoder = std::make_shared<Encoder>(encA, encB);
+        m_pid =
+            std::make_unique<PIDController>(0, 0, 0, 0, m_encoder.get(), this);
 
         m_havePID = true;
     }
@@ -30,7 +31,7 @@ GearBox<T>::GearBox(int shifterChan,
     }
 
     if (shifterChan != -1) {
-        m_shifter = new Solenoid(shifterChan);
+        m_shifter = std::make_unique<Solenoid>(shifterChan);
     }
     else {
         m_shifter = nullptr;
@@ -61,12 +62,6 @@ GearBox<T>::GearBox(int shifterChan,
 
 template <class T>
 GearBox<T>::~GearBox() {
-    if (m_havePID) {
-        delete m_encoder;
-        delete m_pid;
-    }
-
-    delete m_shifter;
 }
 
 template <class T>

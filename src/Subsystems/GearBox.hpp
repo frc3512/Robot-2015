@@ -93,9 +93,9 @@ private:
     // Sets motor speed to 'output'
     void PIDWrite(float output);
 
-    PIDController* m_pid;
-    Encoder* m_encoder;
-    Solenoid* m_shifter;
+    std::unique_ptr<PIDController> m_pid;
+    std::shared_ptr<Encoder> m_encoder;
+    std::unique_ptr<Solenoid> m_shifter;
 
     double m_distancePerPulse;
     bool m_isMotorReversed;
@@ -113,6 +113,7 @@ template <>
 class GearBox<CANTalon> {
 public:
     GearBox(int shifterChan, int motor1, int motor2 = -1, int motor3 = -1);
+    virtual ~GearBox();
 
     enum PIDMode {
         Position,
