@@ -57,20 +57,20 @@ void Robot::OperatorControl() {
             ev->setHeight(settings.getFloat("EL_LEVEL_0"));
         }
         if (elevatorButtons.releasedButton(8)) {
-        	ev->setHeight(settings.getFloat("EL_LEVEL_1"));
+            ev->setHeight(settings.getFloat("EL_LEVEL_1"));
         }
         if (elevatorButtons.releasedButton(9)) {
-        	ev->setHeight(settings.getFloat("EL_LEVEL_2"));
+            ev->setHeight(settings.getFloat("EL_LEVEL_2"));
         }
         if (elevatorButtons.releasedButton(10)) {
-        	ev->setHeight(settings.getFloat("EL_LEVEL_3"));
+            ev->setHeight(settings.getFloat("EL_LEVEL_3"));
         }
         if (elevatorButtons.releasedButton(11)) {
-        	ev->setHeight(settings.getFloat("EL_LEVEL_4"));
+            ev->setHeight(settings.getFloat("EL_LEVEL_4"));
         }
         if (elevatorButtons.releasedButton(12)) {
-        	ev->setHeight(settings.getFloat("EL_LEVEL_5"));
-		}
+            ev->setHeight(settings.getFloat("EL_LEVEL_5"));
+        }
 
 
         /* Set manual value */
@@ -96,7 +96,7 @@ void Robot::OperatorControl() {
         else {
             ev->setIntakeDirection(Elevator::S_STOPPED);
         }
-        if(drive2Buttons.releasedButton(12)) {
+        if (drive2Buttons.releasedButton(12)) {
             ev->resetEncoder();
         }
 
