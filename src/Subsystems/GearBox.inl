@@ -55,7 +55,6 @@ GearBox<T>::GearBox(int shifterChan,
         m_pid->Enable();
     }
     
-    m_setpoint = 0;
     m_distancePerPulse = 0;
 }
 
@@ -76,8 +75,7 @@ void GearBox<T>::setSetpoint(float setpoint) {
             m_pid->Enable();
         }
 
-		m_setpoint = setpoint;
-        m_pid->SetSetpoint(setpoint * m_distancePerPulse);
+        m_pid->SetSetpoint(setpoint);
     }
 }
 
@@ -95,7 +93,7 @@ void GearBox<T>::setManual(float value) {
 template <class T>
 float GearBox<T>::get() const {
     if (m_havePID && m_pid->IsEnabled()) {
-        return m_setpoint;
+        return m_pid->GetSetpoint();
     }
     else {
         if (!m_isMotorReversed) {
