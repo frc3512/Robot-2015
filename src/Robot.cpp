@@ -86,6 +86,11 @@ void Robot::OperatorControl() {
             ev->setIntakeDirection(Elevator::S_STOPPED);
         }
 
+        // Opens intake if the elevator is at the same level as it
+        if (ev->getHeight() < 11 && !ev->getIntakeGrab()) {
+            ev->intakeGrab(true);
+        }
+
         drive1Buttons.updateButtons();
         drive2Buttons.updateButtons();
         elevatorButtons.updateButtons();
