@@ -62,6 +62,11 @@ public:
     bool onTarget();
 
 
+    // TODO: This probably shouldn't exist
+    // For debugging only...
+    void resetEncoder();
+
+
 private:
     std::unique_ptr<Solenoid> m_grabSolenoid;
 

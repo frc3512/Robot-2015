@@ -93,6 +93,8 @@ private:
     Encoder* m_encoder;
     Solenoid* m_shifter;
 
+    double m_setpoint;
+    double m_distancePerPulse;
     bool m_isMotorReversed;
     bool m_isEncoderReversed;
     bool m_havePID;

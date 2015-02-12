@@ -54,11 +54,24 @@ void Robot::OperatorControl() {
 
         /* Automatic preset buttons (7-12) */
         if (elevatorButtons.releasedButton(7)) {
-            ev->setHeight(0);
+            ev->setHeight(settings.getFloat("EL_LEVEL_0"));
         }
         if (elevatorButtons.releasedButton(8)) {
-            ev->setHeight(0.5);
+        	ev->setHeight(settings.getFloat("EL_LEVEL_1"));
         }
+        if (elevatorButtons.releasedButton(9)) {
+        	ev->setHeight(settings.getFloat("EL_LEVEL_2"));
+        }
+        if (elevatorButtons.releasedButton(10)) {
+        	ev->setHeight(settings.getFloat("EL_LEVEL_3"));
+        }
+        if (elevatorButtons.releasedButton(11)) {
+        	ev->setHeight(settings.getFloat("EL_LEVEL_4"));
+        }
+        if (elevatorButtons.releasedButton(12)) {
+        	ev->setHeight(settings.getFloat("EL_LEVEL_5"));
+		}
+
 
         /* Set manual value */
         ev->setManualLiftSpeed(shootStick->GetY());
@@ -82,6 +95,10 @@ void Robot::OperatorControl() {
         }
         else {
             ev->setIntakeDirection(Elevator::S_STOPPED);
+        }
+
+        if(drive2Buttons.releasedButton(12)) {
+        	ev->resetEncoder();
         }
 
         drive1Buttons.updateButtons();
@@ -124,6 +141,7 @@ void Robot::DS_PrintOut() {
 
         dsDisplay.addElementData("EV_HEIGHT", ev->getHeight());
         dsDisplay.addElementData("EV_SETPOINT", ev->getSetpoint());
+        std::cout << "EV_HEIGHT=" << ev->getHeight() << std::endl;
 
         dsDisplay.sendToDS();
     }
