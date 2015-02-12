@@ -78,7 +78,7 @@ void GearBox<T>::setSetpoint(float setpoint) {
 template <class T>
 float GearBox<T>::getSetpoint() {
     if (m_havePID) {
-        return m_encoder->PIDGet();
+        return m_pid->GetSetpoint();
     }
     else {
         return 0.f;
