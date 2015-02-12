@@ -101,12 +101,12 @@ void Elevator::setHeight(float height) {
 }
 
 float Elevator::getHeight() {
-    return m_liftGrbx->getDistance();
+    return m_liftGrbx->get(GearBox<CANTalon>::Position);
 }
 
 float Elevator::getSetpoint() {
     if (!m_manual) {
-        return m_liftGrbx->get();
+        return m_liftGrbx->getSetpoint();
     }
     else {
         return 0;

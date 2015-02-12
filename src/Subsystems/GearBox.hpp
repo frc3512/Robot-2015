@@ -35,14 +35,22 @@ public:
             int motor3 = -1);
     virtual ~GearBox();
 
+    enum PIDMode {
+        Position,
+        Speed,
+        Raw // Returns voltage [0..1] when used
+    };
+
     // Enables PID controller automatically and sets its setpoint
     void setSetpoint(float setpoint);
+
+    float getSetpoint();
 
     // Disables PID controller and sets the motor speeds manually
     void setManual(float value);
 
     // Returns current speed/position/voltage setting of motor controller(s)
-    float get() const;
+    float get(PIDMode mode = PIDMode::Raw) const;
 
     // Set P, I, and D terms for PID controller
     void setPID(float p, float i, float d);
@@ -58,10 +66,6 @@ public:
 
     // Resets encoder distance to 0
     void resetEncoder();
-
-    // Calls respective functions of Encoder class internally
-    double getDistance() const;
-    double getRate() const;
 
     // Reverses gearbox drive direction
     void setMotorReversed(bool reverse);
@@ -110,14 +114,22 @@ class GearBox<CANTalon> {
 public:
     GearBox(int shifterChan, int motor1, int motor2 = -1, int motor3 = -1);
 
+    enum PIDMode {
+        Position,
+        Speed,
+        Raw // Returns voltage [0..1] when used
+    };
+
     // Enables PID controller automatically and sets its setpoint
     void setSetpoint(float setpoint);
+
+    float getSetpoint();
 
     // Disables PID controller and sets the motor speeds manually
     void setManual(float value);
 
     // Returns current speed/position/voltage setting of motor controller(s)
-    float get();
+    float get(PIDMode mode = PIDMode::Raw);
 
     // Set P, I, and D terms for PID controller
     void setPID(float p, float i, float d);
@@ -133,10 +145,6 @@ public:
 
     // Resets encoder distance to 0
     void resetEncoder();
-
-    // Calls respective functions of Encoder class internally
-    double getDistance();
-    double getRate();
 
     // Reverses gearbox drive direction
     void setMotorReversed(bool reverse);

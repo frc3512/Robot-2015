@@ -60,6 +60,10 @@ inline void GearBox<CANTalon>::setSetpoint(float setpoint) {
     m_motors[0]->Set(m_setpoint);
 }
 
+inline float GearBox<CANTalon>::getSetpoint() {
+    return m_setpoint * m_distancePerPulse;
+}
+
 inline void GearBox<CANTalon>::setManual(float value) {
     m_motors[0]->SetControlMode(CANTalon::kPercentVbus);
 
@@ -71,9 +75,12 @@ inline void GearBox<CANTalon>::setManual(float value) {
     }
 }
 
-inline float GearBox<CANTalon>::get() {
-    if (m_motors[0]->GetControlMode() != CANTalon::kPercentVbus) {
-        return m_setpoint * m_distancePerPulse;
+inline float GearBox<CANTalon>::get(PIDMode mode) {
+    if (mode == PIDMode::Position) {
+        return m_motors[0]->GetEncPosition() / m_distancePerPulse;
+    }
+    else if (mode == PIDMode::Speed) {
+        return m_motors[0]->GetEncVel() * m_distancePerPulse;
     }
     else {
         if (!m_isMotorReversed) {
@@ -83,7 +90,6 @@ inline float GearBox<CANTalon>::get() {
             return -m_motors[0]->Get();
         }
     }
-    return m_motors[0]->Get() * m_distancePerPulse;
 }
 
 inline void GearBox<CANTalon>::setPID(float p, float i, float d) {
@@ -104,14 +110,6 @@ inline void GearBox<CANTalon>::setControlMode(CANTalon::ControlMode ctrlMode) {
 
 inline void GearBox<CANTalon>::resetEncoder() {
     m_motors[0]->SetNumberOfQuadIdxRises(0);
-}
-
-inline double GearBox<CANTalon>::getDistance() {
-    return m_motors[0]->GetEncPosition() / m_distancePerPulse;
-}
-
-inline double GearBox<CANTalon>::getRate() {
-    return m_motors[0]->GetEncVel();
 }
 
 inline void GearBox<CANTalon>::setMotorReversed(bool reverse) {

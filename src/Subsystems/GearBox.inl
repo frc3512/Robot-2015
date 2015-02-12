@@ -36,6 +36,7 @@ GearBox<T>::GearBox(int shifterChan,
         m_shifter = nullptr;
     }
 
+    m_distancePerPulse = 0;
     m_isMotorReversed = false;
     m_isEncoderReversed = false;
 
@@ -80,6 +81,16 @@ void GearBox<T>::setSetpoint(float setpoint) {
 }
 
 template <class T>
+float GearBox<T>::getSetpoint() {
+    if (m_havePID) {
+        return m_encoder->PIDGet();
+    }
+    else {
+        return 0.f;
+    }
+}
+
+template <class T>
 void GearBox<T>::setManual(float value) {
     if (m_havePID) {
         if (m_pid->IsEnabled()) {
@@ -91,9 +102,17 @@ void GearBox<T>::setManual(float value) {
 }
 
 template <class T>
-float GearBox<T>::get() const {
+float GearBox<T>::get(PIDMode mode) const {
     if (m_havePID && m_pid->IsEnabled()) {
-        return m_pid->GetSetpoint();
+        if (mode == PIDMode::Position) {
+            return m_encoder->GetDistance();
+        }
+        else if (mode == PIDMode::Speed) {
+            return m_encoder->GetRate();
+        }
+        else {
+            return 0.f;
+        }
     }
     else {
         if (!m_isMotorReversed) {
@@ -139,26 +158,6 @@ template <class T>
 void GearBox<T>::resetEncoder() {
     if (m_havePID) {
         m_encoder->Reset();
-    }
-}
-
-template <class T>
-double GearBox<T>::getDistance() const {
-    if (m_havePID) {
-        return m_encoder->GetDistance();
-    }
-    else {
-        return 0.f;
-    }
-}
-
-template <class T>
-double GearBox<T>::getRate() const {
-    if (m_havePID) {
-        return m_encoder->GetRate();
-    }
-    else {
-        return 0.f;
     }
 }
 
