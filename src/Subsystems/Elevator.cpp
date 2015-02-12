@@ -121,7 +121,7 @@ void Elevator::reloadPID() {
     float d = 0.f;
     float f = 0.f;
 
-    // Set shooter rotator PID
+    // Set elevator PID
     p = m_settings->getFloat("PID_ELEVATOR_P");
     i = m_settings->getFloat("PID_ELEVATOR_I");
     d = m_settings->getFloat("PID_ELEVATOR_D");

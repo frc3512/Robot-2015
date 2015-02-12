@@ -2,6 +2,8 @@
 #include "Robot.hpp"
 #include <cmath>
 #include "DriverStation.h"
+#include <iostream>
+#include <iomanip>
 
 Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  drive1Buttons(0),
@@ -145,7 +147,8 @@ void Robot::DS_PrintOut() {
 
         dsDisplay.addElementData("EV_HEIGHT", ev->getHeight());
         dsDisplay.addElementData("EV_SETPOINT", ev->getSetpoint());
-        std::cout << "EV_HEIGHT=" << ev->getHeight() << std::endl;
+        std::cout << std::setw(40) << "EV_HEIGHT=" << ev->getHeight()
+                  << "EV_SETPOINT" << ev->getSetpoint() << std::endl;
 
         dsDisplay.sendToDS();
     }
