@@ -27,6 +27,14 @@ class Solenoid;
  * will use up to three and other gearboxes will use less.
  */
 
+namespace Grbx {
+enum PIDMode {
+    Position,
+    Speed,
+    Raw // Returns voltage [0..1] when used
+};
+}
+
 template <class T>
 class GearBox : public PIDOutput {
 public:
@@ -34,12 +42,6 @@ public:
             int motor1, int motor2 = -1,
             int motor3 = -1);
     virtual ~GearBox();
-
-    enum PIDMode {
-        Position,
-        Speed,
-        Raw // Returns voltage [0..1] when used
-    };
 
     // Enables PID controller automatically and sets its setpoint
     void setSetpoint(float setpoint);
@@ -50,7 +52,7 @@ public:
     void setManual(float value);
 
     // Returns current speed/position/voltage setting of motor controller(s)
-    float get(PIDMode mode = PIDMode::Raw) const;
+    float get(Grbx::PIDMode mode = Grbx::Raw) const;
 
     // Set P, I, and D terms for PID controller
     void setPID(float p, float i, float d);
@@ -115,12 +117,6 @@ public:
     GearBox(int shifterChan, int motor1, int motor2 = -1, int motor3 = -1);
     virtual ~GearBox();
 
-    enum PIDMode {
-        Position,
-        Speed,
-        Raw // Returns voltage [0..1] when used
-    };
-
     // Enables PID controller automatically and sets its setpoint
     void setSetpoint(float setpoint);
 
@@ -130,7 +126,7 @@ public:
     void setManual(float value);
 
     // Returns current speed/position/voltage setting of motor controller(s)
-    float get(PIDMode mode = PIDMode::Raw);
+    float get(Grbx::PIDMode mode = Grbx::Raw);
 
     // Set P, I, and D terms for PID controller
     void setPID(float p, float i, float d);

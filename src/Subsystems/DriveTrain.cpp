@@ -251,23 +251,23 @@ void DriveTrain::setRightManual(float value) {
 }
 
 double DriveTrain::getLeftDist() {
-    return (m_leftFrontGrbx->get(GearBox<CANTalon>::Position) +
-            m_leftBackGrbx->get(GearBox<CANTalon>::Position)) / 2.f;
+    return (m_leftFrontGrbx->get(Grbx::Position) +
+            m_leftBackGrbx->get(Grbx::Position)) / 2.f;
 }
 
 double DriveTrain::getRightDist() {
-    return (m_rightFrontGrbx->get(GearBox<CANTalon>::Position) +
-            m_rightBackGrbx->get(GearBox<CANTalon>::Position)) / 2.f;
+    return (m_rightFrontGrbx->get(Grbx::Position) +
+            m_rightBackGrbx->get(Grbx::Position)) / 2.f;
 }
 
 double DriveTrain::getLeftRate() {
-    return (m_leftFrontGrbx->get(GearBox<CANTalon>::Speed) +
-            m_leftBackGrbx->get(GearBox<CANTalon>::Speed)) / 2.f;
+    return (m_leftFrontGrbx->get(Grbx::Speed) +
+            m_leftBackGrbx->get(Grbx::Speed)) / 2.f;
 }
 
 double DriveTrain::getRightRate() {
-    return (m_rightFrontGrbx->get(GearBox<CANTalon>::Speed) +
-            m_rightBackGrbx->get(GearBox<CANTalon>::Speed)) / 2.f;
+    return (m_rightFrontGrbx->get(Grbx::Speed) +
+            m_rightBackGrbx->get(Grbx::Speed)) / 2.f;
 }
 
 double DriveTrain::getLeftSetpoint() {

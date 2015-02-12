@@ -97,12 +97,20 @@ void GearBox<T>::setManual(float value) {
 }
 
 template <class T>
-float GearBox<T>::get(PIDMode mode) const {
-    if (m_havePID && m_pid->IsEnabled()) {
-        if (mode == PIDMode::Position) {
+float GearBox<T>::get(Grbx::PIDMode mode) const {
+    if (mode == Grbx::Raw) {
+        if (!m_isMotorReversed) {
+            return m_motors[0]->Get();
+        }
+        else {
+            return -m_motors[0]->Get();
+        }
+    }
+    else if (m_havePID) {
+        if (mode == Grbx::Position) {
             return m_encoder->GetDistance();
         }
-        else if (mode == PIDMode::Speed) {
+        else if (mode == Grbx::Speed) {
             return m_encoder->GetRate();
         }
         else {
@@ -110,12 +118,7 @@ float GearBox<T>::get(PIDMode mode) const {
         }
     }
     else {
-        if (!m_isMotorReversed) {
-            return m_motors[0]->Get();
-        }
-        else {
-            return -m_motors[0]->Get();
-        }
+        return 0.f;
     }
 }
 
