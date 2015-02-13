@@ -79,13 +79,7 @@ inline void GearBox<CANTalon>::setManual(float value) {
 }
 
 inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) {
-    if (mode == Grbx::Position) {
-        return m_motors[0]->GetEncPosition() / m_distancePerPulse;
-    }
-    else if (mode == Grbx::Speed) {
-        return m_motors[0]->GetEncVel() * m_distancePerPulse;
-    }
-    else {
+    if (mode == Grbx::Raw) {
         if (!m_isMotorReversed) {
             return m_motors[0]->Get();
         }
@@ -93,6 +87,14 @@ inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) {
             return -m_motors[0]->Get();
         }
     }
+    else if (mode == Grbx::Position) {
+        return m_motors[0]->GetEncPosition() / m_distancePerPulse;
+    }
+    else if (mode == Grbx::Speed) {
+        return m_motors[0]->GetEncVel() * m_distancePerPulse;
+    }
+
+    return 0.f;
 }
 
 inline void GearBox<CANTalon>::setPID(float p, float i, float d) {

@@ -113,13 +113,9 @@ float GearBox<T>::get(Grbx::PIDMode mode) const {
         else if (mode == Grbx::Speed) {
             return m_encoder->GetRate();
         }
-        else {
-            return 0.f;
-        }
     }
-    else {
-        return 0.f;
-    }
+
+    return 0.f;
 }
 
 template <class T>
