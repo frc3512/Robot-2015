@@ -57,7 +57,6 @@ GearBox<T>::GearBox(int shifterChan,
 
         m_pid->Enable();
     }
-
 }
 
 template <class T>
@@ -219,3 +218,4 @@ void GearBox<T>::resetPID() {
     m_pid->Reset();
     m_pid->Enable();
 }
+

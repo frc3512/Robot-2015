@@ -110,12 +110,14 @@ private:
 
 #include "GearBox.inl"
 
-#if 1
-
 template <>
 class GearBox<CANTalon> {
 public:
-    GearBox(int shifterChan, bool encoderDirection, int motor1, int motor2 = -1, int motor3 = -1);
+    GearBox(int shifterChan,
+            bool encoderDirection,
+            int motor1,
+            int motor2 = -1,
+            int motor3 = -1);
     virtual ~GearBox();
 
     // Enables PID controller automatically and sets its setpoint
@@ -182,8 +184,6 @@ private:
 };
 
 #include "GearBoxCANTalon.inl"
-
-#endif
 
 #endif // GEARBOX_HPP
 

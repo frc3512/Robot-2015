@@ -7,7 +7,8 @@
 #include <Encoder.h>
 #include <Solenoid.h>
 
-inline GearBox<CANTalon>::GearBox(int shifterChan, bool encoderDirection,
+inline GearBox<CANTalon>::GearBox(int shifterChan,
+                                  bool encoderDirection,
                                   int motor1,
                                   int motor2,
                                   int motor3) {
@@ -17,7 +18,7 @@ inline GearBox<CANTalon>::GearBox(int shifterChan, bool encoderDirection,
     else {
         m_shifter = nullptr;
     }
-    
+
     m_isMotorReversed = false;
     m_isEncoderReversed = encoderDirection;
     m_distancePerPulse = 1.f;
@@ -123,7 +124,6 @@ inline void GearBox<CANTalon>::setControlMode(CANTalon::ControlMode ctrlMode) {
 }
 
 inline void GearBox<CANTalon>::resetEncoder() {
-    //m_motors[0]->SetNumberOfQuadIdxRises(0);
     m_motors[0]->SetPosition(0);
 }
 
