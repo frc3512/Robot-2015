@@ -100,6 +100,7 @@ private:
     std::unique_ptr<Solenoid> m_shifter;
 
     double m_distancePerPulse;
+    double m_feedforward;
     bool m_isMotorReversed;
     bool m_isEncoderReversed;
     bool m_havePID;

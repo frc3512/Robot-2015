@@ -38,6 +38,7 @@ GearBox<T>::GearBox(int shifterChan,
     }
 
     m_distancePerPulse = 0;
+    m_feedforward = 0;
     m_isMotorReversed = false;
     m_isEncoderReversed = false;
 
@@ -57,7 +58,6 @@ GearBox<T>::GearBox(int shifterChan,
         m_pid->Enable();
     }
 
-    m_distancePerPulse = 0;
 }
 
 template <class T>
@@ -128,7 +128,7 @@ void GearBox<T>::setPID(float p, float i, float d) {
 template <class T>
 void GearBox<T>::setF(float f) {
     if (m_havePID) {
-        m_pid->SetPID(m_pid->GetP(), m_pid->GetI(), m_pid->GetD(), f);
+        m_feedforward = f;
     }
 }
 
@@ -196,10 +196,10 @@ template <class T>
 void GearBox<T>::PIDWrite(float output) {
     for (auto& motor : m_motors) {
         if (!m_isMotorReversed) {
-            motor->Set(output);
+            motor->Set(output + m_feedforward);
         }
         else {
-            motor->Set(-output);
+            motor->Set(-(output + m_feedforward));
         }
     }
 }
@@ -219,4 +219,3 @@ void GearBox<T>::resetPID() {
     m_pid->Reset();
     m_pid->Enable();
 }
-
