@@ -18,8 +18,9 @@ Elevator::Elevator() {
     m_intakeState = S_STOPPED;
     m_manual = true;
 
+#if 0
     // For WPILib PID loop
-    // m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 2, 3, 2, 7);
+    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 2, 3, 2, 7);
 
     /* gear ratio is 48 driver to 26 driven from output of gearbox (where
      * encoder shaft is located), therefore:
@@ -27,11 +28,12 @@ Elevator::Elevator() {
      *                    = 26/48/360
      *                    = 26/(48*360)
      */
-    // m_liftGrbx->setDistancePerPulse((70.5 / 1.92442) * (26.0 / (48.0 * 360.0)));
-
+    m_liftGrbx->setDistancePerPulse((70.5 / 1.92442) * (26.0 / (48.0 * 360.0)));
+#else
     // For CANTalon PID loop
     m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, true, 2, 7);
     m_liftGrbx->setDistancePerPulse(70.5 / 5125.75);
+#endif
 
     reloadPID();
 }
