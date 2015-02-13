@@ -80,6 +80,7 @@ inline void GearBox<CANTalon>::setManual(float value) {
 
 inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) {
     if (mode == Grbx::Position) {
+    	std::cout << "get() called, returned" << m_motors[0]->GetEncPosition() << std::endl;
         return m_motors[0]->GetEncPosition() * m_distancePerPulse;
     }
     else if (mode == Grbx::Speed) {
