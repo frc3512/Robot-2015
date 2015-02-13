@@ -115,7 +115,7 @@ private:
 template <>
 class GearBox<CANTalon> {
 public:
-    GearBox(int shifterChan, int motor1, int motor2 = -1, int motor3 = -1);
+    GearBox(int shifterChan, bool encoderDirection, int motor1, int motor2 = -1, int motor3 = -1);
     virtual ~GearBox();
 
     // Enables PID controller automatically and sets its setpoint

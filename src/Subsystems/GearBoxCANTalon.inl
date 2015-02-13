@@ -7,7 +7,7 @@
 #include <Encoder.h>
 #include <Solenoid.h>
 
-inline GearBox<CANTalon>::GearBox(int shifterChan,
+inline GearBox<CANTalon>::GearBox(int shifterChan, bool encoderDirection,
                                   int motor1,
                                   int motor2,
                                   int motor3) {
@@ -17,9 +17,9 @@ inline GearBox<CANTalon>::GearBox(int shifterChan,
     else {
         m_shifter = nullptr;
     }
-
+    
     m_isMotorReversed = false;
-    m_isEncoderReversed = false;
+    m_isEncoderReversed = encoderDirection;
     m_distancePerPulse = 1.f;
 
     // Create motor controllers of specified template type
@@ -35,6 +35,9 @@ inline GearBox<CANTalon>::GearBox(int shifterChan,
         if (i == 0) {
             m_motors[i]->SetControlMode(CANTalon::kPercentVbus);
             m_motors[i]->SetFeedbackDevice(CANTalon::QuadEncoder);
+            m_motors[i]->ConfigEncoderCodesPerRev(1);
+            m_motors[i]->SetSensorDirection(m_isEncoderReversed);
+            resetEncoder();
             m_motors[i]->EnableControl();
         }
         else {
@@ -80,14 +83,12 @@ inline void GearBox<CANTalon>::setManual(float value) {
 
 inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) {
     if (mode == Grbx::Position) {
-    	std::cout << "get() called, returned" << m_motors[0]->GetEncPosition() << std::endl;
-        return m_motors[0]->GetEncPosition() * m_distancePerPulse;
+        return m_motors[0]->GetPosition() * m_distancePerPulse;
     }
     else if (mode == Grbx::Speed) {
         return m_motors[0]->GetEncVel() * m_distancePerPulse;
     }
-    else {
-    if (mode == Grbx::Raw) {
+    else if (mode == Grbx::Raw) {
         if (!m_isMotorReversed) {
             return m_motors[0]->Get();
         }
@@ -122,7 +123,8 @@ inline void GearBox<CANTalon>::setControlMode(CANTalon::ControlMode ctrlMode) {
 }
 
 inline void GearBox<CANTalon>::resetEncoder() {
-    m_motors[0]->SetNumberOfQuadIdxRises(0);
+    //m_motors[0]->SetNumberOfQuadIdxRises(0);
+    m_motors[0]->SetPosition(0);
 }
 
 inline void GearBox<CANTalon>::setMotorReversed(bool reverse) {

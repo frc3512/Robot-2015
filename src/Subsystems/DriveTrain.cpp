@@ -34,10 +34,10 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
     m_rightFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 5);
     m_rightBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 8); */
 
-    m_leftFrontGrbx = new GearBox<CANTalon>(-1, 4);
-    m_leftBackGrbx = new GearBox<CANTalon>(-1, 1);
-    m_rightFrontGrbx = new GearBox<CANTalon>(-1, 5);
-    m_rightBackGrbx = new GearBox<CANTalon>(-1, 8);
+    m_leftFrontGrbx = new GearBox<CANTalon>(-1, false, 4);
+    m_leftBackGrbx = new GearBox<CANTalon>(-1, false, 1);
+    m_rightFrontGrbx = new GearBox<CANTalon>(-1, false, 5);
+    m_rightBackGrbx = new GearBox<CANTalon>(-1, false, 8);
 
     m_leftFrontGrbx->setMotorReversed(true);
     m_leftBackGrbx->setMotorReversed(true);
@@ -197,7 +197,7 @@ void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
     }
     m_leftFrontGrbx->setManual(leftPwm);
     m_rightFrontGrbx->setManual(rightPwm);
-    if (!isQuickTurn) {
+    if (true /*!isQuickTurn */) {
         m_leftBackGrbx->setManual(leftPwm);
         m_rightBackGrbx->setManual(rightPwm);
     }
