@@ -12,13 +12,14 @@ Elevator::Elevator() {
     m_grabSolenoid = std::make_unique<Solenoid>(1);
     m_intakeVertical = std::make_unique<Solenoid>(2);
     m_intakeGrabber = std::make_unique<Solenoid>(3);
-    m_intakeWheelLeft = std::make_unique<CANTalon>(6);
-    m_intakeWheelRight = std::make_unique<CANTalon>(2);
+    m_intakeWheelLeft = std::make_unique<CANTalon>(3);
+    m_intakeWheelRight = std::make_unique<CANTalon>(6);
     m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
     m_intakeState = S_STOPPED;
     m_manual = true;
 
-    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 2, 3, 3, 7);
+    //m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 2, 3, 2, 7);
+    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 2, 7);
     /* gear ratio is 48 driver to 26 driven from output of gearbox (where
      * encoder shaft is located), therefore:
      * distance per pulse = 26/48/(number of pulses per revolution)
