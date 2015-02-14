@@ -51,7 +51,7 @@ void Robot::OperatorControl() {
 
         /* Manual state machine */
         if (elevatorButtons.releasedButton(2)) {
-            ev->setManualMode(!ev->getManualMode());
+            ev->setManualMode(!ev->isManualMode());
         }
 
         /* Automatic preset buttons (7-12) */
@@ -103,7 +103,7 @@ void Robot::OperatorControl() {
         }
 
         // Opens intake if the elevator is at the same level as it
-        if (ev->getHeight() < 11 && ev->getIntakeGrab()) {
+        if (ev->getHeight() < 11 && !ev->isManualMode() && ev->getIntakeGrab()) {
             ev->intakeGrab(false);
         }
 

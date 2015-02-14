@@ -127,6 +127,11 @@ inline void GearBox<CANTalon>::resetEncoder() {
     m_motors[0]->SetPosition(0);
 }
 
+inline void GearBox<CANTalon>::setSoftPositionLimits(double forwardLimit,
+                                                     double backwardLimit) {
+    m_motors[0]->ConfigSoftPositionLimits(forwardLimit, backwardLimit);
+}
+
 inline void GearBox<CANTalon>::setMotorReversed(bool reverse) {
     m_isMotorReversed = reverse;
 }

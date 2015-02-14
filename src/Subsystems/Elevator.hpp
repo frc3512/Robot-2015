@@ -8,6 +8,7 @@
 #define ELEVATOR_HPP
 
 class Solenoid;
+class DigitalInput;
 class CANTalon;
 
 #include "GearBox.hpp"
@@ -40,13 +41,11 @@ public:
     void setIntakeDirection(IntakeMotorState state);
     IntakeMotorState getIntakeDirection();
 
-    void stop(bool state);
-
     // Sets speed of lift gearbox directly if manual input is enabled
     void setManualLiftSpeed(float value);
 
     void setManualMode(bool on);
-    bool getManualMode();
+    bool isManualMode();
 
     // Sets setpoint for elevator PID controller
     void setHeight(float height);
@@ -61,14 +60,11 @@ public:
 
     bool onTarget();
 
-
-    // TODO: This probably shouldn't exist
-    // For debugging only...
     void resetEncoder();
-
 
 private:
     std::unique_ptr<Solenoid> m_grabSolenoid;
+    std::unique_ptr<DigitalInput> m_bottomLimit;
 
     // Intake
     IntakeMotorState m_intakeState;
@@ -79,6 +75,8 @@ private:
     std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
     std::unique_ptr<Settings> m_settings;
     bool m_manual;
+
+    static void resetEncoder(uint32_t interruptAssertedMask, void* param);
 };
 
 #endif // ELEVATOR_HPP

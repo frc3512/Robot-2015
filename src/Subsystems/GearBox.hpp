@@ -146,6 +146,9 @@ public:
     // Resets encoder distance to 0
     void resetEncoder();
 
+    // Set soft limits of PID controller
+    void setSoftPositionLimits(double forwardLimit, double backwardLimit);
+
     // Reverses gearbox drive direction
     void setMotorReversed(bool reverse);
 

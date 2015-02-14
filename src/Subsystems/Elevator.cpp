@@ -5,11 +5,18 @@
 // =============================================================================
 
 #include "Elevator.hpp"
-#include "Solenoid.h"
-#include "CANTalon.h"
+#include <Solenoid.h>
+#include <DigitalInput.h>
+#include <CANTalon.h>
 
 Elevator::Elevator() {
     m_grabSolenoid = std::make_unique<Solenoid>(1);
+
+    m_bottomLimit = std::make_unique<DigitalInput>(2);
+    m_bottomLimit->RequestInterrupts(resetEncoder, m_liftGrbx.get());
+    m_bottomLimit->SetUpSourceEdge(true, true);
+    m_bottomLimit->EnableInterrupts();
+
     m_intakeVertical = std::make_unique<Solenoid>(2);
     m_intakeGrabber = std::make_unique<Solenoid>(3);
     m_intakeWheelLeft = std::make_unique<CANTalon>(3);
@@ -33,6 +40,7 @@ Elevator::Elevator() {
     // For CANTalon PID loop
     m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, true, 2, 7);
     m_liftGrbx->setDistancePerPulse(70.5 / 5125.75);
+    m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
 #endif
 
     reloadPID();
@@ -86,9 +94,6 @@ Elevator::IntakeMotorState Elevator::getIntakeDirection() {
     return m_intakeState;
 }
 
-void Elevator::stop(bool state) {
-}
-
 void Elevator::setManualLiftSpeed(float value) {
     if (m_manual == true) {
         m_liftGrbx->setManual(value);
@@ -99,7 +104,7 @@ void Elevator::setManualMode(bool on) {
     m_manual = on;
 }
 
-bool Elevator::getManualMode() {
+bool Elevator::isManualMode() {
     return m_manual;
 }
 
@@ -144,6 +149,10 @@ bool Elevator::onTarget() {
 }
 
 void Elevator::resetEncoder() {
-    m_liftGrbx->resetEncoder();
+    resetEncoder(0, m_liftGrbx.get());
+}
+
+void Elevator::resetEncoder(uint32_t interruptAssertedMask, void* param) {
+    reinterpret_cast<decltype(m_liftGrbx.get())>(param)->resetEncoder();
 }
 
