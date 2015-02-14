@@ -54,6 +54,8 @@ public:
      */
     double setGoal(const BezierCurve& curve, double t);
 
+    void resetProfile();
+
     // Sets distance between two sides of drive train
     void setWidth(double width);
 
@@ -65,12 +67,6 @@ private:
     // Collection of setpoints
     double m_leftSetpoint;
     double m_rightSetpoint;
-
-    /* goal is a distance to which to travel
-     * curSource is the current position
-     * t initializes m_lastTime
-     */
-    double setGoal(double t, double goal, double curSource = 0.0);
 
     /* t is time elapsed since start of motion
      * v is current setpoint velocity of middle of robot

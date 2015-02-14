@@ -35,20 +35,20 @@ public:
      *
      * curTime is current time
      */
-    double updateSetpoint(double curTime, double curSource = 0.0);
+    virtual double updateSetpoint(double curTime, double curSource = 0.0);
 
     /* goal is a distance to which to travel
      * curSource is the current position
      * t initializes m_lastTime
      */
-    double setGoal(double t, double goal, double curSource = 0.0);
+    virtual double setGoal(double t, double goal, double curSource = 0.0);
 
     bool atGoal();
 
     void setMaxVelocity(double v);
     void setTimeToMaxV(double timeToMaxV);
 
-    void resetTime();
+    virtual void resetProfile();
 
     // Tells algorithm whether to use distance or velocity as setpoint
     void setMode(SetpointMode mode);
@@ -60,6 +60,7 @@ protected:
     double m_lastTime;
     double m_acceleration;
     double m_velocity;
+    double m_profileMaxVelocity;
     double m_timeFromMaxVelocity;
     double m_timeToMaxVelocity;
     double m_sign;
