@@ -102,11 +102,10 @@ void Robot::OperatorControl() {
             ev->resetEncoder();
         }
 
-        // TODO: Test this
         // Opens intake if the elevator is at the same level as it
-        /* if (ev->getHeight() < 11 && !ev->getIntakeGrab()) {
-         *   ev->intakeGrab(false);
-         *  } */
+        if (ev->getHeight() < 11 && ev->getIntakeGrab()) {
+        	ev->intakeGrab(false);
+        }
 
         drive1Buttons.updateButtons();
         drive2Buttons.updateButtons();
