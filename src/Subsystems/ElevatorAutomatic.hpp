@@ -28,18 +28,19 @@ public:
     virtual ~ElevatorAutomatic();
 
     void updateState();
-    void raiseElevator(int numTotes);
+    void raiseElevator(unsigned int numTotes);
+    float getLevel(unsigned int i);
     void stackTotes();
 
 private:
     void stateChanged(ElevatorState oldState, ElevatorState newState);
 
-    const std::vector<float> m_toteHeights{0, 12, 24, 36, 210};
+    std::vector<float> m_toteHeights;
 
     std::unique_ptr<Elevator> m_elevator;
     ElevatorState m_state;
     std::unique_ptr<Timer> m_grabTimer;
-    int m_ntotes;
+    unsigned int m_ntotes;
 };
 
 #endif // ELEVATOR_AUTOMATIC_HPP

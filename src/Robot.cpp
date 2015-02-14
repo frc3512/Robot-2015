@@ -40,7 +40,6 @@ void Robot::OperatorControl() {
     ev->reloadPID();
 
     while (IsEnabled() && IsOperatorControl()) {
-        // arcade Drive
         if (driveStick2->GetRawButton(2)) {
             robotDrive->drive(driveStick1->GetY(), driveStick2->GetX(),
                               true);
@@ -49,35 +48,34 @@ void Robot::OperatorControl() {
             robotDrive->drive(driveStick1->GetY(), driveStick2->GetX());
         }
 
-        /* Manual state machine */
+        // Manual state machine
         if (elevatorButtons.releasedButton(2)) {
             ev->setManualMode(!ev->isManualMode());
         }
 
-        /* Automatic preset buttons (7-12) */
+        // Automatic preset buttons (7-12)
         if (elevatorButtons.releasedButton(7)) {
-            ev->setHeight(settings.getFloat("EL_LEVEL_0"));
+            ev->raiseElevator(0);
         }
         if (elevatorButtons.releasedButton(8)) {
-            ev->setHeight(settings.getFloat("EL_LEVEL_1"));
+            ev->raiseElevator(1);
         }
         if (elevatorButtons.releasedButton(9)) {
-            ev->setHeight(settings.getFloat("EL_LEVEL_2"));
+            ev->raiseElevator(2);
         }
         if (elevatorButtons.releasedButton(10)) {
-            ev->setHeight(settings.getFloat("EL_LEVEL_3"));
+            ev->raiseElevator(3);
         }
         if (elevatorButtons.releasedButton(11)) {
-            ev->setHeight(settings.getFloat("EL_LEVEL_4"));
+            ev->raiseElevator(4);
         }
         if (elevatorButtons.releasedButton(12)) {
-            ev->setHeight(settings.getFloat("EL_LEVEL_5"));
+            ev->raiseElevator(5);
         }
 
-        /* Set manual value */
+        // Set manual value
         ev->setManualLiftSpeed(shootStick->GetY());
 
-        /* Trailing edge of trigger press */
         if (elevatorButtons.releasedButton(1)) {
             ev->elevatorGrab(!ev->getElevatorGrab());
         }
@@ -97,6 +95,7 @@ void Robot::OperatorControl() {
         else {
             ev->setIntakeDirection(Elevator::S_STOPPED);
         }
+
         if (drive2Buttons.releasedButton(12)) {
             ev->resetEncoder();
         }

@@ -10,6 +10,15 @@ ElevatorAutomatic::ElevatorAutomatic() {
     m_grabTimer = std::make_unique<Timer>();
     m_state = STATE_IDLE;
     m_ntotes = 0;
+
+    m_toteHeights.push_back(0.0);
+
+    float height = 0;
+    for (int i = 0;
+         (height = m_settings->getFloat("EL_LEVEL_" + std::to_string(i))) ||
+         i == 0; i++) {
+        m_toteHeights.push_back(height);
+    }
 }
 
 ElevatorAutomatic::~ElevatorAutomatic() {
@@ -42,7 +51,7 @@ void ElevatorAutomatic::updateState() {
     }
 }
 
-void ElevatorAutomatic::raiseElevator(int numTotes) {
+void ElevatorAutomatic::raiseElevator(unsigned int numTotes) {
     // Bail out if numTotes is invalid
     if (numTotes < 0 || numTotes > m_toteHeights.size()) {
         return;
@@ -51,11 +60,14 @@ void ElevatorAutomatic::raiseElevator(int numTotes) {
     /* Only allow changing the elevator height manually if not currently
      * auto-stacking
      */
-    if (m_state != STATE_IDLE) {
-        return;
+    if (m_state == STATE_IDLE) {
+        setHeight(m_toteHeights[numTotes * 2]);
+        m_ntotes = numTotes;
     }
+}
 
-    m_ntotes = numTotes;
+float ElevatorAutomatic::getLevel(unsigned int i) {
+    return m_toteHeights[i * 2];
 }
 
 void ElevatorAutomatic::stackTotes() {
@@ -71,26 +83,25 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
         setHeight(m_toteHeights[m_ntotes * 2]);
     }
 
-    /* Grab the tote */
+    // Release the totes
     if (newState == STATE_RELEASE) {
         m_grabTimer->Reset();
         m_grabTimer->Start();
         elevatorGrab(false);
     }
 
-    /* All the way to the bottom */
     if (newState == STATE_SEEK_GROUND) {
         setHeight(m_toteHeights[0]);
     }
 
-    /* Grab the new stack */
+    // Grab the new stack
     if (newState == STATE_GRAB) {
         m_grabTimer->Reset();
         m_grabTimer->Start();
         elevatorGrab(true);
     }
 
-    /* Off the ground a bit */
+    // Off the ground a bit
     if (newState == STATE_SEEK_HALF_TOTE) {
         setHeight(m_toteHeights[1]);
     }

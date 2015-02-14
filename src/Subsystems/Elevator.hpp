@@ -62,6 +62,9 @@ public:
 
     void resetEncoder();
 
+protected:
+    std::unique_ptr<Settings> m_settings;
+
 private:
     std::unique_ptr<Solenoid> m_grabSolenoid;
     std::unique_ptr<DigitalInput> m_bottomLimit;
@@ -73,7 +76,6 @@ private:
     std::unique_ptr<CANTalon> m_intakeWheelLeft;
     std::unique_ptr<CANTalon> m_intakeWheelRight;
     std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
-    std::unique_ptr<Settings> m_settings;
     bool m_manual;
 
     static void resetEncoder(uint32_t interruptAssertedMask, void* param);
