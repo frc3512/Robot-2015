@@ -104,7 +104,7 @@ void Robot::OperatorControl() {
 
         // Opens intake if the elevator is at the same level as it
         if (ev->getHeight() < 11 && ev->getIntakeGrab()) {
-        	ev->intakeGrab(false);
+            ev->intakeGrab(false);
         }
 
         drive1Buttons.updateButtons();
@@ -147,8 +147,11 @@ void Robot::DS_PrintOut() {
 
         dsDisplay.addElementData("EV_HEIGHT", ev->getHeight());
         dsDisplay.addElementData("EV_SETPOINT", ev->getSetpoint());
-        std::cout << std::setw(40) << "EV_HEIGHT=" << ev->getHeight()
-                  << " EV_SETPOINT=" << ev->getSetpoint() << std::endl;
+        std::cout << "EV_HEIGHT=" << std::left << std::setw(20) <<
+        ev->getHeight()
+                  << "EV_SETPOINT=" << std::left << std::setw(20) <<
+        ev->getSetpoint()
+                  << std::endl;
 
         dsDisplay.sendToDS();
     }
