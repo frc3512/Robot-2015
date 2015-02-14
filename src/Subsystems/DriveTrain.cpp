@@ -287,6 +287,13 @@ double DriveTrain::getRightSetpoint() {
     return m_rightFrontGrbx->getSetpoint();
 }
 
+void DriveTrain::setControlMode(CANTalon::ControlMode ctrlMode) {
+    m_leftFrontGrbx->setControlMode(ctrlMode);
+    m_rightBackGrbx->setControlMode(ctrlMode);
+    m_leftFrontGrbx->setControlMode(ctrlMode);
+    m_rightBackGrbx->setControlMode(ctrlMode);
+}
+
 void DriveTrain::setGear(bool gear) {
     m_leftFrontGrbx->setGear(gear);
     m_rightBackGrbx->setGear(gear);

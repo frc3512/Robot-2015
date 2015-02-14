@@ -52,6 +52,8 @@ public:
     double getLeftSetpoint();
     double getRightSetpoint();
 
+    void setControlMode(CANTalon::ControlMode ctrlMode);
+
     // Shifts internal gearboxes
     void setGear(bool gear);
 

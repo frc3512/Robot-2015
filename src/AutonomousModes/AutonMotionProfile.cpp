@@ -15,7 +15,7 @@ void Robot::AutonMotionProfile() {
 
     // Reload drive PID constants
     settings.update();
-    robotDrive->setPIDSourceParameter(PIDSource::kDistance);
+    robotDrive->setControlMode(CANTalon::kPosition);
     robotDrive->reloadPID();
 
     BezierCurve curve;
