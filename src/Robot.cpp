@@ -74,7 +74,6 @@ void Robot::OperatorControl() {
             ev->setHeight(settings.getFloat("EL_LEVEL_5"));
         }
 
-
         /* Set manual value */
         ev->setManualLiftSpeed(shootStick->GetY());
 

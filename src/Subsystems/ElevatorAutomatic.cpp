@@ -44,7 +44,7 @@ void ElevatorAutomatic::updateState() {
 
 void ElevatorAutomatic::raiseElevator(int numTotes) {
     // Bail out if numTotes is invalid
-    if (numTotes < 0 || numTotes > 4) {
+    if (numTotes < 0 || numTotes > m_toteHeights.size()) {
         return;
     }
 
