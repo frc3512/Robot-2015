@@ -29,18 +29,19 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
     m_quickStopAccumulator = 0.f;
     m_negInertiaAccumulator = 0.f;
 
+#if 0
     // For WPILib PID loop
-    /* m_leftFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 4);
-    *   m_leftBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 1);
-    *   m_rightFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 5);
-    *   m_rightBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 8); */
-
-
+    m_leftFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 4);
+    m_leftBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 1);
+    m_rightFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 5);
+    m_rightBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 8);
+#else
     // For CANTalon PID loop
     m_leftFrontGrbx = new GearBox<CANTalon>(-1, false, 4);
     m_leftBackGrbx = new GearBox<CANTalon>(-1, false, 1);
     m_rightFrontGrbx = new GearBox<CANTalon>(-1, false, 5);
     m_rightBackGrbx = new GearBox<CANTalon>(-1, false, 8);
+#endif
 
     m_leftFrontGrbx->setMotorReversed(true);
     m_leftBackGrbx->setMotorReversed(true);
