@@ -53,6 +53,12 @@ void Robot::OperatorControl() {
             ev->setManualMode(!ev->isManualMode());
         }
 
+        // Auto-stacking mode
+        if (elevatorButtons.releasedButton(3)) {
+        	std::cout << "stackTotes()" << std::endl;
+            ev->stackTotes();
+        }
+
         // Automatic preset buttons (7-12)
         if (elevatorButtons.releasedButton(7)) {
             ev->raiseElevator(0);
@@ -115,6 +121,9 @@ void Robot::OperatorControl() {
         // Poll the limit reset limit switch
         ev->pollLimitSwitch();
 
+        // Update the elevator automatic stacking state
+        ev->updateState();
+
         drive1Buttons.updateButtons();
         drive2Buttons.updateButtons();
         elevatorButtons.updateButtons();
@@ -165,6 +174,8 @@ void Robot::DS_PrintOut() {
                   << "EV_SETPOINT=" << std::left << std::setw(20) <<
             ev->getSetpoint()
                   << std::endl;
+
+        std::cout << "On target: " << ev-> onTarget() << std::endl;
 
         std::string name("EL_LEVEL_");
         for (int i = 0; i < 6; i++) {

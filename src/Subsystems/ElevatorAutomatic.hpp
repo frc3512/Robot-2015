@@ -11,6 +11,7 @@
 #include <vector>
 #include <memory>
 #include <Timer.h>
+#include <string>
 
 class ElevatorAutomatic : public Elevator {
 public:
@@ -31,6 +32,7 @@ public:
     void raiseElevator(unsigned int numTotes);
     float getLevel(unsigned int i);
     void stackTotes();
+    std::string stateToString(ElevatorState state);
 
 private:
     void stateChanged(ElevatorState oldState, ElevatorState newState);

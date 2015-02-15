@@ -14,9 +14,9 @@ ElevatorAutomatic::ElevatorAutomatic() {
     m_toteHeights.push_back(0.0);
 
     float height = 0;
-    for (int i = 0;
-         (height = m_settings->getFloat("EV_LEVEL_" + std::to_string(i))) ||
-         i == 0; i++) {
+    //TODO: magic number
+    for (int i = 0; i < 13; i++) {
+    	height = m_settings->getFloat("EV_LEVEL_" + std::to_string(i));
         m_toteHeights.push_back(height);
     }
 }
@@ -87,6 +87,9 @@ void ElevatorAutomatic::stackTotes() {
 
 void ElevatorAutomatic::stateChanged(ElevatorState oldState,
                                      ElevatorState newState) {
+
+	std::cout << "oldState = " << stateToString(oldState)
+			<< " newState = " << stateToString(newState) << std::endl;
     if (newState == STATE_SEEK_DROP_TOTES) {
         setHeight(m_toteHeights[m_ntotes * 2]);
     }
@@ -95,7 +98,7 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
     if (newState == STATE_RELEASE) {
         m_grabTimer->Reset();
         m_grabTimer->Start();
-        elevatorGrab(false);
+        elevatorGrab(true);
     }
 
     if (newState == STATE_SEEK_GROUND) {
@@ -106,7 +109,7 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
     if (newState == STATE_GRAB) {
         m_grabTimer->Reset();
         m_grabTimer->Start();
-        elevatorGrab(true);
+        elevatorGrab(false);
     }
 
     // Off the ground a bit
@@ -115,3 +118,23 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
     }
 }
 
+std::string ElevatorAutomatic::stateToString(ElevatorState state) {
+	switch(state) {
+	case STATE_IDLE:
+		return "STATE_IDLE";
+	case STATE_WAIT_INITIAL_HEIGHT:
+		return "STATE_WAIT_INITIAL_HEIGHT";
+	case STATE_SEEK_DROP_TOTES:
+		return "STATE_SEEK_DROP_TOTES";
+	case STATE_RELEASE:
+		return "STATE_RELEASE";
+	case STATE_SEEK_GROUND:
+		return "STATE_SEEK_GROUND";
+	case STATE_GRAB:
+		return "STATE_GRAB";
+	case STATE_SEEK_HALF_TOTE:
+		return "STATE_SEEK_HALF_TOTE";
+	}
+
+	return "UNKNOWN STATE";
+}
