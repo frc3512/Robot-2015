@@ -1,6 +1,7 @@
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
+#include <DSDisplay.hpp>
 #include <memory>
 
 #include <SampleRobot.h>
@@ -13,7 +14,6 @@
 #include "ButtonTracker.hpp"
 #include "Settings.hpp"
 
-#include "DriverStationDisplay.hpp"
 #include "LiveGrapherHost/GraphHost.hpp"
 #include "Insight.hpp"
 
@@ -47,7 +47,7 @@ private:
     std::unique_ptr<Timer> displayTimer;
 
     // Used for sending data to the Driver Station
-    DriverStationDisplay& dsDisplay;
+    DSDisplay& dsDisplay;
     Insight& insight;
 
     // The LiveGrapher host

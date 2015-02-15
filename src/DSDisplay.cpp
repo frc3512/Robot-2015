@@ -1,24 +1,24 @@
 // =============================================================================
-// File Name: DriverStationDisplay.cpp
+// File Name: DSDisplay.cpp
 // Description: Receives IP address from remote host then sends HUD data there
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
 
-#include "DriverStationDisplay.hpp"
+#include <DSDisplay.hpp>
 
-DriverStationDisplay::~DriverStationDisplay() {
+DSDisplay::~DSDisplay() {
 }
 
-DriverStationDisplay& DriverStationDisplay::getInstance(unsigned short dsPort) {
-    static DriverStationDisplay dsDisplay(dsPort);
+DSDisplay& DSDisplay::getInstance(unsigned short dsPort) {
+    static DSDisplay dsDisplay(dsPort);
     return dsDisplay;
 }
 
-void DriverStationDisplay::clear() {
+void DSDisplay::clear() {
     sf::Packet::clear();
 }
 
-void DriverStationDisplay::sendToDS(sf::Packet* userData) {
+void DSDisplay::sendToDS(sf::Packet* userData) {
     if (m_dsIP != sf::IpAddress::None) {
         if (userData == nullptr) {
             m_socket.send(*static_cast<sf::Packet*>(this),
@@ -42,7 +42,7 @@ void DriverStationDisplay::sendToDS(sf::Packet* userData) {
     }
 }
 
-const std::string DriverStationDisplay::receiveFromDS() {
+const std::string DSDisplay::receiveFromDS() {
     if (m_socket.receive(m_recvBuffer, 256, m_recvAmount,
                          m_recvIP,
                          m_recvPort) == sf::Socket::Done) {
@@ -129,7 +129,7 @@ const std::string DriverStationDisplay::receiveFromDS() {
     return "NONE";
 }
 
-DriverStationDisplay::DriverStationDisplay(unsigned short portNumber) :
+DSDisplay::DSDisplay(unsigned short portNumber) :
     m_dsIP(sf::IpAddress::None),
     m_dsPort(portNumber) {
     m_socket.bind(portNumber);
@@ -151,15 +151,15 @@ DriverStationDisplay::DriverStationDisplay(unsigned short portNumber) :
     }
 }
 
-void DriverStationDisplay::deleteAllMethods() {
+void DSDisplay::deleteAllMethods() {
     m_autonModes.deleteAllMethods();
 }
 
-void DriverStationDisplay::execAutonomous() {
+void DSDisplay::execAutonomous() {
     m_autonModes.execAutonomous(curAutonMode);
 }
 
-void DriverStationDisplay::addElementData(std::string ID, StatusLight data) {
+void DSDisplay::addData(std::string ID, StatusLight data) {
     // If packet is empty, add "display\r\n" header to packet
     if (sf::Packet::getData() == nullptr) {
         *this << std::string("display\r\n");
@@ -170,7 +170,7 @@ void DriverStationDisplay::addElementData(std::string ID, StatusLight data) {
     *this << static_cast<int8_t>(data);
 }
 
-void DriverStationDisplay::addElementData(std::string ID, bool data) {
+void DSDisplay::addData(std::string ID, bool data) {
     // If packet is empty, add "display\r\n" header to packet
     if (sf::Packet::getData() == nullptr) {
         *this << std::string("display\r\n");
@@ -180,15 +180,15 @@ void DriverStationDisplay::addElementData(std::string ID, bool data) {
     *this << ID;
 
     if (data == true) {
-        *this << static_cast<int8_t>(DriverStationDisplay::active);
+        *this << static_cast<int8_t>(DSDisplay::active);
     }
     else {
         *this <<
-            static_cast<int8_t>(DriverStationDisplay::inactive);
+            static_cast<int8_t>(DSDisplay::inactive);
     }
 }
 
-void DriverStationDisplay::addElementData(std::string ID, int8_t data) {
+void DSDisplay::addData(std::string ID, int8_t data) {
     // If packet is empty, add "display\r\n" header to packet
     if (sf::Packet::getData() == nullptr) {
         *this << std::string("display\r\n");
@@ -199,7 +199,7 @@ void DriverStationDisplay::addElementData(std::string ID, int8_t data) {
     *this << static_cast<int8_t>(data);
 }
 
-void DriverStationDisplay::addElementData(std::string ID, int32_t data) {
+void DSDisplay::addData(std::string ID, int32_t data) {
     // If packet is empty, add "display\r\n" header to packet
     if (sf::Packet::getData() == nullptr) {
         *this << std::string("display\r\n");
@@ -210,7 +210,7 @@ void DriverStationDisplay::addElementData(std::string ID, int32_t data) {
     *this << static_cast<int32_t>(data);
 }
 
-void DriverStationDisplay::addElementData(std::string ID, uint32_t data) {
+void DSDisplay::addData(std::string ID, uint32_t data) {
     // If packet is empty, add "display\r\n" header to packet
     if (sf::Packet::getData() == nullptr) {
         *this << std::string("display\r\n");
@@ -221,7 +221,7 @@ void DriverStationDisplay::addElementData(std::string ID, uint32_t data) {
     *this << static_cast<uint32_t>(data);
 }
 
-void DriverStationDisplay::addElementData(std::string ID, std::string data) {
+void DSDisplay::addData(std::string ID, std::string data) {
     // If packet is empty, add "display\r\n" header to packet
     if (sf::Packet::getData() == nullptr) {
         *this << std::string("display\r\n");
@@ -232,7 +232,7 @@ void DriverStationDisplay::addElementData(std::string ID, std::string data) {
     *this << data;
 }
 
-void DriverStationDisplay::addElementData(std::string ID, float data) {
+void DSDisplay::addData(std::string ID, float data) {
     // If packet is empty, add "display\r\n" header to packet
     if (sf::Packet::getData() == nullptr) {
         *this << std::string("display\r\n");
@@ -246,7 +246,7 @@ void DriverStationDisplay::addElementData(std::string ID, float data) {
     *this << ss.str();
 }
 
-void DriverStationDisplay::addElementData(std::string ID, double data) {
+void DSDisplay::addData(std::string ID, double data) {
     // If packet is empty, add "display\r\n" header to packet
     if (sf::Packet::getData() == nullptr) {
         *this << std::string("display\r\n");

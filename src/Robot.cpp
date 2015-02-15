@@ -9,7 +9,7 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  drive1Buttons(0),
                  drive2Buttons(1),
                  elevatorButtons(2),
-                 dsDisplay(DriverStationDisplay::getInstance(
+                 dsDisplay(DSDisplay::getInstance(
                                settings.getInt("DS_Port"))),
                  insight(Insight::getInstance(settings.getInt("Insight_Port"))),
                  pidGraph(3513) {
@@ -150,36 +150,33 @@ void Robot::DS_PrintOut() {
     if (displayTimer->HasPeriodPassed(0.5)) {
         dsDisplay.clear();
 
-        dsDisplay.addElementData("EV_LEVEL_INCHES", ev->getHeight());
-        dsDisplay.addElementData("INTAKE_ARMS_CLOSED", ev->getIntakeGrab());
-        dsDisplay.addElementData("ARMS_CLOSED", ev->getElevatorGrab());
-        dsDisplay.addElementData("ENCODER_LEFT", robotDrive->getLeftDist());
-        dsDisplay.addElementData("ENCODER_RIGHT", robotDrive->getRightDist());
+        dsDisplay.addData("EV_LEVEL_INCHES", ev->getHeight());
+        dsDisplay.addData("INTAKE_ARMS_CLOSED", ev->getIntakeGrab());
+        dsDisplay.addData("ARMS_CLOSED", ev->getElevatorGrab());
+        dsDisplay.addData("ENCODER_LEFT", robotDrive->getLeftDist());
+        dsDisplay.addData("ENCODER_RIGHT", robotDrive->getRightDist());
         std::cout << std::setw(40) << "EV_LEVEL_INCHES=" << ev->getHeight()
                   << "INTAKE_ARMS_CLOSED" << ev->getIntakeGrab()
-				  << "ARMS_CLOSED" << ev->getElevatorGrab() << std::endl;
+                  << "ARMS_CLOSED" << ev->getElevatorGrab() << std::endl;
 
         std::string name("EL_LEVEL_");
-        for(int i = 0; i < 6; i++){
-        	std::string name("EL_LEVEL_");
+        for (int i = 0; i < 6; i++) {
+            std::string name("EL_LEVEL_");
 
-        	if (ev->getHeight() == ev->getLevel(i) && ev->onTarget()){
-        		dsDisplay.addElementData(name + std::to_string(i), DriverStationDisplay::active);
-        	}
-        	else if (ev->getHeight() < ev->getLevel(i + 1)){
-        		dsDisplay.addElementData(name + std::to_string(i),DriverStationDisplay::standby);
-        		dsDisplay.addElementData(name + std::to_string(i +1),DriverStationDisplay::standby);
-        	}
-        	else{
-        		dsDisplay.addElementData(name + std::to_string(i), DriverStationDisplay::inactive);
-        	}
-
+            if (ev->getHeight() == ev->getLevel(i) && ev->onTarget()) {
+                dsDisplay.addData(name + std::to_string(i), DSDisplay::active);
+            }
+            else if (ev->getHeight() < ev->getLevel(i + 1)) {
+                dsDisplay.addData(name + std::to_string(i), DSDisplay::standby);
+                dsDisplay.addData(name + std::to_string(
+                                      i + 1), DSDisplay::standby);
+            }
+            else {
+                dsDisplay.addData(name + std::to_string(i),
+                                  DSDisplay::inactive);
+            }
         }
         dsDisplay.sendToDS();
-
-
-
-
     }
 
     dsDisplay.receiveFromDS();
