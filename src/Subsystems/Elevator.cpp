@@ -41,6 +41,7 @@ Elevator::Elevator() {
     m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, true, 7, 2);
     m_liftGrbx->setDistancePerPulse(70.5 / 5090.0);
     m_liftGrbx->setIZone(1);
+    m_liftGrbx->setCloseLoopRampRate(1.0);
     //m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
 #endif
 

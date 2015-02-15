@@ -176,6 +176,8 @@ public:
 
 	void setIZone(unsigned int value);
 
+	void setCloseLoopRampRate(double value);
+
 private:
     std::unique_ptr<Solenoid> m_shifter;
 

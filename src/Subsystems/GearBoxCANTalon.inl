@@ -179,6 +179,10 @@ inline bool GearBox<CANTalon>::isRevLimitSwitchClosed() {
     return m_motors[0]->IsRevLimitSwitchClosed();
 }
 
-void setIZone(unsigned int value) {
+inline void GearBox<CANTalon>::setIZone(unsigned int value) {
     m_motors[0]->SetIzone(value);
+}
+
+inline void GearBox<CANTalon>::setCloseLoopRampRate(double value) {
+    m_motors[0]->SetCloseLoopRampRate(value);
 }
