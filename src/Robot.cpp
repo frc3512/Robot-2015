@@ -106,8 +106,14 @@ void Robot::OperatorControl() {
             ev->intakeGrab(false);
         }
 
+
+        // Ensure that the intake is open if the tines are open
+        if(ev->isManualMode() && ev->getElevatorGrab()) {
+        	ev->intakeGrab(true);
+        }
+
         // Poll the limit reset limit switch
-        //ev->pollLimitSwitch();
+        ev->pollLimitSwitch();
 
         drive1Buttons.updateButtons();
         drive2Buttons.updateButtons();
@@ -151,6 +157,8 @@ void Robot::DS_PrintOut() {
         dsDisplay.addElementData("EV_SETPOINT", ev->getSetpoint());
         std::cout << "EV_HEIGHT=" << std::left << std::setw(20) <<
             ev->getHeight()
+            	/* << "EV_RAWHEIGHT=" << std::left << std::setw(20) <<
+			ev->getRawHeight() */
                   << "EV_SETPOINT=" << std::left << std::setw(20) <<
             ev->getSetpoint()
                   << std::endl;

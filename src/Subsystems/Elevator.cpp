@@ -39,8 +39,8 @@ Elevator::Elevator() {
 #else
     // For CANTalon PID loop
     m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, true, 7, 2);
-    m_liftGrbx->setDistancePerPulse(70.5 / 5125.75);
-    m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
+    m_liftGrbx->setDistancePerPulse(70.5 / 5090.0);
+    //m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
 #endif
 
     reloadPID();
@@ -157,10 +157,13 @@ void Elevator::resetEncoder(uint32_t interruptAssertedMask, void* param) {
 }
 
 void Elevator::pollLimitSwitch() {
-	std::cout << "Forward Limit: " << m_liftGrbx->isFwdLimitSwitchClosed() << std::endl
-			<< " Reverse limit: " << m_liftGrbx->isRevLimitSwitchClosed() << std::endl;
     // Check encoder reset limit switch
-    if(m_liftGrbx->isFwdLimitSwitchClosed()) {
+    if(m_liftGrbx->isRevLimitSwitchClosed()) {
     	m_liftGrbx->resetEncoder();
     }
+}
+
+float Elevator::getRawHeight() {
+	//TODO: HACK
+    return m_liftGrbx->get(Grbx::Position) / (70.5 / 5125.75);
 }

@@ -53,6 +53,9 @@ public:
     // Gets the current height as integrated from the encoder
     float getHeight();
 
+    // Gets the current raw height as integrated from the encoder
+    float getRawHeight();
+
     // Get setpoint from PID controller
     float getSetpoint();
 
