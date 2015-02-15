@@ -9,17 +9,9 @@
 ElevatorAutomatic::ElevatorAutomatic() : TrapezoidProfile(120, 0.3125) {
     m_profileTimer = std::make_unique<Timer>();
     m_grabTimer = std::make_unique<Timer>();
-    m_updateProfile = true;
-    m_profileUpdater =
-        std::make_unique<std::thread>([this] { while (m_updateProfile) {
-                                                   setHeight(
-                                                       updateSetpoint(
-                                                           m_profileTimer->Get()));
-                                                   std::this_thread::sleep_for(
-                                                       std::chrono::milliseconds(
-                                                           10));
-                                               }
-                                      });
+    m_updateProfile = false;
+    m_profileUpdater = nullptr;
+
     m_state = STATE_IDLE;
     m_ntotes = 0;
 
@@ -35,6 +27,10 @@ ElevatorAutomatic::ElevatorAutomatic() : TrapezoidProfile(120, 0.3125) {
 
 ElevatorAutomatic::~ElevatorAutomatic() {
     m_updateProfile = false;
+    if (m_profileUpdater != nullptr) {
+    	m_profileUpdater->join();
+    	delete m_profileUpdater;
+    }
 }
 
 void ElevatorAutomatic::updateState() {
@@ -76,11 +72,30 @@ void ElevatorAutomatic::raiseElevator(unsigned int numTotes) {
     /* Only allow changing the elevator height manually if not currently
      * auto-stacking
      */
-    if (m_state == STATE_IDLE && atGoal()) {
+    if (m_state == STATE_IDLE && onTarget()) {
         std::cout << "Seeking to " << m_toteHeights[numTotes * 2] << std::endl;
+        m_updateProfile = false;
+        if (m_profileUpdater != nullptr) {
+        	m_profileUpdater->join();
+        	delete m_profileUpdater;
+        }
+
         m_profileTimer->Reset();
         m_profileTimer->Start();
         setGoal(m_toteHeights[numTotes * 2], m_profileTimer->Get());
+        m_updateProfile = true;
+        m_profileUpdater = new std::thread([this] {
+        	double height;
+        	while (m_updateProfile) {
+        		height = updateSetpoint(m_profileTimer->Get());
+        		std::cout << "looping.. t = " << m_profileTimer->Get()
+         			<< ", setpoint = " << height
+ 					<< std::endl;
+                setHeight(height);
+                std::this_thread::sleep_for(std::chrono::milliseconds(
+                                            10));
+            }
+        });
         m_ntotes = numTotes;
     }
 }

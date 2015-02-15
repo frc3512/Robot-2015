@@ -41,7 +41,7 @@ private:
     std::vector<float> m_toteHeights;
     std::unique_ptr<Timer> m_profileTimer;
     std::atomic<bool> m_updateProfile;
-    std::unique_ptr<std::thread> m_profileUpdater;
+    std::thread* m_profileUpdater;
 
     std::unique_ptr<Elevator> m_elevator;
     ElevatorState m_state;
