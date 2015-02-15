@@ -186,3 +186,4 @@ inline void GearBox<CANTalon>::setIZone(unsigned int value) {
 inline void GearBox<CANTalon>::setCloseLoopRampRate(double value) {
     m_motors[0]->SetCloseLoopRampRate(value);
 }
+

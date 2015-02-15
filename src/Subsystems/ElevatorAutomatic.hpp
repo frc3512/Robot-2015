@@ -8,11 +8,14 @@
 #define ELEVATOR_AUTOMATIC_HPP
 
 #include "Elevator.hpp"
+#include "../MotionProfile/TrapezoidProfile.hpp"
 #include <vector>
 #include <memory>
+#include <thread>
+#include <atomic>
 #include <Timer.h>
 
-class ElevatorAutomatic : public Elevator {
+class ElevatorAutomatic : public Elevator, public TrapezoidProfile {
 public:
     enum ElevatorState {
         STATE_IDLE,
@@ -36,6 +39,9 @@ private:
     void stateChanged(ElevatorState oldState, ElevatorState newState);
 
     std::vector<float> m_toteHeights;
+    std::unique_ptr<Timer> m_profileTimer;
+    std::atomic<bool> m_updateProfile;
+    std::unique_ptr<std::thread> m_profileUpdater;
 
     std::unique_ptr<Elevator> m_elevator;
     ElevatorState m_state;

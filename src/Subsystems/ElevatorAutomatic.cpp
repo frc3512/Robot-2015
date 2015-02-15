@@ -6,8 +6,20 @@
 
 #include "Subsystems/ElevatorAutomatic.hpp"
 
-ElevatorAutomatic::ElevatorAutomatic() {
+ElevatorAutomatic::ElevatorAutomatic() : TrapezoidProfile(120, 0.3125) {
+    m_profileTimer = std::make_unique<Timer>();
     m_grabTimer = std::make_unique<Timer>();
+    m_updateProfile = true;
+    m_profileUpdater =
+        std::make_unique<std::thread>([this] { while (m_updateProfile) {
+                                                   setHeight(
+                                                       updateSetpoint(
+                                                           m_profileTimer->Get()));
+                                                   std::this_thread::sleep_for(
+                                                       std::chrono::milliseconds(
+                                                           10));
+                                               }
+                                      });
     m_state = STATE_IDLE;
     m_ntotes = 0;
 
@@ -22,6 +34,7 @@ ElevatorAutomatic::ElevatorAutomatic() {
 }
 
 ElevatorAutomatic::~ElevatorAutomatic() {
+    m_updateProfile = false;
 }
 
 void ElevatorAutomatic::updateState() {
@@ -58,24 +71,26 @@ void ElevatorAutomatic::raiseElevator(unsigned int numTotes) {
     }
 
     std::cout << "m_toteHeights[" << numTotes * 2 << "] == "
-    		<< m_toteHeights[numTotes * 2] << std::endl;
+              << m_toteHeights[numTotes * 2] << std::endl;
 
     /* Only allow changing the elevator height manually if not currently
      * auto-stacking
      */
-    if (m_state == STATE_IDLE) {
-    	std::cout << "Seeking to " << m_toteHeights[numTotes * 2] << std::endl;
-        setHeight(m_toteHeights[numTotes * 2]);
+    if (m_state == STATE_IDLE && atGoal()) {
+        std::cout << "Seeking to " << m_toteHeights[numTotes * 2] << std::endl;
+        m_profileTimer->Reset();
+        m_profileTimer->Start();
+        setGoal(m_toteHeights[numTotes * 2], m_profileTimer->Get());
         m_ntotes = numTotes;
     }
 }
 
 float ElevatorAutomatic::getLevel(unsigned int i) {
-	if(i * 2 < m_toteHeights.size()) {
-		return m_toteHeights[i * 2];
-	}
+    if (i * 2 < m_toteHeights.size()) {
+        return m_toteHeights[i * 2];
+    }
 
-	return 0.0;
+    return 0.0;
 }
 
 void ElevatorAutomatic::stackTotes() {

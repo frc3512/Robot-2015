@@ -42,7 +42,7 @@ Elevator::Elevator() {
     m_liftGrbx->setDistancePerPulse(70.5 / 5090.0);
     m_liftGrbx->setIZone(1);
     m_liftGrbx->setCloseLoopRampRate(1.0);
-    //m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
+    // m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
 #endif
 
     reloadPID();
@@ -160,12 +160,8 @@ void Elevator::resetEncoder(uint32_t interruptAssertedMask, void* param) {
 
 void Elevator::pollLimitSwitch() {
     // Check encoder reset limit switch
-    if(m_liftGrbx->isRevLimitSwitchClosed()) {
-    	m_liftGrbx->resetEncoder();
+    if (m_liftGrbx->isRevLimitSwitchClosed()) {
+        m_liftGrbx->resetEncoder();
     }
 }
 
-float Elevator::getRawHeight() {
-	//TODO: HACK
-    return m_liftGrbx->get(Grbx::Position) / (70.5 / 5125.75);
-}
