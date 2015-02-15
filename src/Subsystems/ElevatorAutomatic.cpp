@@ -72,7 +72,7 @@ void ElevatorAutomatic::raiseElevator(unsigned int numTotes) {
     /* Only allow changing the elevator height manually if not currently
      * auto-stacking
      */
-    if (m_state == STATE_IDLE && onTarget()) {
+    if (m_state == STATE_IDLE) {
         std::cout << "Seeking to " << m_toteHeights[numTotes * 2] << std::endl;
         m_updateProfile = false;
         if (m_profileUpdater != nullptr) {
@@ -82,15 +82,17 @@ void ElevatorAutomatic::raiseElevator(unsigned int numTotes) {
 
         m_profileTimer->Reset();
         m_profileTimer->Start();
-        setGoal(m_toteHeights[numTotes * 2], m_profileTimer->Get());
+        setGoal(m_profileTimer->Get(), m_toteHeights[numTotes * 2], getHeight());
         m_updateProfile = true;
         m_profileUpdater = new std::thread([this] {
         	double height;
         	while (m_updateProfile) {
         		height = updateSetpoint(m_profileTimer->Get());
-        		std::cout << "looping.. t = " << m_profileTimer->Get()
-         			<< ", setpoint = " << height
- 					<< std::endl;
+        		if (height != 0) {
+        			std::cout << "looping.. t = " << m_profileTimer->Get()
+         					<< ", setpoint = " << height
+							<< std::endl;
+        		}
                 setHeight(height);
                 std::this_thread::sleep_for(std::chrono::milliseconds(
                                             10));
