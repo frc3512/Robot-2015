@@ -171,3 +171,10 @@ inline void GearBox<CANTalon>::resetPID() {
     m_motors[0]->ClearIaccum();
 }
 
+inline bool GearBox<CANTalon>::isFwdLimitSwitchClosed() {
+    return m_motors[0]->IsFwdLimitSwitchClosed();
+}
+
+inline bool GearBox<CANTalon>::isRevLimitSwitchClosed() {
+    return m_motors[0]->IsRevLimitSwitchClosed();
+}

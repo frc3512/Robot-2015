@@ -106,6 +106,9 @@ void Robot::OperatorControl() {
             ev->intakeGrab(false);
         }
 
+        // Poll the limit reset limit switch
+        //ev->pollLimitSwitch();
+
         drive1Buttons.updateButtons();
         drive2Buttons.updateButtons();
         elevatorButtons.updateButtons();

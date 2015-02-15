@@ -10,15 +10,15 @@
 #include <CANTalon.h>
 
 Elevator::Elevator() {
-    m_grabSolenoid = std::make_unique<Solenoid>(1);
+    m_grabSolenoid = std::make_unique<Solenoid>(3);
 
     m_bottomLimit = std::make_unique<DigitalInput>(2);
     m_bottomLimit->RequestInterrupts(resetEncoder, m_liftGrbx.get());
     m_bottomLimit->SetUpSourceEdge(true, true);
     m_bottomLimit->EnableInterrupts();
 
-    m_intakeVertical = std::make_unique<Solenoid>(2);
-    m_intakeGrabber = std::make_unique<Solenoid>(3);
+    m_intakeVertical = std::make_unique<Solenoid>(1);
+    m_intakeGrabber = std::make_unique<Solenoid>(2);
     m_intakeWheelLeft = std::make_unique<CANTalon>(3);
     m_intakeWheelRight = std::make_unique<CANTalon>(6);
     m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
@@ -38,7 +38,7 @@ Elevator::Elevator() {
     m_liftGrbx->setDistancePerPulse((70.5 / 1.92442) * (26.0 / (48.0 * 360.0)));
 #else
     // For CANTalon PID loop
-    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, true, 2, 7);
+    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, true, 7, 2);
     m_liftGrbx->setDistancePerPulse(70.5 / 5125.75);
     m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
 #endif
@@ -156,3 +156,11 @@ void Elevator::resetEncoder(uint32_t interruptAssertedMask, void* param) {
     reinterpret_cast<decltype(m_liftGrbx.get())>(param)->resetEncoder();
 }
 
+void Elevator::pollLimitSwitch() {
+	std::cout << "Forward Limit: " << m_liftGrbx->isFwdLimitSwitchClosed() << std::endl
+			<< " Reverse limit: " << m_liftGrbx->isRevLimitSwitchClosed() << std::endl;
+    // Check encoder reset limit switch
+    if(m_liftGrbx->isFwdLimitSwitchClosed()) {
+    	m_liftGrbx->resetEncoder();
+    }
+}

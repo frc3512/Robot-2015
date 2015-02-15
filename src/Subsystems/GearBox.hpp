@@ -171,6 +171,9 @@ public:
 
     void resetPID();
 
+	bool isFwdLimitSwitchClosed();
+	bool isRevLimitSwitchClosed();
+
 private:
     std::unique_ptr<Solenoid> m_shifter;
 

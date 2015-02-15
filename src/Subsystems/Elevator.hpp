@@ -61,6 +61,7 @@ public:
     bool onTarget();
 
     void resetEncoder();
+    void pollLimitSwitch();
 
 protected:
     std::unique_ptr<Settings> m_settings;
