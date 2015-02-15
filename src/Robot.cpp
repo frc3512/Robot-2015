@@ -140,12 +140,6 @@ void Robot::DS_PrintOut() {
 
         pidGraph.resetInterval();
     }
-    if (pidGraph.hasIntervalPassed()) {
-        pidGraph.graphData(ev->getHeight(), "Distance (EV)");
-        pidGraph.graphData(ev->getSetpoint(), "Setpoint (EV)");
-
-        pidGraph.resetInterval();
-    }
 
     if (displayTimer->HasPeriodPassed(0.5)) {
         dsDisplay.clear();
