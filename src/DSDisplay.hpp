@@ -1,5 +1,5 @@
 // =============================================================================
-// File Name: DriverStationDisplay.hpp
+// File Name: DSDisplay.hpp
 // Description: Receives IP address from remote host then sends HUD data there
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
@@ -11,11 +11,11 @@
  * application on the DriverStation that displays it in a GUI.
  *
  * USAGE:
- * 1) Call DriverStationDisplay::getInstance() to create an instance of this
+ * 1) Call DSDisplay::getInstance() to create an instance of this
  *    class. The port number passed in should be the port on which
  *    communications will be received (probably 1130).
  * 2) Call clear() on the pointer to empty the packet before adding new data.
- * 3) Add new data with the << operator (e.g. *dsPtr << 4.f; *dsPtr << myVar;).
+ * 3) Add new data with the << operator (e.g. dsDisplay << 4.f; dsDisplay << myVar;).
  * 4) After all data is packed, call sendToDS() to send the data to the Driver
  *    Station.
  *
@@ -24,7 +24,7 @@
  *
  * receiveFromDS() requires that the file GUISettings.txt exist in
  * "/c", which follows the convention described in the
- * DriverStationDisplay's readme. This class creates a file "autonMode.txt"
+ * DSDisplay's readme. This class creates a file "autonMode.txt"
  * internally to store the currently selected autonomous routine.
  *
  * Before sending HUD data to the DriverStation, call clear() followed by
@@ -51,7 +51,7 @@
 #include <string>
 #include <functional>
 
-class DriverStationDisplay : public sf::Packet {
+class DSDisplay : public sf::Packet {
 public:
     enum StatusLight {
         active,
@@ -59,9 +59,9 @@ public:
         inactive
     };
 
-    virtual ~DriverStationDisplay();
+    virtual ~DSDisplay();
 
-    static DriverStationDisplay& getInstance(unsigned short dsPort);
+    static DSDisplay& getInstance(unsigned short dsPort);
 
     // Empties internal packet of data
     void clear();
@@ -96,20 +96,20 @@ public:
      * compile time. floats and doubles are converted to strings because VxWorks
      * messes up floats over the network.
      */
-    void addElementData(std::string ID, StatusLight data);
-    void addElementData(std::string ID, bool data);
-    void addElementData(std::string ID, int8_t data);
-    void addElementData(std::string ID, int32_t data);
-    void addElementData(std::string ID, uint32_t data);
-    void addElementData(std::string ID, std::string data);
-    void addElementData(std::string ID, float data);
-    void addElementData(std::string ID, double data);
+    void addData(std::string ID, StatusLight data);
+    void addData(std::string ID, bool data);
+    void addData(std::string ID, int8_t data);
+    void addData(std::string ID, int32_t data);
+    void addData(std::string ID, uint32_t data);
+    void addData(std::string ID, std::string data);
+    void addData(std::string ID, float data);
+    void addData(std::string ID, double data);
 
 private:
-    DriverStationDisplay(unsigned short portNumber);
+    DSDisplay(unsigned short portNumber);
 
-    DriverStationDisplay(const DriverStationDisplay&);
-    DriverStationDisplay& operator=(const DriverStationDisplay&) = delete;
+    DSDisplay(const DSDisplay&);
+    DSDisplay& operator=(const DSDisplay&) = delete;
 
     sf::UdpSocket m_socket; // socket for sending data to Driver Station
     sf::IpAddress m_dsIP; // IP address of Driver Station
@@ -124,7 +124,7 @@ private:
     char curAutonMode;
 };
 
-#include "DriverStationDisplay.inl"
+#include "DSDisplay.inl"
 
 #endif // DRIVER_STATION_DISPLAY_HPP
 
