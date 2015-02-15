@@ -27,7 +27,7 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                              this);
     dsDisplay.addAutonMethod("Noop Auton", &Robot::NoopAuton, this);
 
-    pidGraph.setSendInterval(10);
+    pidGraph.setSendInterval(5);
 
     displayTimer->Start();
 }
@@ -158,9 +158,13 @@ void Robot::DS_PrintOut() {
         dsDisplay.addData("ARMS_CLOSED", ev->getElevatorGrab());
         dsDisplay.addData("ENCODER_LEFT", robotDrive->getLeftDist());
         dsDisplay.addData("ENCODER_RIGHT", robotDrive->getRightDist());
-        std::cout << std::setw(40) << "EV_LEVEL_INCHES=" << ev->getHeight()
-                  << "INTAKE_ARMS_CLOSED" << ev->getIntakeGrab()
-                  << "ARMS_CLOSED" << ev->getElevatorGrab() << std::endl;
+        std::cout << "EV_HEIGHT=" << std::left << std::setw(20) <<
+            ev->getHeight()
+            	/* << "EV_RAWHEIGHT=" << std::left << std::setw(20) <<
+			ev->getRawHeight() */
+                  << "EV_SETPOINT=" << std::left << std::setw(20) <<
+            ev->getSetpoint()
+                  << std::endl;
 
         std::string name("EL_LEVEL_");
         for (int i = 0; i < 6; i++) {

@@ -174,6 +174,8 @@ public:
 	bool isFwdLimitSwitchClosed();
 	bool isRevLimitSwitchClosed();
 
+	void setIZone(unsigned int value);
+
 private:
     std::unique_ptr<Solenoid> m_shifter;
 

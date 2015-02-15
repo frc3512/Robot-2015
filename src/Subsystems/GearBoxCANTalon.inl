@@ -178,3 +178,7 @@ inline bool GearBox<CANTalon>::isFwdLimitSwitchClosed() {
 inline bool GearBox<CANTalon>::isRevLimitSwitchClosed() {
     return m_motors[0]->IsRevLimitSwitchClosed();
 }
+
+void setIZone(unsigned int value) {
+    m_motors[0]->SetIzone(value);
+}

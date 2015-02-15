@@ -15,7 +15,7 @@ ElevatorAutomatic::ElevatorAutomatic() {
 
     float height = 0;
     for (int i = 0;
-         (height = m_settings->getFloat("EL_LEVEL_" + std::to_string(i))) ||
+         (height = m_settings->getFloat("EV_LEVEL_" + std::to_string(i))) ||
          i == 0; i++) {
         m_toteHeights.push_back(height);
     }
@@ -57,17 +57,25 @@ void ElevatorAutomatic::raiseElevator(unsigned int numTotes) {
         return;
     }
 
+    std::cout << "m_toteHeights[" << numTotes * 2 << "] == "
+    		<< m_toteHeights[numTotes * 2] << std::endl;
+
     /* Only allow changing the elevator height manually if not currently
      * auto-stacking
      */
     if (m_state == STATE_IDLE) {
+    	std::cout << "Seeking to " << m_toteHeights[numTotes * 2] << std::endl;
         setHeight(m_toteHeights[numTotes * 2]);
         m_ntotes = numTotes;
     }
 }
 
 float ElevatorAutomatic::getLevel(unsigned int i) {
-    return m_toteHeights[i * 2];
+	if(i * 2 < m_toteHeights.size()) {
+		return m_toteHeights[i * 2];
+	}
+
+	return 0.0;
 }
 
 void ElevatorAutomatic::stackTotes() {
