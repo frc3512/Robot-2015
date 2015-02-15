@@ -140,19 +140,46 @@ void Robot::DS_PrintOut() {
 
         pidGraph.resetInterval();
     }
+    if (pidGraph.hasIntervalPassed()) {
+        pidGraph.graphData(ev->getHeight(), "Distance (EV)");
+        pidGraph.graphData(ev->getSetpoint(), "Setpoint (EV)");
+
+        pidGraph.resetInterval();
+    }
 
     if (displayTimer->HasPeriodPassed(0.5)) {
         dsDisplay.clear();
 
-        dsDisplay.addElementData("EV_HEIGHT", ev->getHeight());
-        dsDisplay.addElementData("EV_SETPOINT", ev->getSetpoint());
-        std::cout << "EV_HEIGHT=" << std::left << std::setw(20) <<
-            ev->getHeight()
-                  << "EV_SETPOINT=" << std::left << std::setw(20) <<
-            ev->getSetpoint()
-                  << std::endl;
+        dsDisplay.addElementData("EV_LEVEL_INCHES", ev->getHeight());
+        dsDisplay.addElementData("INTAKE_ARMS_CLOSED", ev->getIntakeGrab());
+        dsDisplay.addElementData("ARMS_CLOSED", ev->getElevatorGrab());
+        dsDisplay.addElementData("ENCODER_LEFT", robotDrive->getLeftDist());
+        dsDisplay.addElementData("ENCODER_RIGHT", robotDrive->getRightDist());
+        std::cout << std::setw(40) << "EV_LEVEL_INCHES=" << ev->getHeight()
+                  << "INTAKE_ARMS_CLOSED" << ev->getIntakeGrab()
+				  << "ARMS_CLOSED" << ev->getElevatorGrab() << std::endl;
 
+        std::string name("EL_LEVEL_");
+        for(int i = 0; i < 6; i++){
+        	std::string name("EL_LEVEL_");
+
+        	if (ev->getHeight() == ev->getLevel(i) && ev->onTarget()){
+        		dsDisplay.addElementData(name + std::to_string(i), DriverStationDisplay::active);
+        	}
+        	else if (ev->getHeight() < ev->getLevel(i + 1)){
+        		dsDisplay.addElementData(name + std::to_string(i),DriverStationDisplay::standby);
+        		dsDisplay.addElementData(name + std::to_string(i +1),DriverStationDisplay::standby);
+        	}
+        	else{
+        		dsDisplay.addElementData(name + std::to_string(i), DriverStationDisplay::inactive);
+        	}
+
+        }
         dsDisplay.sendToDS();
+
+
+
+
     }
 
     dsDisplay.receiveFromDS();
