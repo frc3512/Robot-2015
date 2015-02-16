@@ -40,7 +40,7 @@ void ElevatorAutomatic::updateState() {
         m_state = STATE_RELEASE;
         stateChanged(STATE_SEEK_DROP_TOTES, m_state);
     }
-    else if (m_state == STATE_RELEASE && m_grabTimer->HasPeriodPassed(1)) {
+    else if (m_state == STATE_RELEASE && m_grabTimer->HasPeriodPassed(0.5)) {
         m_state = STATE_SEEK_GROUND;
         stateChanged(STATE_RELEASE, m_state);
     }
@@ -48,13 +48,16 @@ void ElevatorAutomatic::updateState() {
         m_state = STATE_GRAB;
         stateChanged(STATE_SEEK_GROUND, m_state);
     }
-    else if (m_state == STATE_GRAB && m_grabTimer->HasPeriodPassed(1)) {
+    else if (m_state == STATE_GRAB && m_grabTimer->HasPeriodPassed(0.5)) {
         m_state = STATE_SEEK_HALF_TOTE;
         stateChanged(STATE_GRAB, m_state);
     }
     else if (m_state == STATE_SEEK_HALF_TOTE && onTarget() && atGoal()) {
         m_state = STATE_IDLE;
         stateChanged(STATE_SEEK_HALF_TOTE, m_state);
+    } else if (m_state != STATE_IDLE && isManualMode()) {
+    	//FIXME Hack
+    	m_state = STATE_IDLE;
     }
 
 }
@@ -127,7 +130,7 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
 
     // Off the ground a bit
     if (newState == STATE_SEEK_HALF_TOTE) {
-    	m_setpoint = m_toteHeights[1];
+    	m_setpoint = m_toteHeights[3];
     	std::cout << "m_setpoint == " << m_setpoint << std::endl;
     	setProfileHeight(m_setpoint);
     }

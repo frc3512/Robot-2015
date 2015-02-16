@@ -38,6 +38,7 @@ public:
     std::string stateToString(ElevatorState state);
 
 private:
+    friend class Elevator;
     void stateChanged(ElevatorState oldState, ElevatorState newState);
     void setProfileHeight(double height);
 
