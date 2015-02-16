@@ -63,11 +63,12 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
     double height = 0;
     for (int i = 0; i <= 6; i++) {
-        height = m_settings->getDouble("EV_LEVEL_" + std::to_string(i));
-        m_toteHeights["EV_LEVEL_" + std::to_string(i)] = height;
+        height = m_settings->getDouble("EV_TOTE_" + std::to_string(i));
+        m_toteHeights["EV_TOTE_" + std::to_string(i)] = height;
     }
 
     m_toteHeights["EV_STEP"] = m_settings->getDouble("EV_STEP");
+    m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings->getDouble("EV_HALF_TOTE_OFFSET");
 
     reloadPID();
 }
@@ -125,31 +126,36 @@ Elevator::IntakeMotorState Elevator::getIntakeDirection() {
     return m_intakeState;
 }
 
-void Elevator::setManualLiftSpeed(float value) {
+void Elevator::setManualLiftSpeed(double value) {
     if (m_manual == true) {
         m_liftGrbx->setManual(value);
     }
 }
 
 void Elevator::setManualMode(bool on) {
-    m_manual = on;
+    if(!on && m_manual) {
+    	m_manual = false;
+    	setProfileHeight(getHeight());
+    } else {
+    	m_manual = on;
+    }
 }
 
 bool Elevator::isManualMode() {
     return m_manual;
 }
 
-void Elevator::setHeight(float height) {
+void Elevator::setHeight(double height) {
     if (m_manual == false) {
         m_liftGrbx->setSetpoint(height);
     }
 }
 
-float Elevator::getHeight() {
+double Elevator::getHeight() {
     return m_liftGrbx->get(Grbx::Position);
 }
 
-float Elevator::getSetpoint() {
+double Elevator::getSetpoint() {
     if (!m_manual) {
         return m_liftGrbx->getSetpoint();
     }
@@ -162,10 +168,10 @@ void Elevator::reloadPID() {
     m_settings->update();
 
     // First profile
-    float p0 = 0.f;
-    float i0 = 0.f;
-    float d0 = 0.f;
-    float f0 = 0.f;
+    double p0 = 0.f;
+    double i0 = 0.f;
+    double d0 = 0.f;
+    double f0 = 0.f;
 
     // Set elevator PID
     p0 = m_settings->getDouble("PID_ELEVATOR_DOWN_P");
@@ -178,10 +184,10 @@ void Elevator::reloadPID() {
     m_liftGrbx->setF(f0);
 
     // Second profile
-    float p1 = 0.f;
-    float i1 = 0.f;
-    float d1 = 0.f;
-    float f1 = 0.f;
+    double p1 = 0.f;
+    double i1 = 0.f;
+    double d1 = 0.f;
+    double f1 = 0.f;
 
     // Set elevator PID
     p1 = m_settings->getDouble("PID_ELEVATOR_UP_P");
@@ -216,7 +222,7 @@ void Elevator::pollLimitSwitch() {
 void Elevator::raiseElevator(std::string level) {
 	size_t pos;
 	size_t newpos;
-	double height;
+	double height = 0;
 
 	pos = level.find("+");
 	auto it = m_toteHeights.find(level.substr(0, pos));
@@ -241,6 +247,47 @@ void Elevator::raiseElevator(std::string level) {
         m_setpoint = height;
         setProfileHeight(m_setpoint);
     }
+}
+
+void Elevator::setProfileHeight(double height) {
+    // Don't try to seek anywhere if we're already at setpoint
+    /* if (height == getHeight()) {
+        return;
+    } */
+
+    // Set PID constant profile
+    if (height > getHeight()) {
+        // Going up.
+        setMaxVelocity(88.0);
+        setTimeToMaxV(0.4);
+        m_liftGrbx->setProfile(true);
+    }
+    else {
+        // Going down.
+        setMaxVelocity(91.26);
+        setTimeToMaxV(0.4);
+        m_liftGrbx->setProfile(false);
+    }
+
+    m_updateProfile = false;
+    if (m_profileUpdater != nullptr) {
+        m_profileUpdater->join();
+        delete m_profileUpdater;
+    }
+
+	m_profileTimer->Reset();
+	m_profileTimer->Start();
+    setGoal(m_profileTimer->Get(), height, getHeight());
+    m_updateProfile = true;
+    m_profileUpdater = new std::thread([this] {
+        double height;
+        while (m_updateProfile) {
+            height = updateSetpoint(m_profileTimer->Get());
+            setHeight(height);
+            std::this_thread::sleep_for(std::chrono::milliseconds(
+                                            10));
+        }
+    });
 }
 
 double Elevator::getLevelHeight(std::string level) const {
@@ -346,45 +393,3 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
         setProfileHeight(m_setpoint);
     }
 }
-
-void Elevator::setProfileHeight(double height) {
-    // Don't try to seek anywhere if we're already at setpoint
-    if (height == getHeight()) {
-        return;
-    }
-
-    // Set PID constant profile
-    if (height > getHeight()) {
-        // Going up.
-        setMaxVelocity(88.0);
-        setTimeToMaxV(0.4);
-        m_liftGrbx->setProfile(true);
-    }
-    else {
-        // Going down.
-        setMaxVelocity(91.26);
-        setTimeToMaxV(0.4);
-        m_liftGrbx->setProfile(false);
-    }
-
-    m_updateProfile = false;
-    if (m_profileUpdater != nullptr) {
-        m_profileUpdater->join();
-        delete m_profileUpdater;
-    }
-
-    m_profileTimer->Reset();
-    m_profileTimer->Start();
-    setGoal(m_profileTimer->Get(), height, getHeight());
-    m_updateProfile = true;
-    m_profileUpdater = new std::thread([this] {
-        double height;
-        while (m_updateProfile) {
-            height = updateSetpoint(m_profileTimer->Get());
-            setHeight(height);
-            std::this_thread::sleep_for(std::chrono::milliseconds(
-                                            10));
-        }
-    });
-}
-

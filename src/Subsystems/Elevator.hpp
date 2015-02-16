@@ -60,19 +60,19 @@ public:
     IntakeMotorState getIntakeDirection();
 
     // Sets speed of lift gearbox directly if manual input is enabled
-    void setManualLiftSpeed(float value);
+    void setManualLiftSpeed(double value);
 
     void setManualMode(bool on);
     bool isManualMode();
 
     // Sets setpoint for elevator PID controller
-    void setHeight(float height);
+    void setHeight(double height);
 
     // Gets the current height as integrated from the encoder
-    float getHeight();
+    double getHeight();
 
     // Get setpoint from PID controller
-    float getSetpoint();
+    double getSetpoint();
 
     void reloadPID();
 
@@ -83,6 +83,7 @@ public:
 
     // Takes a string representing the name of the height
     void raiseElevator(std::string level);
+    void setProfileHeight(double height);
     double getLevelHeight(std::string level) const;
 
     void stackTotes();
@@ -94,7 +95,6 @@ protected:
 
 private:
     void stateChanged(ElevatorState oldState, ElevatorState newState);
-    void setProfileHeight(double height);
 
     std::unique_ptr<Solenoid> m_grabSolenoid;
     std::unique_ptr<DigitalInput> m_bottomLimit;

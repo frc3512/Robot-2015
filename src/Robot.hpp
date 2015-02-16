@@ -45,6 +45,7 @@ private:
 
     std::unique_ptr<Timer> autonTimer;
     std::unique_ptr<Timer> displayTimer;
+    std::unique_ptr<Timer> accumTimer;
 
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay;

@@ -19,6 +19,7 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
     evStick = std::make_unique<Joystick>(2);
     autonTimer = std::make_unique<Timer>();
     displayTimer = std::make_unique<Timer>();
+    accumTimer = std::make_unique<Timer>();
 
     dsDisplay.addAutonMethod("MotionProfile",
                              &Robot::AutonMotionProfile,
@@ -57,7 +58,7 @@ void Robot::OperatorControl() {
         }
 
         std::string offsetString;
-        if(evStick->GetZ() > 0) {
+        if(evStick->GetThrottle() > 0) {
         	offsetString = "+EV_HALF_TOTE_OFFSET";
         } else {
         	offsetString = "";
@@ -109,6 +110,22 @@ void Robot::OperatorControl() {
         if (drive2Buttons.releasedButton(12)) {
             ev->resetEncoder();
         }
+
+        // Accumulate assised automatic mode
+        double deltaT = accumTimer->Get();
+        accumTimer->Reset();
+		accumTimer->Start();
+
+		double evStickY = evStick->GetY();
+		double tmp;
+		if(fabs(evStickY) > 0.03) {
+			tmp = evStickY * ev->getMaxVelocity() * deltaT;
+
+			//TODO: probably wrong
+			if(ev->getSetpoint() + tmp > 0) {
+				ev->manualChangeSetpoint(tmp);
+			}
+		}
 
         /* Opens intake if the elevator is at the same level as it or if the
          * tines are open

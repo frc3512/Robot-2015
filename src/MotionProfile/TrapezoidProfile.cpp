@@ -18,6 +18,10 @@ TrapezoidProfile::TrapezoidProfile(double maxV, double timeToMaxV) :
 TrapezoidProfile::~TrapezoidProfile() {
 }
 
+void TrapezoidProfile::manualChangeSetpoint(double delta) {
+		m_setpoint += delta;
+}
+
 double TrapezoidProfile::updateSetpoint(double curTime, double curSource) {
     double period = curTime - m_lastTime;
 
@@ -67,6 +71,7 @@ double TrapezoidProfile::updateSetpoint(double curTime, double curSource) {
 double TrapezoidProfile::setGoal(double t, double goal, double curSource) {
     m_varMutex.lock();
 
+    m_goal = goal;
     m_setpoint = goal - curSource;
 
     m_sign = (m_setpoint < 0) ? -1.0 : 1.0;
@@ -159,7 +164,14 @@ void TrapezoidProfile::setMode(SetpointMode mode) {
     m_mode = mode;
 }
 
-SetpointMode TrapezoidProfile::getMode() {
+SetpointMode TrapezoidProfile::getMode() const {
     return m_mode;
 }
 
+double TrapezoidProfile::getGoal() const {
+	return m_goal;
+}
+
+double TrapezoidProfile::getMaxVelocity() const {
+	return m_velocity;
+}

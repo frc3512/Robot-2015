@@ -25,6 +25,8 @@ public:
     TrapezoidProfile(double maxV, double timeToMaxV);
     virtual ~TrapezoidProfile();
 
+    void manualChangeSetpoint(double delta);
+
     /* If distance:
      *     curSetpoint is current distance set to which to travel
      *     curSource is current position (not used)
@@ -44,15 +46,17 @@ public:
     virtual double setGoal(double t, double goal, double curSource = 0.0);
 
     bool atGoal();
+    double getGoal() const;
 
     void setMaxVelocity(double v);
+    double getMaxVelocity() const;
     void setTimeToMaxV(double timeToMaxV);
 
     virtual void resetProfile();
 
     // Tells algorithm whether to use distance or velocity as setpoint
     void setMode(SetpointMode mode);
-    SetpointMode getMode();
+    SetpointMode getMode() const;
 
 protected:
     double m_setpoint;
@@ -65,6 +69,7 @@ protected:
     double m_timeToMaxVelocity;
     double m_sign;
     double m_timeTotal;
+    double m_goal;
 
     SetpointMode m_mode;
 
