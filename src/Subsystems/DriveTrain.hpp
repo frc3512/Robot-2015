@@ -11,6 +11,7 @@
 #include "../MotionProfile/BezierTrapezoidProfile.hpp"
 #include "GearBox.hpp"
 
+#include <memory>
 #include <CANTalon.h>
 
 class DriveTrain : public BezierTrapezoidProfile {
@@ -80,10 +81,10 @@ private:
     float m_quickStopAccumulator;
     float m_negInertiaAccumulator;
 
-    GearBox<CANTalon>* m_leftFrontGrbx;
-    GearBox<CANTalon>* m_rightFrontGrbx;
-    GearBox<CANTalon>* m_leftBackGrbx;
-    GearBox<CANTalon>* m_rightBackGrbx;
+    std::unique_ptr<GearBox<CANTalon>> m_leftFrontGrbx;
+    std::unique_ptr<GearBox<CANTalon>> m_rightFrontGrbx;
+    std::unique_ptr<GearBox<CANTalon>> m_leftBackGrbx;
+    std::unique_ptr<GearBox<CANTalon>> m_rightBackGrbx;
 
     /* Zeroes value if its inside deadband range, and rescales values outside
      * of it

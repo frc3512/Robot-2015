@@ -16,7 +16,7 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
 
     driveStick1 = std::make_unique<Joystick>(0);
     driveStick2 = std::make_unique<Joystick>(1);
-    shootStick = std::make_unique<Joystick>(2);
+    evStick = std::make_unique<Joystick>(2);
     autonTimer = std::make_unique<Timer>();
     displayTimer = std::make_unique<Timer>();
 

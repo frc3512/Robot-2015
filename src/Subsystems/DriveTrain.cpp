@@ -31,16 +31,16 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
 
 #if 0
     // For WPILib PID loop
-    m_leftFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 4);
-    m_leftBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 1);
-    m_rightFrontGrbx = new GearBox<CANTalon>(-1, -1, -1, 5);
-    m_rightBackGrbx = new GearBox<CANTalon>(-1, -1, -1, 8);
+    m_leftFrontGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 4);
+    m_leftBackGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 1);
+    m_rightFrontGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 5);
+    m_rightBackGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 8);
 #else
     // For CANTalon PID loop
-    m_leftFrontGrbx = new GearBox<CANTalon>(-1, false, 4);
-    m_leftBackGrbx = new GearBox<CANTalon>(-1, false, 1);
-    m_rightFrontGrbx = new GearBox<CANTalon>(-1, false, 5);
-    m_rightBackGrbx = new GearBox<CANTalon>(-1, false, 8);
+    m_leftFrontGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 4);
+    m_leftBackGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 1);
+    m_rightFrontGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 5);
+    m_rightBackGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 8);
 #endif
 
     m_leftFrontGrbx->setMotorReversed(true);
@@ -62,10 +62,6 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
 }
 
 DriveTrain::~DriveTrain() {
-    delete m_leftFrontGrbx;
-    delete m_rightFrontGrbx;
-    delete m_leftBackGrbx;
-    delete m_rightBackGrbx;
 }
 
 void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
@@ -105,20 +101,20 @@ void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
     // Negative inertia!
     double negInertiaScalar;
     if (getGear()) {
-        negInertiaScalar = m_settings.getDouble("INERTIA_HIGH_GEAR");
+        negInertiaScalar = m_settings.getDouble("INERTIA");
     }
     else {
         if (turn * negInertia > 0) {
-            negInertiaScalar = m_settings.getDouble("INERTIA_LOW_DAMPEN");
+            negInertiaScalar = m_settings.getDouble("INERTIA_DAMPEN");
         }
         else {
             if (fabs(turn) > 0.65) {
                 negInertiaScalar =
-                    m_settings.getDouble("INERTIA_LOW_HIGH_TURN");
+                    m_settings.getDouble("INERTIA_HIGH_TURN");
             }
             else {
                 negInertiaScalar =
-                    m_settings.getDouble("INERTIA_LOW_LOW_TURN");
+                    m_settings.getDouble("INERTIA_LOW_TURN");
             }
         }
     }
