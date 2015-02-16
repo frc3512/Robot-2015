@@ -49,7 +49,7 @@ void Robot::OperatorControl() {
         }
 
         // Manual state machine
-        if (elevatorButtons.releasedButton(2)) {
+        if (elevatorButtons.releasedButton(5)) {
             ev->setManualMode(!ev->isManualMode());
         }
 
@@ -85,10 +85,10 @@ void Robot::OperatorControl() {
         if (elevatorButtons.releasedButton(1)) {
             ev->elevatorGrab(!ev->getElevatorGrab());
         }
-        if (elevatorButtons.releasedButton(5)) {
+        if (elevatorButtons.releasedButton(2)) {
             ev->intakeGrab(!ev->getIntakeGrab());
         }
-        if (elevatorButtons.releasedButton(6)) {
+        if (elevatorButtons.releasedButton(4)) {
             ev->stowIntake(!ev->isIntakeStowed());
         }
 
