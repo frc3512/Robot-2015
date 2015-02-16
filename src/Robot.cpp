@@ -58,22 +58,22 @@ void Robot::OperatorControl() {
 
         // Automatic preset buttons (7-12)
         if (evButtons.releasedButton(7)) {
-            ev->raiseElevator("EV_LEVEL_0");
+            ev->raiseElevator("EV_TOTE_0");
         }
         if (evButtons.releasedButton(8)) {
-            ev->raiseElevator("EV_LEVEL_1");
+            ev->raiseElevator("EV_TOTE_1");
         }
         if (evButtons.releasedButton(9)) {
-            ev->raiseElevator("EV_LEVEL_2");
+            ev->raiseElevator("EV_TOTE_2");
         }
         if (evButtons.releasedButton(10)) {
-            ev->raiseElevator("EV_LEVEL_3");
+            ev->raiseElevator("EV_TOTE_3");
         }
         if (evButtons.releasedButton(11)) {
-            ev->raiseElevator("EV_LEVEL_4");
+            ev->raiseElevator("EV_TOTE_4");
         }
         if (evButtons.releasedButton(12)) {
-            ev->raiseElevator("EV_LEVEL_5");
+            ev->raiseElevator("EV_TOTE_5");
         }
 
         // Set manual value

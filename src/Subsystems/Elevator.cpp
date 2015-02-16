@@ -59,12 +59,15 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
     m_setpoint = 0.0;
 
+    m_toteHeights["EV_GROUND"] = m_settings->getDouble("EV_GROUND");
+
     double height = 0;
-    // TODO: magic number
     for (int i = 0; i <= 6; i++) {
         height = m_settings->getDouble("EV_LEVEL_" + std::to_string(i));
         m_toteHeights["EV_LEVEL_" + std::to_string(i)] = height;
     }
+
+    m_toteHeights["EV_STEP"] = m_settings->getDouble("EV_STEP");
 
     reloadPID();
 }
@@ -317,7 +320,7 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
     }
 
     if (newState == STATE_SEEK_GROUND) {
-        m_setpoint = m_toteHeights["EV_LEVEL_0"];
+        m_setpoint = m_toteHeights["EV_GROUND"];
         setProfileHeight(m_setpoint);
     }
 
@@ -330,7 +333,7 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
 
     // Off the ground a bit
     if (newState == STATE_SEEK_HALF_TOTE) {
-        m_setpoint = m_toteHeights["EV_LEVEL_3"];
+        m_setpoint = m_toteHeights["EV_TOTE_3"];
         std::cout << "m_setpoint == " << m_setpoint << std::endl;
         setProfileHeight(m_setpoint);
     }
