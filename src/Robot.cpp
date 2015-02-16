@@ -117,13 +117,12 @@ void Robot::OperatorControl() {
 		accumTimer->Start();
 
 		double evStickY = evStick->GetY();
-		double tmp;
 		if(fabs(evStickY) > 0.03) {
-			tmp = evStickY * ev->getMaxVelocity() * deltaT;
+			manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
 
 			//TODO: probably wrong
-			if(ev->getSetpoint() + tmp > 0) {
-				ev->manualChangeSetpoint(tmp);
+			if(ev->getSetpoint() + manualAverage.get() > 0) {
+				ev->manualChangeSetpoint(manualAverage.get());
 			}
 		}
 

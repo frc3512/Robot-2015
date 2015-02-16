@@ -1,7 +1,6 @@
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
-#include <DSDisplay.hpp>
 #include <memory>
 
 #include <SampleRobot.h>
@@ -14,6 +13,8 @@
 #include "ButtonTracker.hpp"
 #include "Settings.hpp"
 
+#include "RollingAverage.hpp"
+#include "DSDisplay.hpp"
 #include "LiveGrapherHost/GraphHost.hpp"
 
 class Robot : public SampleRobot {
@@ -46,6 +47,8 @@ private:
     std::unique_ptr<Timer> autonTimer;
     std::unique_ptr<Timer> displayTimer;
     std::unique_ptr<Timer> accumTimer;
+
+    RollingAverage<double, 10> manualAverage;
 
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay;
