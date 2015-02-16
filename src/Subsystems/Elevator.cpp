@@ -23,7 +23,7 @@ Elevator::Elevator() {
     m_intakeWheelRight = std::make_unique<CANTalon>(6);
     m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
     m_intakeState = S_STOPPED;
-    m_manual = true;
+    m_manual = false;
 
 #if 0
     // For WPILib PID loop
@@ -40,8 +40,14 @@ Elevator::Elevator() {
     // For CANTalon PID loop
     m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, true, 7, 2);
     m_liftGrbx->setDistancePerPulse(70.5 / 5090.0);
-    m_liftGrbx->setIZone(1);
+
+    m_liftGrbx->setProfile(false);
+    m_liftGrbx->setIZone(50);
     m_liftGrbx->setCloseLoopRampRate(1.0);
+
+    m_liftGrbx->setProfile(true);
+    m_liftGrbx->setIZone(50);
+	m_liftGrbx->setCloseLoopRampRate(1.0);
     // m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
 #endif
 
