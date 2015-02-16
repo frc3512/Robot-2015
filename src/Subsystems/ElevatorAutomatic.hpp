@@ -31,10 +31,10 @@ public:
     ElevatorAutomatic();
     virtual ~ElevatorAutomatic();
 
-    void updateState();
-    void raiseElevator(unsigned int numTotes);
-    float getLevel(unsigned int i);
+    // Takes a string representing the name of the height
+    void raiseElevator(std::string level);
     void stackTotes();
+    void updateState();
     std::string stateToString(ElevatorState state);
 
 private:
@@ -42,7 +42,7 @@ private:
     void stateChanged(ElevatorState oldState, ElevatorState newState);
     void setProfileHeight(double height);
 
-    std::vector<double> m_toteHeights;
+    std::map<std::string, double> m_toteHeights;
     std::unique_ptr<Timer> m_profileTimer;
     std::atomic<bool> m_updateProfile;
     std::thread* m_profileUpdater;
@@ -50,7 +50,6 @@ private:
     std::unique_ptr<Elevator> m_elevator;
     ElevatorState m_state;
     std::unique_ptr<Timer> m_grabTimer;
-    unsigned int m_ntotes;
 
     double m_setpoint;
 };

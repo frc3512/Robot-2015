@@ -55,28 +55,28 @@ void Robot::OperatorControl() {
 
         // Auto-stacking mode
         if (elevatorButtons.releasedButton(3)) {
-        	std::cout << "stackTotes()" << std::endl;
+            std::cout << "stackTotes()" << std::endl;
             ev->stackTotes();
         }
 
         // Automatic preset buttons (7-12)
         if (elevatorButtons.releasedButton(7)) {
-            ev->raiseElevator(0);
+            ev->raiseElevator("EL_LEVEL_0");
         }
         if (elevatorButtons.releasedButton(8)) {
-            ev->raiseElevator(1);
+            ev->raiseElevator("EL_LEVEL_1");
         }
         if (elevatorButtons.releasedButton(9)) {
-            ev->raiseElevator(2);
+            ev->raiseElevator("EL_LEVEL_2");
         }
         if (elevatorButtons.releasedButton(10)) {
-            ev->raiseElevator(3);
+            ev->raiseElevator("EL_LEVEL_3");
         }
         if (elevatorButtons.releasedButton(11)) {
-            ev->raiseElevator(4);
+            ev->raiseElevator("EL_LEVEL_4");
         }
         if (elevatorButtons.releasedButton(12)) {
-            ev->raiseElevator(5);
+            ev->raiseElevator("EL_LEVEL_5");
         }
 
         // Set manual value
@@ -171,8 +171,10 @@ void Robot::DS_PrintOut() {
             ev->getSetpoint()
                   << std::endl;
 
-        std::cout << "On target: " << ev-> onTarget() << std::endl;
+        std::cout << "On target: " << ev->onTarget() << std::endl;
 
+        // FIXME: getLevel() not defined anymore
+#if 0
         std::string name("EL_LEVEL_");
         for (int i = 0; i < 6; i++) {
             std::string name("EL_LEVEL_");
@@ -190,6 +192,7 @@ void Robot::DS_PrintOut() {
                                   DSDisplay::inactive);
             }
         }
+#endif
         dsDisplay.sendToDS();
     }
 
