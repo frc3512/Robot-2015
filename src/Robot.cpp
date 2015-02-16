@@ -106,16 +106,12 @@ void Robot::OperatorControl() {
             ev->resetEncoder();
         }
 
-        // Opens intake if the elevator is at the same level as it
-        if (ev->getSetpoint() < 11 && !ev->isManualMode() &&
-            ev->getIntakeGrab()) {
+        /* Opens intake if the elevator is at the same level as it or if the
+         * tines are open
+         */
+        if (((ev->getSetpoint() < 11 && !ev->isManualMode()) ||
+             ev->getElevatorGrab()) && ev->getIntakeGrab()) {
             ev->intakeGrab(false);
-        }
-
-
-        // Ensure that the intake is open if the tines are open
-        if(ev->isManualMode() && ev->getElevatorGrab()) {
-        	ev->intakeGrab(false);
         }
 
         // Poll the limit reset limit switch
@@ -169,8 +165,8 @@ void Robot::DS_PrintOut() {
         dsDisplay.addData("ENCODER_RIGHT", robotDrive->getRightDist());
         std::cout << "EV_HEIGHT=" << std::left << std::setw(20) <<
             ev->getHeight()
-            	/* << "EV_RAWHEIGHT=" << std::left << std::setw(20) <<
-			ev->getRawHeight() */
+            /* << "EV_RAWHEIGHT=" << std::left << std::setw(20) <<
+             *  ev->getRawHeight() */
                   << "EV_SETPOINT=" << std::left << std::setw(20) <<
             ev->getSetpoint()
                   << std::endl;

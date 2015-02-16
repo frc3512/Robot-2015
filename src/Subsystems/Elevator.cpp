@@ -42,7 +42,7 @@ Elevator::Elevator() {
     m_liftGrbx->setDistancePerPulse(70.5 / 5090.0);
     m_liftGrbx->setIZone(1);
     m_liftGrbx->setCloseLoopRampRate(1.0);
-    //m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
+    // m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
 #endif
 
     reloadPID();
@@ -132,18 +132,37 @@ float Elevator::getSetpoint() {
 void Elevator::reloadPID() {
     m_settings->update();
 
-    float p = 0.f;
-    float i = 0.f;
-    float d = 0.f;
-    float f = 0.f;
+    // First profile
+    float p0 = 0.f;
+    float i0 = 0.f;
+    float d0 = 0.f;
+    float f0 = 0.f;
 
     // Set elevator PID
-    p = m_settings->getFloat("PID_ELEVATOR_P");
-    i = m_settings->getFloat("PID_ELEVATOR_I");
-    d = m_settings->getFloat("PID_ELEVATOR_D");
-    f = m_settings->getFloat("PID_ELEVATOR_F");
-    m_liftGrbx->setPID(p, i, d);
-    m_liftGrbx->setF(f);
+    p0 = m_settings->getFloat("PID_ELEVATOR_DOWN_P");
+    i0 = m_settings->getFloat("PID_ELEVATOR_DOWN_I");
+    d0 = m_settings->getFloat("PID_ELEVATOR_DOWN_D");
+    f0 = m_settings->getFloat("PID_ELEVATOR_DOWN_F");
+
+    m_liftGrbx->setProfile(false);
+    m_liftGrbx->setPID(p0, i0, d0);
+    m_liftGrbx->setF(f0);
+
+    // Second profile
+    float p1 = 0.f;
+    float i1 = 0.f;
+    float d1 = 0.f;
+    float f1 = 0.f;
+
+    // Set elevator PID
+    p1 = m_settings->getFloat("PID_ELEVATOR_UP_P");
+    i1 = m_settings->getFloat("PID_ELEVATOR_UP_I");
+    d1 = m_settings->getFloat("PID_ELEVATOR_UP_D");
+    f1 = m_settings->getFloat("PID_ELEVATOR_UP_F");
+
+    m_liftGrbx->setProfile(true);
+    m_liftGrbx->setPID(p1, i1, d1);
+    m_liftGrbx->setF(f1);
 }
 
 bool Elevator::onTarget() {
@@ -160,12 +179,8 @@ void Elevator::resetEncoder(uint32_t interruptAssertedMask, void* param) {
 
 void Elevator::pollLimitSwitch() {
     // Check encoder reset limit switch
-    if(m_liftGrbx->isRevLimitSwitchClosed()) {
-    	m_liftGrbx->resetEncoder();
+    if (m_liftGrbx->isRevLimitSwitchClosed()) {
+        m_liftGrbx->resetEncoder();
     }
 }
 
-float Elevator::getRawHeight() {
-	//TODO: HACK
-    return m_liftGrbx->get(Grbx::Position) / (70.5 / 5125.75);
-}

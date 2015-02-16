@@ -12,6 +12,7 @@ TrapezoidProfile::TrapezoidProfile(double maxV, double timeToMaxV) :
     setMaxVelocity(maxV);
     setTimeToMaxV(timeToMaxV);
     setMode(SetpointMode::distance);
+    resetProfile();
 }
 
 TrapezoidProfile::~TrapezoidProfile() {

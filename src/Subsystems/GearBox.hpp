@@ -171,12 +171,13 @@ public:
 
     void resetPID();
 
-	bool isFwdLimitSwitchClosed();
-	bool isRevLimitSwitchClosed();
+    bool isFwdLimitSwitchClosed();
+    bool isRevLimitSwitchClosed();
 
-	void setIZone(unsigned int value);
+    void setIZone(unsigned int value);
 
-	void setCloseLoopRampRate(double value);
+    void setCloseLoopRampRate(double value);
+    void setProfile(bool secondProfile);
 
 private:
     std::unique_ptr<Solenoid> m_shifter;

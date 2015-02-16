@@ -6,8 +6,12 @@
 
 #include "Subsystems/ElevatorAutomatic.hpp"
 
-ElevatorAutomatic::ElevatorAutomatic() {
+ElevatorAutomatic::ElevatorAutomatic() : TrapezoidProfile(0.0, 0.0) {
+    m_profileTimer = std::make_unique<Timer>();
     m_grabTimer = std::make_unique<Timer>();
+    m_updateProfile = false;
+    m_profileUpdater = nullptr;
+
     m_state = STATE_IDLE;
     m_ntotes = 0;
 
@@ -22,6 +26,11 @@ ElevatorAutomatic::ElevatorAutomatic() {
 }
 
 ElevatorAutomatic::~ElevatorAutomatic() {
+    m_updateProfile = false;
+    if (m_profileUpdater != nullptr) {
+    	m_profileUpdater->join();
+    	delete m_profileUpdater;
+    }
 }
 
 void ElevatorAutomatic::updateState() {
@@ -58,24 +67,26 @@ void ElevatorAutomatic::raiseElevator(unsigned int numTotes) {
     }
 
     std::cout << "m_toteHeights[" << numTotes * 2 << "] == "
-    		<< m_toteHeights[numTotes * 2] << std::endl;
+              << m_toteHeights[numTotes * 2] << std::endl;
 
     /* Only allow changing the elevator height manually if not currently
      * auto-stacking
      */
     if (m_state == STATE_IDLE) {
-    	std::cout << "Seeking to " << m_toteHeights[numTotes * 2] << std::endl;
-        setHeight(m_toteHeights[numTotes * 2]);
+        std::cout << "Seeking to " << m_toteHeights[numTotes * 2] << std::endl;
+
+        setProfileHeight(m_toteHeights[numTotes * 2]);
+
         m_ntotes = numTotes;
     }
 }
 
 float ElevatorAutomatic::getLevel(unsigned int i) {
-	if(i * 2 < m_toteHeights.size()) {
-		return m_toteHeights[i * 2];
-	}
+    if (i * 2 < m_toteHeights.size()) {
+        return m_toteHeights[i * 2];
+    }
 
-	return 0.0;
+    return 0.0;
 }
 
 void ElevatorAutomatic::stackTotes() {
@@ -88,10 +99,10 @@ void ElevatorAutomatic::stackTotes() {
 void ElevatorAutomatic::stateChanged(ElevatorState oldState,
                                      ElevatorState newState) {
 
-	std::cout << "oldState = " << stateToString(oldState)
-			<< " newState = " << stateToString(newState) << std::endl;
+	/* std::cout << "oldState = " << stateToString(oldState)
+			<< " newState = " << stateToString(newState) << std::endl; */
     if (newState == STATE_SEEK_DROP_TOTES) {
-        setHeight(m_toteHeights[m_ntotes * 2]);
+    	setProfileHeight(m_toteHeights[m_ntotes * 2]);
     }
 
     // Release the totes
@@ -102,7 +113,7 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
     }
 
     if (newState == STATE_SEEK_GROUND) {
-        setHeight(m_toteHeights[0]);
+    	setProfileHeight(m_toteHeights[0]);
     }
 
     // Grab the new stack
@@ -114,7 +125,7 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
 
     // Off the ground a bit
     if (newState == STATE_SEEK_HALF_TOTE) {
-        setHeight(m_toteHeights[1]);
+    	setProfileHeight(m_toteHeights[1]);
     }
 }
 
@@ -137,4 +148,47 @@ std::string ElevatorAutomatic::stateToString(ElevatorState state) {
 	}
 
 	return "UNKNOWN STATE";
+}
+
+void ElevatorAutomatic::setProfileHeight(double height) {
+
+	// Don't try to seek anywhere if we're already at setpoint
+	if(height == getHeight()) {
+		return;
+	}
+
+	// Set PID constant profile
+	if(height > getHeight()) {
+		// Going up.
+		std::cout << "setMaxVelocity(88.0);" << std::endl;
+		setMaxVelocity(88.0);
+		setTimeToMaxV(0.4);
+	    m_liftGrbx->setProfile(true);
+	} else {
+		// Going down.
+		std::cout << "setMaxVelocity(91.26);" << std::endl;
+		setMaxVelocity(91.26);
+		setTimeToMaxV(0.4);
+		m_liftGrbx->setProfile(false);
+	}
+
+    m_updateProfile = false;
+    if (m_profileUpdater != nullptr) {
+    	m_profileUpdater->join();
+    	delete m_profileUpdater;
+    }
+
+    m_profileTimer->Reset();
+    m_profileTimer->Start();
+    setGoal(m_profileTimer->Get(), height, getHeight());
+    m_updateProfile = true;
+    m_profileUpdater = new std::thread([this] {
+    	double height;
+    	while (m_updateProfile) {
+    		height = updateSetpoint(m_profileTimer->Get());
+            setHeight(height);
+            std::this_thread::sleep_for(std::chrono::milliseconds(
+                                        10));
+        }
+    });
 }
