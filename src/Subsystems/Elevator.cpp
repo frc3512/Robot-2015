@@ -214,23 +214,31 @@ void Elevator::pollLimitSwitch() {
 }
 
 void Elevator::raiseElevator(std::string level) {
-    auto height = m_toteHeights.find(level);
+	size_t pos;
+	size_t newpos;
+	double height;
 
-    // Bail out if numTotes is invalid
-    if (height == m_toteHeights.end()) {
-        return;
-    }
-
-    std::cout << "m_toteHeights[" << level << "] == "
-              << height->second << std::endl;
+	pos = level.find("+");
+	auto it = m_toteHeights.find(level.substr(0, pos));
+	if(it != m_toteHeights.end()) {
+		height = it->second;
+	}
+	while(pos != std::string::npos) {
+		newpos = level.find("+", pos + 1);
+		it = m_toteHeights.find(level.substr(pos + 1, newpos));
+		if(it != m_toteHeights.end()) {
+			height += it->second;
+		}
+		pos = newpos;
+	}
 
     /* Only allow changing the elevator height manually if not currently
      * auto-stacking
      */
     if (m_state == STATE_IDLE) {
-        std::cout << "Seeking to " << height->second << std::endl;
+        std::cout << "Seeking to " << height << std::endl;
 
-        m_setpoint = height->second;
+        m_setpoint = height;
         setProfileHeight(m_setpoint);
     }
 }
