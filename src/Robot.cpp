@@ -1,4 +1,3 @@
-#include <Subsystems/ElevatorAutomatic.hpp>
 #include "Robot.hpp"
 #include <cmath>
 #include "DriverStation.h"
@@ -14,13 +13,13 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  insight(Insight::getInstance(settings.getInt("Insight_Port"))),
                  pidGraph(3513) {
     robotDrive = std::make_unique<DriveTrain>();
+    ev = std::make_unique<Elevator>();
 
     driveStick1 = std::make_unique<Joystick>(0);
     driveStick2 = std::make_unique<Joystick>(1);
     shootStick = std::make_unique<Joystick>(2);
     autonTimer = std::make_unique<Timer>();
     displayTimer = std::make_unique<Timer>();
-    ev = std::make_unique<ElevatorAutomatic>();
 
     dsDisplay.addAutonMethod("MotionProfile",
                              &Robot::AutonMotionProfile,

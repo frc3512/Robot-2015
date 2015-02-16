@@ -10,7 +10,7 @@
 #include <Timer.h>
 
 #include "Subsystems/DriveTrain.hpp"
-#include "Subsystems/ElevatorAutomatic.hpp"
+#include "Subsystems/Elevator.hpp"
 #include "ButtonTracker.hpp"
 #include "Settings.hpp"
 
@@ -34,6 +34,7 @@ private:
     Settings settings;
 
     std::unique_ptr<DriveTrain> robotDrive;
+    std::unique_ptr<Elevator> ev;
 
     std::unique_ptr<Joystick> driveStick1;
     std::unique_ptr<Joystick> driveStick2;
@@ -52,8 +53,6 @@ private:
 
     // The LiveGrapher host
     GraphHost pidGraph;
-
-    std::unique_ptr<ElevatorAutomatic> ev;
 };
 
 #endif // ROBOT_HPP

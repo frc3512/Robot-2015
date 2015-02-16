@@ -11,11 +11,29 @@ class Solenoid;
 class DigitalInput;
 class CANTalon;
 
+#include "../MotionProfile/TrapezoidProfile.hpp"
+#include <vector>
+#include <memory>
+#include <thread>
+#include <atomic>
+#include <Timer.h>
+#include <string>
+
 #include "GearBox.hpp"
 #include "../Settings.hpp"
 
-class Elevator {
+class Elevator : public TrapezoidProfile {
 public:
+    enum ElevatorState {
+        STATE_IDLE,
+        STATE_WAIT_INITIAL_HEIGHT,
+        STATE_SEEK_DROP_TOTES,
+        STATE_RELEASE,
+        STATE_SEEK_GROUND,
+        STATE_GRAB,
+        STATE_SEEK_HALF_TOTE
+    };
+
     enum IntakeMotorState {
         S_STOPPED,
         S_FORWARD,
@@ -63,11 +81,20 @@ public:
     void resetEncoder();
     void pollLimitSwitch();
 
+    // Takes a string representing the name of the height
+    void raiseElevator(std::string level);
+
+    void stackTotes();
+    void updateState();
+    std::string stateToString(ElevatorState state);
+
 protected:
     std::unique_ptr<Settings> m_settings;
 
 private:
-    friend class ElevatorAutomatic;
+    void stateChanged(ElevatorState oldState, ElevatorState newState);
+    void setProfileHeight(double height);
+
     std::unique_ptr<Solenoid> m_grabSolenoid;
     std::unique_ptr<DigitalInput> m_bottomLimit;
 
@@ -79,6 +106,17 @@ private:
     std::unique_ptr<CANTalon> m_intakeWheelRight;
     std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
     bool m_manual;
+
+    std::map<std::string, double> m_toteHeights;
+    std::unique_ptr<Timer> m_profileTimer;
+    std::atomic<bool> m_updateProfile;
+    std::thread* m_profileUpdater;
+
+    std::unique_ptr<Elevator> m_elevator;
+    ElevatorState m_state;
+    std::unique_ptr<Timer> m_grabTimer;
+
+    double m_setpoint;
 
     static void resetEncoder(uint32_t interruptAssertedMask, void* param);
 };

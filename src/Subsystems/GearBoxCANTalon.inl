@@ -165,7 +165,7 @@ inline bool GearBox<CANTalon>::getGear() const {
 }
 
 inline bool GearBox<CANTalon>::onTarget() {
-    return m_motors[0]->GetClosedLoopError() < 10; 
+    return m_motors[0]->GetClosedLoopError() < 10;
 }
 
 inline void GearBox<CANTalon>::resetPID() {
@@ -191,3 +191,4 @@ inline void GearBox<CANTalon>::setCloseLoopRampRate(double value) {
 inline void GearBox<CANTalon>::setProfile(bool secondProfile) {
     m_motors[0]->SelectProfileSlot(secondProfile);
 }
+
