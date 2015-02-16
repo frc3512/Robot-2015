@@ -58,11 +58,11 @@ Elevator::~Elevator() {
 }
 
 void Elevator::elevatorGrab(bool state) {
-    m_grabSolenoid->Set(state);
+    m_grabSolenoid->Set(!state);
 }
 
 bool Elevator::getElevatorGrab() {
-    return m_grabSolenoid->Get();
+    return !m_grabSolenoid->Get();
 }
 
 void Elevator::intakeGrab(bool state) {

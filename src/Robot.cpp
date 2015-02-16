@@ -110,7 +110,7 @@ void Robot::OperatorControl() {
          * tines are open
          */
         if (((ev->getSetpoint() < 11 && !ev->isManualMode()) ||
-             ev->getElevatorGrab()) && ev->getIntakeGrab()) {
+             !ev->getElevatorGrab()) && ev->getIntakeGrab()) {
             ev->intakeGrab(false);
         }
 

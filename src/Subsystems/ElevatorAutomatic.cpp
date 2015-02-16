@@ -109,7 +109,7 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
     if (newState == STATE_RELEASE) {
         m_grabTimer->Reset();
         m_grabTimer->Start();
-        elevatorGrab(true);
+        elevatorGrab(false);
     }
 
     if (newState == STATE_SEEK_GROUND) {
@@ -120,7 +120,7 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
     if (newState == STATE_GRAB) {
         m_grabTimer->Reset();
         m_grabTimer->Start();
-        elevatorGrab(false);
+        elevatorGrab(true);
     }
 
     // Off the ground a bit
