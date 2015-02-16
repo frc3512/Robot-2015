@@ -7,10 +7,9 @@
 Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  drive1Buttons(0),
                  drive2Buttons(1),
-                 elevatorButtons(2),
+                 evButtons(2),
                  dsDisplay(DSDisplay::getInstance(
                                settings.getInt("DS_Port"))),
-                 insight(Insight::getInstance(settings.getInt("Insight_Port"))),
                  pidGraph(3513) {
     robotDrive = std::make_unique<DriveTrain>();
     ev = std::make_unique<Elevator>();
@@ -48,53 +47,52 @@ void Robot::OperatorControl() {
         }
 
         // Manual state machine
-        if (elevatorButtons.releasedButton(5)) {
+        if (evButtons.releasedButton(5)) {
             ev->setManualMode(!ev->isManualMode());
         }
 
         // Auto-stacking mode
-        if (elevatorButtons.releasedButton(3)) {
-            std::cout << "stackTotes()" << std::endl;
+        if (evButtons.releasedButton(3)) {
             ev->stackTotes();
         }
 
         // Automatic preset buttons (7-12)
-        if (elevatorButtons.releasedButton(7)) {
-            ev->raiseElevator("EL_LEVEL_0");
+        if (evButtons.releasedButton(7)) {
+            ev->raiseElevator("EV_LEVEL_0");
         }
-        if (elevatorButtons.releasedButton(8)) {
-            ev->raiseElevator("EL_LEVEL_1");
+        if (evButtons.releasedButton(8)) {
+            ev->raiseElevator("EV_LEVEL_1");
         }
-        if (elevatorButtons.releasedButton(9)) {
-            ev->raiseElevator("EL_LEVEL_2");
+        if (evButtons.releasedButton(9)) {
+            ev->raiseElevator("EV_LEVEL_2");
         }
-        if (elevatorButtons.releasedButton(10)) {
-            ev->raiseElevator("EL_LEVEL_3");
+        if (evButtons.releasedButton(10)) {
+            ev->raiseElevator("EV_LEVEL_3");
         }
-        if (elevatorButtons.releasedButton(11)) {
-            ev->raiseElevator("EL_LEVEL_4");
+        if (evButtons.releasedButton(11)) {
+            ev->raiseElevator("EV_LEVEL_4");
         }
-        if (elevatorButtons.releasedButton(12)) {
-            ev->raiseElevator("EL_LEVEL_5");
+        if (evButtons.releasedButton(12)) {
+            ev->raiseElevator("EV_LEVEL_5");
         }
 
         // Set manual value
-        ev->setManualLiftSpeed(shootStick->GetY());
+        ev->setManualLiftSpeed(evStick->GetY());
 
-        if (elevatorButtons.releasedButton(1)) {
+        if (evButtons.releasedButton(1)) {
             ev->elevatorGrab(!ev->getElevatorGrab());
         }
-        if (elevatorButtons.releasedButton(2)) {
+        if (evButtons.releasedButton(2)) {
             ev->intakeGrab(!ev->getIntakeGrab());
         }
-        if (elevatorButtons.releasedButton(4)) {
+        if (evButtons.releasedButton(4)) {
             ev->stowIntake(!ev->isIntakeStowed());
         }
 
-        if (shootStick->GetPOV() == 180) {
+        if (evStick->GetPOV() == 180) {
             ev->setIntakeDirection(Elevator::S_FORWARD);
         }
-        else if (shootStick->GetPOV() == 0) {
+        else if (evStick->GetPOV() == 0) {
             ev->setIntakeDirection(Elevator::S_REVERSED);
         }
         else {
@@ -121,7 +119,7 @@ void Robot::OperatorControl() {
 
         drive1Buttons.updateButtons();
         drive2Buttons.updateButtons();
-        elevatorButtons.updateButtons();
+        evButtons.updateButtons();
 
         DS_PrintOut();
 
@@ -172,16 +170,17 @@ void Robot::DS_PrintOut() {
 
         std::cout << "On target: " << ev->onTarget() << std::endl;
 
-        // FIXME: getLevel() not defined anymore
-#if 0
         std::string name("EL_LEVEL_");
         for (int i = 0; i < 6; i++) {
             std::string name("EL_LEVEL_");
 
-            if (ev->getHeight() == ev->getLevel(i) && ev->onTarget()) {
+            if (ev->getHeight() ==
+                ev->getLevelHeight(name + std::to_string(i)) &&
+                ev->onTarget()) {
                 dsDisplay.addData(name + std::to_string(i), DSDisplay::active);
             }
-            else if (ev->getHeight() < ev->getLevel(i + 1)) {
+            else if (ev->getHeight() <
+                     ev->getLevelHeight(name + std::to_string(i + 1))) {
                 dsDisplay.addData(name + std::to_string(i), DSDisplay::standby);
                 dsDisplay.addData(name + std::to_string(
                                       i + 1), DSDisplay::standby);
@@ -191,12 +190,10 @@ void Robot::DS_PrintOut() {
                                   DSDisplay::inactive);
             }
         }
-#endif
         dsDisplay.sendToDS();
     }
 
     dsDisplay.receiveFromDS();
-    insight.receiveFromDS();
 }
 
 START_ROBOT_CLASS(Robot);

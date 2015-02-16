@@ -83,10 +83,11 @@ public:
 
     // Takes a string representing the name of the height
     void raiseElevator(std::string level);
+    double getLevelHeight(std::string level) const;
 
     void stackTotes();
     void updateState();
-    std::string stateToString(ElevatorState state);
+    std::string to_string(ElevatorState state);
 
 protected:
     std::unique_ptr<Settings> m_settings;

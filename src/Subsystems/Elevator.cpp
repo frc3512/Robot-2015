@@ -48,7 +48,6 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_liftGrbx->setProfile(true);
     m_liftGrbx->setIZone(80);
     m_liftGrbx->setCloseLoopRampRate(1.0);
-    // m_liftGrbx->setSoftPositionLimits(70.5, 0.0);
 #endif
 
     m_profileTimer = std::make_unique<Timer>();
@@ -233,6 +232,17 @@ void Elevator::raiseElevator(std::string level) {
     }
 }
 
+double Elevator::getLevelHeight(std::string level) const {
+    auto height = m_toteHeights.find(level);
+
+    if (height == m_toteHeights.end()) {
+        return 0.0;
+    }
+    else {
+        return height->second;
+    }
+}
+
 void Elevator::stackTotes() {
     if (m_state == STATE_IDLE) {
         m_state = STATE_WAIT_INITIAL_HEIGHT;
@@ -271,7 +281,7 @@ void Elevator::updateState() {
     }
 }
 
-std::string Elevator::stateToString(ElevatorState state) {
+std::string Elevator::to_string(ElevatorState state) {
     switch (state) {
     case STATE_IDLE:
         return "STATE_IDLE";
@@ -293,8 +303,8 @@ std::string Elevator::stateToString(ElevatorState state) {
 }
 
 void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
-    std::cout << "oldState = " << stateToString(oldState)
-              << " newState = " << stateToString(newState) << std::endl;
+    std::cout << "oldState = " << to_string(oldState)
+              << " newState = " << to_string(newState) << std::endl;
     if (newState == STATE_SEEK_DROP_TOTES) {
         setProfileHeight(m_setpoint);
     }
@@ -307,7 +317,7 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
     }
 
     if (newState == STATE_SEEK_GROUND) {
-        m_setpoint = m_toteHeights["EL_LEVEL_0"];
+        m_setpoint = m_toteHeights["EV_LEVEL_0"];
         setProfileHeight(m_setpoint);
     }
 
@@ -320,7 +330,7 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
 
     // Off the ground a bit
     if (newState == STATE_SEEK_HALF_TOTE) {
-        m_setpoint = m_toteHeights["EL_LEVEL_3"];
+        m_setpoint = m_toteHeights["EV_LEVEL_3"];
         std::cout << "m_setpoint == " << m_setpoint << std::endl;
         setProfileHeight(m_setpoint);
     }

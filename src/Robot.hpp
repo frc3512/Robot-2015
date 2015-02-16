@@ -15,7 +15,6 @@
 #include "Settings.hpp"
 
 #include "LiveGrapherHost/GraphHost.hpp"
-#include "Insight.hpp"
 
 class Robot : public SampleRobot {
 public:
@@ -38,18 +37,17 @@ private:
 
     std::unique_ptr<Joystick> driveStick1;
     std::unique_ptr<Joystick> driveStick2;
-    std::unique_ptr<Joystick> shootStick;
+    std::unique_ptr<Joystick> evStick;
 
     ButtonTracker drive1Buttons;
     ButtonTracker drive2Buttons;
-    ButtonTracker elevatorButtons;
+    ButtonTracker evButtons;
 
     std::unique_ptr<Timer> autonTimer;
     std::unique_ptr<Timer> displayTimer;
 
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay;
-    Insight& insight;
 
     // The LiveGrapher host
     GraphHost pidGraph;
