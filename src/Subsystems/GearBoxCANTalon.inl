@@ -39,6 +39,7 @@ inline GearBox<CANTalon>::GearBox(int shifterChan,
             m_motors[i]->ConfigEncoderCodesPerRev(1);
             m_motors[i]->SetSensorDirection(m_isEncoderReversed);
             resetEncoder();
+            setProfile(false);
             m_motors[i]->EnableControl();
         }
         else {
@@ -187,3 +188,6 @@ inline void GearBox<CANTalon>::setCloseLoopRampRate(double value) {
     m_motors[0]->SetCloseLoopRampRate(value);
 }
 
+inline void GearBox<CANTalon>::setProfile(bool secondProfile) {
+    m_motors[0]->SelectProfileSlot(secondProfile);
+}

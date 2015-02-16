@@ -37,6 +37,7 @@ public:
 
 private:
     void stateChanged(ElevatorState oldState, ElevatorState newState);
+    void setProfileHeight(double height);
 
     std::vector<float> m_toteHeights;
     std::unique_ptr<Timer> m_profileTimer;

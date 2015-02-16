@@ -177,6 +177,7 @@ public:
     void setIZone(unsigned int value);
 
     void setCloseLoopRampRate(double value);
+    void setProfile(bool secondProfile);
 
 private:
     std::unique_ptr<Solenoid> m_shifter;

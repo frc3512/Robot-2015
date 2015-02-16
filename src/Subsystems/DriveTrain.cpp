@@ -18,7 +18,7 @@
 const float DriveTrain::maxWheelSpeed = 274.f;
 
 DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
-                           m_settings("RobotSettings.txt") {
+                           m_settings("/home/lvuser/RobotSettings.txt") {
     m_settings.update();
 
     m_deadband = 0.02f;

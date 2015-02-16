@@ -67,6 +67,7 @@ protected:
     std::unique_ptr<Settings> m_settings;
 
 private:
+    friend class ElevatorAutomatic;
     std::unique_ptr<Solenoid> m_grabSolenoid;
     std::unique_ptr<DigitalInput> m_bottomLimit;
 
