@@ -15,12 +15,10 @@ ElevatorAutomatic::ElevatorAutomatic() : TrapezoidProfile(0.0, 0.0) {
     m_state = STATE_IDLE;
     m_ntotes = 0;
 
-    m_toteHeights.push_back(0.0);
-
-    float height = 0;
+    double height = 0;
     //TODO: magic number
     for (int i = 0; i < 13; i++) {
-    	height = m_settings->getFloat("EV_LEVEL_" + std::to_string(i));
+    	height = m_settings->getDouble("EV_LEVEL_" + std::to_string(i));
         m_toteHeights.push_back(height);
     }
 }
@@ -34,30 +32,31 @@ ElevatorAutomatic::~ElevatorAutomatic() {
 }
 
 void ElevatorAutomatic::updateState() {
-    if (onTarget() && m_state == STATE_WAIT_INITIAL_HEIGHT) {
+    if (m_state == STATE_WAIT_INITIAL_HEIGHT && onTarget() && atGoal()) {
         stateChanged(STATE_WAIT_INITIAL_HEIGHT,
                      m_state = STATE_SEEK_DROP_TOTES);
     }
-    if (onTarget() && m_state == STATE_SEEK_DROP_TOTES) {
+    if (m_state == STATE_SEEK_DROP_TOTES && onTarget() && atGoal()) {
         m_state = STATE_RELEASE;
         stateChanged(STATE_SEEK_DROP_TOTES, m_state);
     }
-    else if (m_grabTimer->HasPeriodPassed(5) && m_state == STATE_RELEASE) {
+    else if (m_state == STATE_RELEASE && m_grabTimer->HasPeriodPassed(1)) {
         m_state = STATE_SEEK_GROUND;
         stateChanged(STATE_RELEASE, m_state);
     }
-    else if (onTarget() && m_state == STATE_SEEK_GROUND) {
+    else if (m_state == STATE_SEEK_GROUND && onTarget() && atGoal()) {
         m_state = STATE_GRAB;
         stateChanged(STATE_SEEK_GROUND, m_state);
     }
-    else if (m_grabTimer->HasPeriodPassed(5) && m_state == STATE_GRAB) {
+    else if (m_state == STATE_GRAB && m_grabTimer->HasPeriodPassed(1)) {
         m_state = STATE_SEEK_HALF_TOTE;
         stateChanged(STATE_GRAB, m_state);
     }
-    else if (onTarget() && m_state == STATE_SEEK_HALF_TOTE) {
+    else if (m_state == STATE_SEEK_HALF_TOTE && onTarget() && atGoal()) {
         m_state = STATE_IDLE;
         stateChanged(STATE_SEEK_HALF_TOTE, m_state);
     }
+
 }
 
 void ElevatorAutomatic::raiseElevator(unsigned int numTotes) {
@@ -75,7 +74,8 @@ void ElevatorAutomatic::raiseElevator(unsigned int numTotes) {
     if (m_state == STATE_IDLE) {
         std::cout << "Seeking to " << m_toteHeights[numTotes * 2] << std::endl;
 
-        setProfileHeight(m_toteHeights[numTotes * 2]);
+        m_setpoint = m_toteHeights[numTotes * 2];
+        setProfileHeight(m_setpoint);
 
         m_ntotes = numTotes;
     }
@@ -99,10 +99,11 @@ void ElevatorAutomatic::stackTotes() {
 void ElevatorAutomatic::stateChanged(ElevatorState oldState,
                                      ElevatorState newState) {
 
-	/* std::cout << "oldState = " << stateToString(oldState)
-			<< " newState = " << stateToString(newState) << std::endl; */
+	std::cout << "oldState = " << stateToString(oldState)
+			<< " newState = " << stateToString(newState) << std::endl;
     if (newState == STATE_SEEK_DROP_TOTES) {
-    	setProfileHeight(m_toteHeights[m_ntotes * 2]);
+    	m_setpoint = m_toteHeights[m_ntotes * 2];
+    	setProfileHeight(m_setpoint);
     }
 
     // Release the totes
@@ -113,7 +114,8 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
     }
 
     if (newState == STATE_SEEK_GROUND) {
-    	setProfileHeight(m_toteHeights[0]);
+    	m_setpoint = m_toteHeights[0];
+    	setProfileHeight(m_setpoint);
     }
 
     // Grab the new stack
@@ -125,7 +127,9 @@ void ElevatorAutomatic::stateChanged(ElevatorState oldState,
 
     // Off the ground a bit
     if (newState == STATE_SEEK_HALF_TOTE) {
-    	setProfileHeight(m_toteHeights[1]);
+    	m_setpoint = m_toteHeights[1];
+    	std::cout << "m_setpoint == " << m_setpoint << std::endl;
+    	setProfileHeight(m_setpoint);
     }
 }
 

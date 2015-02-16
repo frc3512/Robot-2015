@@ -41,7 +41,7 @@ private:
     void stateChanged(ElevatorState oldState, ElevatorState newState);
     void setProfileHeight(double height);
 
-    std::vector<float> m_toteHeights;
+    std::vector<double> m_toteHeights;
     std::unique_ptr<Timer> m_profileTimer;
     std::atomic<bool> m_updateProfile;
     std::thread* m_profileUpdater;
@@ -50,6 +50,8 @@ private:
     ElevatorState m_state;
     std::unique_ptr<Timer> m_grabTimer;
     unsigned int m_ntotes;
+
+    double m_setpoint;
 };
 
 #endif // ELEVATOR_AUTOMATIC_HPP

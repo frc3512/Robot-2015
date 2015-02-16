@@ -58,7 +58,7 @@ const std::string Settings::getString(const std::string& key) const {
     return index->second;
 }
 
-const float Settings::getFloat(const std::string& key) const {
+const double Settings::getDouble(const std::string& key) const {
     auto index = m_values.find(key);
 
     // If the element wasn't found

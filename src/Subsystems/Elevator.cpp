@@ -145,10 +145,10 @@ void Elevator::reloadPID() {
     float f0 = 0.f;
 
     // Set elevator PID
-    p0 = m_settings->getFloat("PID_ELEVATOR_DOWN_P");
-    i0 = m_settings->getFloat("PID_ELEVATOR_DOWN_I");
-    d0 = m_settings->getFloat("PID_ELEVATOR_DOWN_D");
-    f0 = m_settings->getFloat("PID_ELEVATOR_DOWN_F");
+    p0 = m_settings->getDouble("PID_ELEVATOR_DOWN_P");
+    i0 = m_settings->getDouble("PID_ELEVATOR_DOWN_I");
+    d0 = m_settings->getDouble("PID_ELEVATOR_DOWN_D");
+    f0 = m_settings->getDouble("PID_ELEVATOR_DOWN_F");
 
     m_liftGrbx->setProfile(false);
     m_liftGrbx->setPID(p0, i0, d0);
@@ -161,10 +161,10 @@ void Elevator::reloadPID() {
     float f1 = 0.f;
 
     // Set elevator PID
-    p1 = m_settings->getFloat("PID_ELEVATOR_UP_P");
-    i1 = m_settings->getFloat("PID_ELEVATOR_UP_I");
-    d1 = m_settings->getFloat("PID_ELEVATOR_UP_D");
-    f1 = m_settings->getFloat("PID_ELEVATOR_UP_F");
+    p1 = m_settings->getDouble("PID_ELEVATOR_UP_P");
+    i1 = m_settings->getDouble("PID_ELEVATOR_UP_I");
+    d1 = m_settings->getDouble("PID_ELEVATOR_UP_D");
+    f1 = m_settings->getDouble("PID_ELEVATOR_UP_F");
 
     m_liftGrbx->setProfile(true);
     m_liftGrbx->setPID(p1, i1, d1);

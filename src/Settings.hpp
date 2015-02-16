@@ -27,7 +27,7 @@ public:
     /* Returns value associated with the given key
      * Returns 0 if there is no entry for that name-value pair
      */
-    const float getFloat(const std::string& key) const;
+    const double getDouble(const std::string& key) const;
 
     /* Returns value associated with the given key
      * Returns 0 if there is no entry for that name-value pair

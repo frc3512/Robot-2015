@@ -22,7 +22,7 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
     m_settings.update();
 
     m_deadband = 0.02f;
-    m_sensitivity = m_settings.getFloat("LOW_GEAR_SENSITIVE");
+    m_sensitivity = m_settings.getDouble("LOW_GEAR_SENSITIVE");
     // TODO Does robot start in low gear?
 
     m_oldTurn = 0.f;
@@ -90,7 +90,7 @@ void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
     double negInertia = turn - m_oldTurn;
     m_oldTurn = turn;
 
-    float turnNonLinearity = m_settings.getFloat("TURN_NON_LINEARITY");
+    float turnNonLinearity = m_settings.getDouble("TURN_NON_LINEARITY");
 
     /* Apply a sine function that's scaled to make turning sensitivity feel better.
      * turnNonLinearity should never be zero, but can be close
@@ -105,20 +105,20 @@ void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
     // Negative inertia!
     double negInertiaScalar;
     if (getGear()) {
-        negInertiaScalar = m_settings.getFloat("INERTIA_HIGH_GEAR");
+        negInertiaScalar = m_settings.getDouble("INERTIA_HIGH_GEAR");
     }
     else {
         if (turn * negInertia > 0) {
-            negInertiaScalar = m_settings.getFloat("INERTIA_LOW_DAMPEN");
+            negInertiaScalar = m_settings.getDouble("INERTIA_LOW_DAMPEN");
         }
         else {
             if (fabs(turn) > 0.65) {
                 negInertiaScalar =
-                    m_settings.getFloat("INERTIA_LOW_HIGH_TURN");
+                    m_settings.getDouble("INERTIA_LOW_HIGH_TURN");
             }
             else {
                 negInertiaScalar =
-                    m_settings.getFloat("INERTIA_LOW_LOW_TURN");
+                    m_settings.getDouble("INERTIA_LOW_LOW_TURN");
             }
         }
     }
@@ -229,9 +229,9 @@ void DriveTrain::reloadPID() {
     float i = 0.f;
     float d = 0.f;
 
-    p = m_settings.getFloat("PID_DRIVE_P");
-    i = m_settings.getFloat("PID_DRIVE_I");
-    d = m_settings.getFloat("PID_DRIVE_D");
+    p = m_settings.getDouble("PID_DRIVE_P");
+    i = m_settings.getDouble("PID_DRIVE_I");
+    d = m_settings.getDouble("PID_DRIVE_D");
 
     m_leftFrontGrbx->setPID(p, i, d);
     m_rightBackGrbx->setPID(p, i, d);
@@ -309,10 +309,10 @@ void DriveTrain::setGear(bool gear) {
 
     // If high gear
     if (gear) {
-        m_sensitivity = m_settings.getFloat("HIGH_GEAR_SENSITIVE");
+        m_sensitivity = m_settings.getDouble("HIGH_GEAR_SENSITIVE");
     }
     else {
-        m_sensitivity = m_settings.getFloat("LOW_GEAR_SENSITIVE");
+        m_sensitivity = m_settings.getDouble("LOW_GEAR_SENSITIVE");
     }
 }
 
