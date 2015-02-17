@@ -165,7 +165,7 @@ inline bool GearBox<CANTalon>::getGear() const {
 }
 
 inline bool GearBox<CANTalon>::onTarget() {
-    return m_motors[0]->GetClosedLoopError() < 10;
+    return fabs(m_motors[0]->GetClosedLoopError()) < 15;
 }
 
 inline void GearBox<CANTalon>::resetPID() {

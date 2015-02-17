@@ -54,7 +54,7 @@ void Robot::OperatorControl() {
         }
 
         // Auto-stacking mode
-        if (evButtons.releasedButton(3)) {
+        if (evButtons.releasedButton(4)) {
             ev->stackTotes();
         }
 
@@ -97,7 +97,7 @@ void Robot::OperatorControl() {
         if (evButtons.releasedButton(2)) {
             ev->intakeGrab(!ev->getIntakeGrab());
         }
-        if (evButtons.releasedButton(4)) {
+        if (evButtons.releasedButton(3)) {
             ev->stowIntake(!ev->isIntakeStowed());
         }
 
