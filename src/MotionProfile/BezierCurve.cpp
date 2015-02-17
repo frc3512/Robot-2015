@@ -25,10 +25,10 @@ BezierCurve::BezierCurve(const std::pair<double, double>& pt1,
 BezierCurve::~BezierCurve() {
 }
 
-double BezierCurve::getArcLength() const {
+double BezierCurve::getArcLength(double start, double end) const {
     double length = 0.0;
 
-    for (double t = 0.0; t < 1.0; t += 0.0001) {
+    for (double t = start; t < end; t += 0.0001) {
         length +=
             std::sqrt(std::pow(getDerivative(t, true),
                                2.0) +

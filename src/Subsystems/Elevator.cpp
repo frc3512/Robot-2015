@@ -373,13 +373,13 @@ std::string Elevator::to_string(ElevatorState state) {
 }
 
 void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
-	double setpoint;
+    double setpoint;
 
     std::cout << "oldState = " << to_string(oldState)
               << " newState = " << to_string(newState) << std::endl;
 
     if (newState == STATE_SEEK_DROP_TOTES) {
-    	// TODO: magic number
+        // TODO: magic number
         setProfileHeight(getGoal() - 5.0);
     }
 

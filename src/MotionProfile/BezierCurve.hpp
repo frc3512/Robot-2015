@@ -19,7 +19,8 @@ public:
                 const std::pair<double, double>& pt4);
     virtual ~BezierCurve();
 
-    double getArcLength() const;
+    // 'start' and 'end' represent start and end t values [0..1]
+    double getArcLength(double start, double end) const;
     double getCurvature(double t) const;
 
     // Return value and first and second derivatives at parameter t

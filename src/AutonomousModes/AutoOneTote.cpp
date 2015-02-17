@@ -1,12 +1,12 @@
 // =============================================================================
-// File Name: AutonMotionProfile.cpp
-// Description: Drives set distance with motion profiles
+// File Name: AutoOneTote.cpp
+// Description: Drives forward and picks up one tote
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
 
 #include "../Robot.hpp"
 
-void Robot::AutonMotionProfile() {
+void Robot::AutoOneTote() {
     robotDrive->setLeftManual(0.f);
     robotDrive->setRightManual(0.f);
     robotDrive->setLeftSetpoint(0.f);
@@ -26,14 +26,14 @@ void Robot::AutonMotionProfile() {
 
     robotDrive->resetEncoders();
 
-    autonTimer->Reset();
+    autoTimer->Reset();
 
     // Move robot forward
-    robotDrive->setGoal(curve, autonTimer->Get());
+    robotDrive->setGoal(curve, autoTimer->Get());
     while (IsAutonomous() && IsEnabled() && !robotDrive->atGoal()) {
         DS_PrintOut();
 
-        robotDrive->updateSetpoint(autonTimer->Get());
+        robotDrive->updateSetpoint(autoTimer->Get());
         robotDrive->setLeftSetpoint(
             robotDrive->BezierTrapezoidProfile::getLeftSetpoint());
         robotDrive->setRightSetpoint(
@@ -45,5 +45,9 @@ void Robot::AutonMotionProfile() {
     // Stop moving
     robotDrive->setLeftManual(0.f);
     robotDrive->setRightManual(0.f);
+
+    while (IsAutonomous() && IsEnabled()) {
+        ev->pollLimitSwitches();
+    }
 }
 
