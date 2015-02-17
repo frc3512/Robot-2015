@@ -68,7 +68,9 @@ void Robot::OperatorControl() {
 
         // Automatic preset buttons (7-12)
         if (evButtons.releasedButton(7)) {
-            ev->raiseElevator("EV_TOTE_0" + offsetString);
+            // ev->raiseElevator("EV_TOTE_0" + offsetString);
+            ev->setManualMode(true);
+            ev->setManualLiftSpeed(-0.1);
         }
         if (evButtons.releasedButton(8)) {
             ev->raiseElevator("EV_TOTE_1" + offsetString);
@@ -142,8 +144,8 @@ void Robot::OperatorControl() {
             ev->intakeGrab(false);
         }
 
-        if(ev->isIntakeStowed() && ev->getIntakeGrab()) {
-        	ev->intakeGrab(false);
+        if (ev->isIntakeStowed() && ev->getIntakeGrab()) {
+            ev->intakeGrab(false);
         }
 
         // Poll the limit reset limit switch

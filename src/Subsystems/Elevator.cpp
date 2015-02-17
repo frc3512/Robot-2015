@@ -231,7 +231,7 @@ void Elevator::pollLimitSwitches() {
     }
 
     // Check front limit switches
-    if (m_frontLeftLimit->Get() && m_frontRightLimit->Get()) {
+    if (!m_frontLeftLimit->Get() && !m_frontRightLimit->Get()) {
         stackTotes();
     }
 }
@@ -323,7 +323,7 @@ void Elevator::updateState() {
         m_state = STATE_RELEASE;
         stateChanged(STATE_SEEK_DROP_TOTES, m_state);
     }
-    else if (m_state == STATE_RELEASE && m_grabTimer->HasPeriodPassed(0.5)) {
+    else if (m_state == STATE_RELEASE && m_grabTimer->HasPeriodPassed(0.2)) {
         m_state = STATE_SEEK_GROUND;
         stateChanged(STATE_RELEASE, m_state);
     }
@@ -331,7 +331,7 @@ void Elevator::updateState() {
         m_state = STATE_GRAB;
         stateChanged(STATE_SEEK_GROUND, m_state);
     }
-    else if (m_state == STATE_GRAB && m_grabTimer->HasPeriodPassed(0.5)) {
+    else if (m_state == STATE_GRAB && m_grabTimer->HasPeriodPassed(0.2)) {
         m_state = STATE_SEEK_HALF_TOTE;
         stateChanged(STATE_GRAB, m_state);
     }
@@ -339,7 +339,7 @@ void Elevator::updateState() {
         m_state = STATE_INTAKE_IN;
         stateChanged(STATE_SEEK_HALF_TOTE, m_state);
     }
-    else if (m_state == STATE_INTAKE_IN && m_grabTimer->HasPeriodPassed(0.5)) {
+    else if (m_state == STATE_INTAKE_IN && m_grabTimer->HasPeriodPassed(0.2)) {
         m_state = STATE_IDLE;
         stateChanged(STATE_INTAKE_IN, m_state);
     }
@@ -373,13 +373,13 @@ std::string Elevator::to_string(ElevatorState state) {
 }
 
 void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
-	double setpoint;
+    double setpoint;
 
     std::cout << "oldState = " << to_string(oldState)
               << " newState = " << to_string(newState) << std::endl;
 
     if (newState == STATE_SEEK_DROP_TOTES) {
-    	// TODO: magic number
+        // TODO: magic number
         setProfileHeight(getGoal() - 5.0);
     }
 
@@ -423,6 +423,7 @@ void Elevator::manualChangeSetpoint(double delta) {
         newSetpoint = m_maxHeight;
     }
 
+    // TODO: Magic numbers
     // Set PID constant profile
     if (newSetpoint > m_setpoint) {
         // Going up.
