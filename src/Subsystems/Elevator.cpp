@@ -329,8 +329,12 @@ void Elevator::updateState() {
         stateChanged(STATE_GRAB, m_state);
     }
     else if (m_state == STATE_SEEK_HALF_TOTE && onTarget() && atGoal()) {
-        m_state = STATE_IDLE;
+        m_state = STATE_INTAKE_IN;
         stateChanged(STATE_SEEK_HALF_TOTE, m_state);
+    }
+    else if (m_state == STATE_INTAKE_IN && m_grabTimer->HasPeriodPassed(0.5)) {
+        m_state = STATE_IDLE;
+        stateChanged(STATE_INTAKE_IN, m_state);
     }
     else if (m_state != STATE_IDLE && isManualMode()) {
         // FIXME Hack
@@ -354,6 +358,8 @@ std::string Elevator::to_string(ElevatorState state) {
         return "STATE_GRAB";
     case STATE_SEEK_HALF_TOTE:
         return "STATE_SEEK_HALF_TOTE";
+    case STATE_INTAKE_IN:
+        return "STATE_INTAKE_IN";
     }
 
     return "UNKNOWN STATE";
@@ -391,6 +397,12 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
         std::cout << "m_setpoint == " << m_setpoint << std::endl;
         setProfileHeight(m_setpoint);
     }
+
+    if (newState == STATE_INTAKE_IN) {
+        m_grabTimer->Reset();
+        m_grabTimer->Start();
+        intakeGrab(true);
+    }
 }
 
 
@@ -402,7 +414,7 @@ void Elevator::manualChangeSetpoint(double delta) {
     }
 
     // Set PID constant profile
-    if (newSetpoint > getHeight()) {
+    if (newSetpoint > m_setpoint) {
         // Going up.
         setMaxVelocity(88.0);
         setTimeToMaxV(0.4);

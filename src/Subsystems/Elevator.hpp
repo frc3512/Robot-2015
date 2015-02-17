@@ -31,7 +31,8 @@ public:
         STATE_RELEASE,
         STATE_SEEK_GROUND,
         STATE_GRAB,
-        STATE_SEEK_HALF_TOTE
+        STATE_SEEK_HALF_TOTE,
+        STATE_INTAKE_IN
     };
 
     enum IntakeMotorState {
