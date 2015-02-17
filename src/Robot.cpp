@@ -99,10 +99,10 @@ void Robot::OperatorControl() {
             ev->stowIntake(!ev->isIntakeStowed());
         }
 
-        if (evStick->GetPOV() == 180) {
+        if (evStick->GetPOV() == 0) {
             ev->setIntakeDirection(Elevator::S_FORWARD);
         }
-        else if (evStick->GetPOV() == 0) {
+        else if (evStick->GetPOV() == 180) {
             ev->setIntakeDirection(Elevator::S_REVERSED);
         }
         else {
@@ -119,6 +119,7 @@ void Robot::OperatorControl() {
         accumTimer->Start();
 
         double evStickY = evStick->GetY();
+        evStickY = 0;
         std::cout << "evStickY = " << evStickY << std::endl;
         manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
         if (fabs(manualAverage.getAverage()) > 0.05 && fabs(evStickY) > 0.05) {
