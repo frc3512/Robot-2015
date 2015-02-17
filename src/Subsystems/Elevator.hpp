@@ -77,7 +77,7 @@ public:
     bool onTarget();
 
     void resetEncoder();
-    void pollLimitSwitch();
+    void pollLimitSwitches();
 
     // Takes a string representing the name of the height
     void raiseElevator(std::string level);
@@ -113,7 +113,6 @@ private:
     std::atomic<bool> m_updateProfile;
     std::thread* m_profileUpdater;
 
-    std::unique_ptr<Elevator> m_elevator;
     ElevatorState m_state;
     std::unique_ptr<Timer> m_grabTimer;
 

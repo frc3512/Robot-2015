@@ -222,10 +222,16 @@ void Elevator::resetEncoder(uint32_t interruptAssertedMask, void* param) {
     reinterpret_cast<decltype(m_liftGrbx.get())>(param)->resetEncoder();
 }
 
-void Elevator::pollLimitSwitch() {
+void Elevator::pollLimitSwitches() {
     // Check encoder reset limit switch
     if (m_liftGrbx->isRevLimitSwitchClosed()) {
         m_liftGrbx->resetEncoder();
+    }
+
+    // Check front limit switches
+    if (!m_intakeWheelRight->IsFwdLimitSwitchClosed() &&
+            !m_intakeWheelRight->IsRevLimitSwitchClosed()) {
+        stackTotes();
     }
 }
 

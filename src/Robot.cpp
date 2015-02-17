@@ -144,7 +144,7 @@ void Robot::OperatorControl() {
         }
 
         // Poll the limit reset limit switch
-        ev->pollLimitSwitch();
+        ev->pollLimitSwitches();
 
         // Update the elevator automatic stacking state
         ev->updateState();
