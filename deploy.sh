@@ -6,6 +6,7 @@ PASSWD=''
 if [ $# -ne 1 ] ; then
     echo usage: ./deploy.sh DIRECTORY
     echo -e "DIRECTORY is the directory in which the robot code binary is located"
+    exit 1
 fi
 
 # Add file names here to send them
