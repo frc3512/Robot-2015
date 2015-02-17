@@ -316,8 +316,8 @@ void Elevator::stackTotes() {
 
 void Elevator::updateState() {
     if (m_state == STATE_WAIT_INITIAL_HEIGHT && onTarget() && atGoal()) {
-        stateChanged(STATE_WAIT_INITIAL_HEIGHT,
-                     m_state = STATE_SEEK_DROP_TOTES);
+        m_state = STATE_SEEK_DROP_TOTES;
+        stateChanged(STATE_WAIT_INITIAL_HEIGHT, m_state);
     }
     if (m_state == STATE_SEEK_DROP_TOTES && onTarget() && atGoal()) {
         m_state = STATE_RELEASE;
