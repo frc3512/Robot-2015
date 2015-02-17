@@ -119,17 +119,17 @@ void Robot::OperatorControl() {
         accumTimer->Start();
 
         double evStickY = evStick->GetY();
+        std::cout << "evStickY = " << evStickY << std::endl;
         manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
-        std::cout << "adding value "
-                  << evStickY * ev->getMaxVelocity() * deltaT
-                  << " for an average of "
-                  << manualAverage.getAverage()
-                  << std::endl;
-        if (fabs(manualAverage.getAverage()) > 0.05) {
+        if (fabs(manualAverage.getAverage()) > 0.05 && fabs(evStickY) > 0.05) {
             // TODO: probably wrong
-        	// TODO: magic number
+            // TODO: magic number
             if (ev->getSetpoint() + manualAverage.getAverage() > 0
-            		&& ev->getSetpoint() + manualAverage.getAverage() < 70.0) {
+                && ev->getSetpoint() + manualAverage.getAverage() < 70.0) {
+            	std::cout << "manualChangeSetpoint("
+            			<< manualAverage.getAverage()
+						<< ")"
+						<< std::endl;
                 ev->manualChangeSetpoint(manualAverage.getAverage());
             }
         }

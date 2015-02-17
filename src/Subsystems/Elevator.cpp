@@ -52,12 +52,27 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
     m_profileTimer = std::make_unique<Timer>();
     m_grabTimer = std::make_unique<Timer>();
-    m_updateProfile = false;
+    m_updateProfile = true;
     m_profileUpdater = nullptr;
 
     m_state = STATE_IDLE;
 
     m_setpoint = 0.0;
+
+    m_profileUpdater = new std::thread([this] {
+        double height;
+        while (m_updateProfile) {
+            if (!atGoal()) {
+                height = updateSetpoint(m_profileTimer->Get());
+            }
+            else {
+                height = m_setpoint;
+            }
+            setHeight(height);
+            std::this_thread::sleep_for(std::chrono::milliseconds(
+                                            10));
+        }
+    });
 
     m_maxHeight = m_settings->getDouble("EV_MAX_HEIGHT");
 
@@ -250,10 +265,10 @@ void Elevator::setProfileHeight(double height) {
      *   return;
      *  } */
 
-	//TODO: magic number
-	if(height > m_maxHeight) {
-		height = m_maxHeight;
-	}
+    // TODO: magic number
+    if (height > m_maxHeight) {
+        height = m_maxHeight;
+    }
 
     // Set PID constant profile
     if (height > getHeight()) {
@@ -269,30 +284,9 @@ void Elevator::setProfileHeight(double height) {
         m_liftGrbx->setProfile(false);
     }
 
-    m_updateProfile = false;
-    if (m_profileUpdater != nullptr) {
-        m_profileUpdater->join();
-        delete m_profileUpdater;
-    }
-
     m_profileTimer->Reset();
     m_profileTimer->Start();
     setGoal(m_profileTimer->Get(), height, getHeight());
-    m_updateProfile = true;
-    m_profileUpdater = new std::thread([this] {
-        double height;
-        while (m_updateProfile) {
-            if (!atGoal()) {
-                height = updateSetpoint(m_profileTimer->Get());
-            }
-            else {
-                height = m_setpoint;
-            }
-            setHeight(height);
-            std::this_thread::sleep_for(std::chrono::milliseconds(
-                                            10));
-        }
-    });
 }
 
 double Elevator::getLevelHeight(std::string level) const {
