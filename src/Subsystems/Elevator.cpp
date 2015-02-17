@@ -393,3 +393,28 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
     }
 }
 
+
+void Elevator::manualChangeSetpoint(double delta) {
+    double newSetpoint = delta + m_setpoint;
+
+    if (newSetpoint > m_maxHeight) {
+        newSetpoint = m_maxHeight;
+    }
+
+    // Set PID constant profile
+    if (newSetpoint > getHeight()) {
+        // Going up.
+        setMaxVelocity(88.0);
+        setTimeToMaxV(0.4);
+        m_liftGrbx->setProfile(true);
+    }
+    else {
+        // Going down.
+        setMaxVelocity(91.26);
+        setTimeToMaxV(0.4);
+        m_liftGrbx->setProfile(false);
+    }
+
+    m_setpoint = newSetpoint;
+}
+

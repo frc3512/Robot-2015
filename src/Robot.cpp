@@ -126,10 +126,10 @@ void Robot::OperatorControl() {
             // TODO: magic number
             if (ev->getSetpoint() + manualAverage.getAverage() > 0
                 && ev->getSetpoint() + manualAverage.getAverage() < 70.0) {
-            	std::cout << "manualChangeSetpoint("
-            			<< manualAverage.getAverage()
-						<< ")"
-						<< std::endl;
+                std::cout << "manualChangeSetpoint("
+                          << manualAverage.getAverage()
+                          << ")"
+                          << std::endl;
                 ev->manualChangeSetpoint(manualAverage.getAverage());
             }
         }

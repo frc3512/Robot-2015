@@ -25,8 +25,6 @@ public:
     TrapezoidProfile(double maxV, double timeToMaxV);
     virtual ~TrapezoidProfile();
 
-    void manualChangeSetpoint(double delta);
-
     /* If distance:
      *     curSetpoint is current distance set to which to travel
      *     curSource is current position (not used)

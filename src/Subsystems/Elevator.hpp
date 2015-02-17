@@ -87,6 +87,8 @@ public:
     void updateState();
     std::string to_string(ElevatorState state);
 
+    void manualChangeSetpoint(double delta);
+
 protected:
     std::unique_ptr<Settings> m_settings;
 

@@ -18,10 +18,6 @@ TrapezoidProfile::TrapezoidProfile(double maxV, double timeToMaxV) :
 TrapezoidProfile::~TrapezoidProfile() {
 }
 
-void TrapezoidProfile::manualChangeSetpoint(double delta) {
-    m_setpoint += delta;
-}
-
 double TrapezoidProfile::updateSetpoint(double curTime, double curSource) {
     double period = curTime - m_lastTime;
 
