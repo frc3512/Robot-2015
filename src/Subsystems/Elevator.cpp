@@ -21,6 +21,8 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_intakeGrabber = std::make_unique<Solenoid>(2);
     m_intakeWheelLeft = std::make_unique<CANTalon>(3);
     m_intakeWheelRight = std::make_unique<CANTalon>(6);
+    m_frontLeftLimit = std::make_unique<DigitalInput>(0);
+    m_frontRightLimit = std::make_unique<DigitalInput>(1);
     m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
     m_intakeState = S_STOPPED;
     m_manual = false;
@@ -229,8 +231,7 @@ void Elevator::pollLimitSwitches() {
     }
 
     // Check front limit switches
-    if (m_intakeWheelRight->IsFwdLimitSwitchClosed() &&
-            m_intakeWheelRight->IsRevLimitSwitchClosed()) {
+    if (m_frontLeftLimit->Get() && m_frontRightLimit->Get()) {
         stackTotes();
     }
 }
