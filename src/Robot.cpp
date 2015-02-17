@@ -8,6 +8,7 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  drive1Buttons(0),
                  drive2Buttons(1),
                  evButtons(2),
+                 manualAverage(5),
                  dsDisplay(DSDisplay::getInstance(
                                settings.getInt("DS_Port"))),
                  pidGraph(3513) {
@@ -58,10 +59,11 @@ void Robot::OperatorControl() {
         }
 
         std::string offsetString;
-        if(evStick->GetThrottle() > 0) {
-        	offsetString = "+EV_HALF_TOTE_OFFSET";
-        } else {
-        	offsetString = "";
+        if (evStick->GetThrottle() > 0) {
+            offsetString = "+EV_HALF_TOTE_OFFSET";
+        }
+        else {
+            offsetString = "";
         }
 
         // Automatic preset buttons (7-12)
@@ -114,17 +116,23 @@ void Robot::OperatorControl() {
         // Accumulate assised automatic mode
         double deltaT = accumTimer->Get();
         accumTimer->Reset();
-		accumTimer->Start();
+        accumTimer->Start();
 
-		double evStickY = evStick->GetY();
-		if(fabs(evStickY) > 0.03) {
-			manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
-
-			//TODO: probably wrong
-			if(ev->getSetpoint() + manualAverage.get() > 0) {
-				ev->manualChangeSetpoint(manualAverage.get());
-			}
-		}
+        double evStickY = evStick->GetY();
+        manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
+        std::cout << "adding value "
+                  << evStickY * ev->getMaxVelocity() * deltaT
+                  << " for an average of "
+                  << manualAverage.getAverage()
+                  << std::endl;
+        if (fabs(manualAverage.getAverage()) > 0.05) {
+            // TODO: probably wrong
+        	// TODO: magic number
+            if (ev->getSetpoint() + manualAverage.getAverage() > 0
+            		&& ev->getSetpoint() + manualAverage.getAverage() < 70.0) {
+                ev->manualChangeSetpoint(manualAverage.getAverage());
+            }
+        }
 
         /* Opens intake if the elevator is at the same level as it or if the
          * tines are open

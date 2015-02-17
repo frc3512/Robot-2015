@@ -71,9 +71,6 @@ public:
     // Gets the current height as integrated from the encoder
     double getHeight();
 
-    // Get setpoint from PID controller
-    double getSetpoint();
-
     void reloadPID();
 
     bool onTarget();
@@ -117,7 +114,7 @@ private:
     ElevatorState m_state;
     std::unique_ptr<Timer> m_grabTimer;
 
-    double m_setpoint;
+    double m_maxHeight;
 
     static void resetEncoder(uint32_t interruptAssertedMask, void* param);
 };

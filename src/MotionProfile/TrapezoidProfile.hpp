@@ -48,6 +48,8 @@ public:
     bool atGoal();
     double getGoal() const;
 
+    double getSetpoint() const;
+
     void setMaxVelocity(double v);
     double getMaxVelocity() const;
     void setTimeToMaxV(double timeToMaxV);

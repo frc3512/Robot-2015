@@ -19,7 +19,7 @@ TrapezoidProfile::~TrapezoidProfile() {
 }
 
 void TrapezoidProfile::manualChangeSetpoint(double delta) {
-		m_setpoint += delta;
+    m_setpoint += delta;
 }
 
 double TrapezoidProfile::updateSetpoint(double curTime, double curSource) {
@@ -164,14 +164,19 @@ void TrapezoidProfile::setMode(SetpointMode mode) {
     m_mode = mode;
 }
 
+double TrapezoidProfile::getSetpoint() const {
+    return m_setpoint;
+}
+
 SetpointMode TrapezoidProfile::getMode() const {
     return m_mode;
 }
 
 double TrapezoidProfile::getGoal() const {
-	return m_goal;
+    return m_goal;
 }
 
 double TrapezoidProfile::getMaxVelocity() const {
-	return m_velocity;
+    return m_velocity;
 }
+

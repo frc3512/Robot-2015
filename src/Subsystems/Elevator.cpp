@@ -59,6 +59,8 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
     m_setpoint = 0.0;
 
+    m_maxHeight = m_settings->getDouble("EV_MAX_HEIGHT");
+
     m_toteHeights["EV_GROUND"] = m_settings->getDouble("EV_GROUND");
 
     double height = 0;
@@ -68,7 +70,8 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     }
 
     m_toteHeights["EV_STEP"] = m_settings->getDouble("EV_STEP");
-    m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings->getDouble("EV_HALF_TOTE_OFFSET");
+    m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings->getDouble(
+        "EV_HALF_TOTE_OFFSET");
 
     reloadPID();
 }
@@ -133,11 +136,12 @@ void Elevator::setManualLiftSpeed(double value) {
 }
 
 void Elevator::setManualMode(bool on) {
-    if(!on && m_manual) {
-    	m_manual = false;
-    	setProfileHeight(getHeight());
-    } else {
-    	m_manual = on;
+    if (!on && m_manual) {
+        m_manual = false;
+        setProfileHeight(getHeight());
+    }
+    else {
+        m_manual = on;
     }
 }
 
@@ -153,15 +157,6 @@ void Elevator::setHeight(double height) {
 
 double Elevator::getHeight() {
     return m_liftGrbx->get(Grbx::Position);
-}
-
-double Elevator::getSetpoint() {
-    if (!m_manual) {
-        return m_liftGrbx->getSetpoint();
-    }
-    else {
-        return 0;
-    }
 }
 
 void Elevator::reloadPID() {
@@ -220,23 +215,23 @@ void Elevator::pollLimitSwitch() {
 }
 
 void Elevator::raiseElevator(std::string level) {
-	size_t pos;
-	size_t newpos;
-	double height = 0;
+    size_t pos;
+    size_t newpos;
+    double height = 0;
 
-	pos = level.find("+");
-	auto it = m_toteHeights.find(level.substr(0, pos));
-	if(it != m_toteHeights.end()) {
-		height = it->second;
-	}
-	while(pos != std::string::npos) {
-		newpos = level.find("+", pos + 1);
-		it = m_toteHeights.find(level.substr(pos + 1, newpos));
-		if(it != m_toteHeights.end()) {
-			height += it->second;
-		}
-		pos = newpos;
-	}
+    pos = level.find("+");
+    auto it = m_toteHeights.find(level.substr(0, pos));
+    if (it != m_toteHeights.end()) {
+        height = it->second;
+    }
+    while (pos != std::string::npos) {
+        newpos = level.find("+", pos + 1);
+        it = m_toteHeights.find(level.substr(pos + 1, newpos));
+        if (it != m_toteHeights.end()) {
+            height += it->second;
+        }
+        pos = newpos;
+    }
 
     /* Only allow changing the elevator height manually if not currently
      * auto-stacking
@@ -252,8 +247,13 @@ void Elevator::raiseElevator(std::string level) {
 void Elevator::setProfileHeight(double height) {
     // Don't try to seek anywhere if we're already at setpoint
     /* if (height == getHeight()) {
-        return;
-    } */
+     *   return;
+     *  } */
+
+	//TODO: magic number
+	if(height > m_maxHeight) {
+		height = m_maxHeight;
+	}
 
     // Set PID constant profile
     if (height > getHeight()) {
@@ -275,14 +275,19 @@ void Elevator::setProfileHeight(double height) {
         delete m_profileUpdater;
     }
 
-	m_profileTimer->Reset();
-	m_profileTimer->Start();
+    m_profileTimer->Reset();
+    m_profileTimer->Start();
     setGoal(m_profileTimer->Get(), height, getHeight());
     m_updateProfile = true;
     m_profileUpdater = new std::thread([this] {
         double height;
         while (m_updateProfile) {
-            height = updateSetpoint(m_profileTimer->Get());
+            if (!atGoal()) {
+                height = updateSetpoint(m_profileTimer->Get());
+            }
+            else {
+                height = m_setpoint;
+            }
             setHeight(height);
             std::this_thread::sleep_for(std::chrono::milliseconds(
                                             10));
@@ -388,8 +393,9 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
 
     // Off the ground a bit
     if (newState == STATE_SEEK_HALF_TOTE) {
-        m_setpoint = m_toteHeights["EV_TOTE_3"];
+        m_setpoint = m_toteHeights["EV_TOTE_1"];
         std::cout << "m_setpoint == " << m_setpoint << std::endl;
         setProfileHeight(m_setpoint);
     }
 }
+

@@ -48,7 +48,7 @@ private:
     std::unique_ptr<Timer> displayTimer;
     std::unique_ptr<Timer> accumTimer;
 
-    RollingAverage<double, 10> manualAverage;
+    RollingAverage<double> manualAverage;
 
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay;
