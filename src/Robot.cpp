@@ -18,14 +18,13 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
     driveStick1 = std::make_unique<Joystick>(0);
     driveStick2 = std::make_unique<Joystick>(1);
     evStick = std::make_unique<Joystick>(2);
-    autonTimer = std::make_unique<Timer>();
+    autoTimer = std::make_unique<Timer>();
     displayTimer = std::make_unique<Timer>();
     accumTimer = std::make_unique<Timer>();
 
-    dsDisplay.addAutonMethod("MotionProfile",
-                             &Robot::AutonMotionProfile,
-                             this);
-    dsDisplay.addAutonMethod("Noop Auton", &Robot::NoopAuton, this);
+    dsDisplay.addAutoMethod("DriveForward", &Robot::AutoDriveForward, this);
+    dsDisplay.addAutoMethod("OneTote", &Robot::AutoOneTote, this);
+    dsDisplay.addAutoMethod("Noop Auton", &Robot::AutoNoop, this);
 
     pidGraph.setSendInterval(5);
 
@@ -166,12 +165,12 @@ void Robot::OperatorControl() {
 
 
 void Robot::Autonomous() {
-    autonTimer->Reset();
-    autonTimer->Start();
+    autoTimer->Reset();
+    autoTimer->Start();
 
     dsDisplay.execAutonomous();
 
-    autonTimer->Stop();
+    autoTimer->Stop();
 }
 
 void Robot::Disabled() {

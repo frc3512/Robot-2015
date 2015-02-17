@@ -77,9 +77,9 @@ public:
 
     // Add and remove autonomous functions
     template <class T>
-    void addAutonMethod(const std::string & methodName,
-                        void (T::* function)(),
-                        T * object);
+    void addAutoMethod(const std::string & methodName,
+                       void (T::* function)(),
+                       T * object);
     void deleteAllMethods();
 
     // Runs autonomous function currently selected

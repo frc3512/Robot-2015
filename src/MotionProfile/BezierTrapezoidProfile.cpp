@@ -104,7 +104,7 @@ double BezierTrapezoidProfile::getRightSetpoint() const {
 double BezierTrapezoidProfile::setGoal(const BezierCurve& curve, double t) {
     m_curve = curve;
 
-    return TrapezoidProfile::setGoal(t, m_curve.getArcLength());
+    return TrapezoidProfile::setGoal(t, m_curve.getArcLength(0, 1));
 }
 
 void BezierTrapezoidProfile::resetProfile() {

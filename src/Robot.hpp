@@ -25,8 +25,9 @@ public:
     void Autonomous();
     void Disabled();
 
-    void AutonMotionProfile();
-    void NoopAuton();
+    void AutoDriveForward();
+    void AutoOneTote();
+    void AutoNoop();
 
     void DS_PrintOut();
 
@@ -44,7 +45,7 @@ private:
     ButtonTracker drive2Buttons;
     ButtonTracker evButtons;
 
-    std::unique_ptr<Timer> autonTimer;
+    std::unique_ptr<Timer> autoTimer;
     std::unique_ptr<Timer> displayTimer;
     std::unique_ptr<Timer> accumTimer;
 
