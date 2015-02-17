@@ -116,11 +116,11 @@ bool Elevator::getIntakeGrab() {
 }
 
 void Elevator::stowIntake(bool state) {
-    m_intakeVertical->Set(state);
+    m_intakeVertical->Set(!state);
 }
 
 bool Elevator::isIntakeStowed() {
-    return m_intakeVertical->Get();
+    return !m_intakeVertical->Get();
 }
 
 void Elevator::setIntakeDirection(IntakeMotorState state) {
@@ -229,8 +229,8 @@ void Elevator::pollLimitSwitches() {
     }
 
     // Check front limit switches
-    if (!m_intakeWheelRight->IsFwdLimitSwitchClosed() &&
-            !m_intakeWheelRight->IsRevLimitSwitchClosed()) {
+    if (m_intakeWheelRight->IsFwdLimitSwitchClosed() &&
+            m_intakeWheelRight->IsRevLimitSwitchClosed()) {
         stackTotes();
     }
 }
@@ -372,10 +372,14 @@ std::string Elevator::to_string(ElevatorState state) {
 }
 
 void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
+	double setpoint;
+
     std::cout << "oldState = " << to_string(oldState)
               << " newState = " << to_string(newState) << std::endl;
+
     if (newState == STATE_SEEK_DROP_TOTES) {
-        setProfileHeight(m_setpoint);
+    	// TODO: magic number
+        setProfileHeight(getGoal() - 5.0);
     }
 
     // Release the totes
@@ -386,8 +390,8 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
     }
 
     if (newState == STATE_SEEK_GROUND) {
-        m_setpoint = m_toteHeights["EV_GROUND"];
-        setProfileHeight(m_setpoint);
+        setpoint = m_toteHeights["EV_GROUND"];
+        setProfileHeight(setpoint);
     }
 
     // Grab the new stack
@@ -399,9 +403,8 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
 
     // Off the ground a bit
     if (newState == STATE_SEEK_HALF_TOTE) {
-        m_setpoint = m_toteHeights["EV_TOTE_1"];
-        std::cout << "m_setpoint == " << m_setpoint << std::endl;
-        setProfileHeight(m_setpoint);
+        setpoint = m_toteHeights["EV_TOTE_1"];
+        setProfileHeight(setpoint);
     }
 
     if (newState == STATE_INTAKE_IN) {

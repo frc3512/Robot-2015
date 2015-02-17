@@ -120,7 +120,6 @@ void Robot::OperatorControl() {
 
         double evStickY = evStick->GetY();
         evStickY = 0;
-        std::cout << "evStickY = " << evStickY << std::endl;
         manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
         if (fabs(manualAverage.getAverage()) > 0.05 && fabs(evStickY) > 0.05) {
             // TODO: probably wrong
@@ -141,6 +140,10 @@ void Robot::OperatorControl() {
         if (((ev->getSetpoint() < 11 && !ev->isManualMode()) ||
              !ev->getElevatorGrab()) && ev->getIntakeGrab()) {
             ev->intakeGrab(false);
+        }
+
+        if(ev->isIntakeStowed() && ev->getIntakeGrab()) {
+        	ev->intakeGrab(false);
         }
 
         // Poll the limit reset limit switch
