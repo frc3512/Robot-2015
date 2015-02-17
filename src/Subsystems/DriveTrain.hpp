@@ -55,17 +55,6 @@ public:
 
     void setControlMode(CANTalon::ControlMode ctrlMode);
 
-    // Shifts internal gearboxes
-    void setGear(bool gear);
-
-    // Returns gear of internal gearboxes (true assumed to be high gear
-    // TODO check if 'true' is high gear
-    bool getGear() const;
-
-    void setDefencive(bool defencive);
-
-    bool getDefencive();
-
     const static float maxWheelSpeed;
 
 private:

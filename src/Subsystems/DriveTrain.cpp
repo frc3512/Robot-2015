@@ -100,22 +100,15 @@ void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
 
     // Negative inertia!
     double negInertiaScalar;
-    if (getGear()) {
-        negInertiaScalar = m_settings.getDouble("INERTIA");
+    if (turn * negInertia > 0) {
+        negInertiaScalar = m_settings.getDouble("INERTIA_DAMPEN");
     }
     else {
-        if (turn * negInertia > 0) {
-            negInertiaScalar = m_settings.getDouble("INERTIA_DAMPEN");
+        if (fabs(turn) > 0.65) {
+            negInertiaScalar = m_settings.getDouble("INERTIA_HIGH_TURN");
         }
         else {
-            if (fabs(turn) > 0.65) {
-                negInertiaScalar =
-                    m_settings.getDouble("INERTIA_HIGH_TURN");
-            }
-            else {
-                negInertiaScalar =
-                    m_settings.getDouble("INERTIA_LOW_TURN");
-            }
+            negInertiaScalar = m_settings.getDouble("INERTIA_LOW_TURN");
         }
     }
 
@@ -197,14 +190,8 @@ void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
     }
     m_leftFrontGrbx->setManual(leftPwm);
     m_rightFrontGrbx->setManual(rightPwm);
-    if (true /*!isQuickTurn */) {
-        m_leftBackGrbx->setManual(leftPwm);
-        m_rightBackGrbx->setManual(rightPwm);
-    }
-    else {
-        m_leftBackGrbx->setManual(0.0);
-        m_rightBackGrbx->setManual(0.0);
-    }
+    m_leftBackGrbx->setManual(leftPwm);
+    m_rightBackGrbx->setManual(rightPwm);
 }
 
 void DriveTrain::setDeadband(float band) {
@@ -288,44 +275,6 @@ void DriveTrain::setControlMode(CANTalon::ControlMode ctrlMode) {
     m_rightBackGrbx->setControlMode(ctrlMode);
     m_leftFrontGrbx->setControlMode(ctrlMode);
     m_rightBackGrbx->setControlMode(ctrlMode);
-}
-
-void DriveTrain::setGear(bool gear) {
-    m_leftFrontGrbx->setGear(gear);
-    m_rightBackGrbx->setGear(gear);
-    m_leftFrontGrbx->setGear(gear);
-    m_rightBackGrbx->setGear(gear);
-
-
-    /* Update turning sensitivity
-     * Lower value makes robot turn less when full turn is commanded.
-     * Value of 1 (default) makes robot's turn radius the smallest.
-     * Value of 0 makes robot unable to turn unless QuickTurn is enabled.
-     */
-
-    // If high gear
-    if (gear) {
-        m_sensitivity = m_settings.getDouble("HIGH_GEAR_SENSITIVE");
-    }
-    else {
-        m_sensitivity = m_settings.getDouble("LOW_GEAR_SENSITIVE");
-    }
-}
-
-bool DriveTrain::getGear() const {
-    return m_leftFrontGrbx->getGear();
-}
-void DriveTrain::setDefencive(bool defencive) {
-    m_isDefencive = defencive;
-}
-// returns true if drive train is reversed
-bool DriveTrain::getDefencive() {
-    if (m_isDefencive == true) {
-        return true;
-    }
-    else {
-        return false;
-    }
 }
 
 float DriveTrain::applyDeadband(float value) {
