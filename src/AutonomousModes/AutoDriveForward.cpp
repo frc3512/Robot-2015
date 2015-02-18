@@ -45,5 +45,10 @@ void Robot::AutoDriveForward() {
     // Stop moving
     robotDrive->setLeftManual(0.f);
     robotDrive->setRightManual(0.f);
+
+    while (IsAutonomous() && IsEnabled()) {
+        DS_PrintOut();
+        Wait(0.01);
+    }
 }
 

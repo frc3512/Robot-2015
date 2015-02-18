@@ -49,14 +49,10 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
     m_isDefencive = (false);
     // c = PI * 10.16cm [wheel diameter]
     // dPerP = c / pulses
-    m_leftFrontGrbx->setDistancePerPulse(
-        ((3.14159265 * 10.16) / 360.0) * 1.0 / 3.0);
-    m_rightFrontGrbx->setDistancePerPulse(
-        ((3.14159265 * 10.16) / 360.0) * 1.0 / 3.0);
-    m_leftBackGrbx->setDistancePerPulse(
-        ((3.14159265 * 10.16) / 360.0) * 1.0 / 3.0);
-    m_rightBackGrbx->setDistancePerPulse(
-        ((3.14159265 * 10.16) / 360.0) * 1.0 / 3.0);
+    m_leftFrontGrbx->setDistancePerPulse(72.0 / 2800.0);
+    m_rightFrontGrbx->setDistancePerPulse(72.0 / 2800.0);
+    m_leftBackGrbx->setDistancePerPulse(72.0 / 2800.0);
+    m_rightBackGrbx->setDistancePerPulse(72.0 / 2800.0);
 
     reloadPID();
 }

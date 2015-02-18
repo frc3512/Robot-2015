@@ -184,6 +184,8 @@ void Robot::DS_PrintOut() {
     if (pidGraph.hasIntervalPassed()) {
         pidGraph.graphData(ev->getHeight(), "Distance (EV)");
         pidGraph.graphData(ev->getSetpoint(), "Setpoint (EV)");
+        pidGraph.graphData(robotDrive->getLeftDist(), "Distance (DR)");
+        pidGraph.graphData(robotDrive->getLeftSetpoint(), "Setpoint (DR)");
 
         pidGraph.resetInterval();
     }
