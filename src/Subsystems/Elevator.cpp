@@ -16,6 +16,8 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_intakeGrabber = std::make_unique<Solenoid>(2);
     m_intakeWheelLeft = std::make_unique<CANTalon>(3);
     m_intakeWheelRight = std::make_unique<CANTalon>(6);
+    m_frontLeftLimit = std::make_unique<DigitalInput>(0);
+    m_frontRightLimit = std::make_unique<DigitalInput>(1);
     m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
     m_intakeState = S_STOPPED;
     m_manual = false;
@@ -213,9 +215,9 @@ void Elevator::reloadPID() {
     m_liftGrbx->setF(f1);
 }
 
-bool Elevator::onTarget() {
-    return m_liftGrbx->onTarget();
-}
+//bool Elevator::onTarget() {
+//    return m_liftGrbx->onTarget();
+//}
 
 void Elevator::resetEncoder() {
     resetEncoder(0, m_liftGrbx.get());
@@ -315,11 +317,11 @@ void Elevator::stackTotes() {
 }
 
 void Elevator::updateState() {
-    if (m_state == STATE_WAIT_INITIAL_HEIGHT && onTarget() && atGoal()) {
+    if (m_state == STATE_WAIT_INITIAL_HEIGHT && atGoal()) {
         m_state = STATE_SEEK_DROP_TOTES;
         stateChanged(STATE_WAIT_INITIAL_HEIGHT, m_state);
     }
-    if (m_state == STATE_SEEK_DROP_TOTES && onTarget() && atGoal()) {
+    if (m_state == STATE_SEEK_DROP_TOTES && atGoal()) {
         m_state = STATE_RELEASE;
         stateChanged(STATE_SEEK_DROP_TOTES, m_state);
     }
@@ -327,7 +329,7 @@ void Elevator::updateState() {
         m_state = STATE_SEEK_GROUND;
         stateChanged(STATE_RELEASE, m_state);
     }
-    else if (m_state == STATE_SEEK_GROUND && onTarget() && atGoal()) {
+    else if (m_state == STATE_SEEK_GROUND && atGoal()) {
         m_state = STATE_GRAB;
         stateChanged(STATE_SEEK_GROUND, m_state);
     }
@@ -335,7 +337,7 @@ void Elevator::updateState() {
         m_state = STATE_SEEK_HALF_TOTE;
         stateChanged(STATE_GRAB, m_state);
     }
-    else if (m_state == STATE_SEEK_HALF_TOTE && onTarget() && atGoal()) {
+    else if (m_state == STATE_SEEK_HALF_TOTE && atGoal()) {
         m_state = STATE_INTAKE_IN;
         stateChanged(STATE_SEEK_HALF_TOTE, m_state);
     }

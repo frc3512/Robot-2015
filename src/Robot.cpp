@@ -208,7 +208,7 @@ void Robot::DS_PrintOut() {
             ev->getSetpoint()
                   << std::endl;
 
-        std::cout << "On target: " << ev->onTarget() << std::endl;
+        std::cout << "At goal: " << ev->atGoal() << std::endl;
 
         std::string name("EL_LEVEL_");
         for (int i = 0; i < 6; i++) {
@@ -216,7 +216,7 @@ void Robot::DS_PrintOut() {
 
             if (ev->getHeight() ==
                 ev->getLevelHeight(name + std::to_string(i)) &&
-                ev->onTarget()) {
+                ev->atGoal()) {
                 dsDisplay.addData(name + std::to_string(i), DSDisplay::active);
             }
             else if (ev->getHeight() <

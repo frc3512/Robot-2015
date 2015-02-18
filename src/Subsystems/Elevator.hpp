@@ -75,7 +75,7 @@ public:
 
     // TODO: probably shouldn't exist / should be private
     // setGoal() is probably the correct function to use
-    bool onTarget();
+   // bool onTarget();
 
     void resetEncoder();
 
@@ -110,6 +110,8 @@ private:
     std::unique_ptr<Solenoid> m_intakeGrabber;
     std::unique_ptr<CANTalon> m_intakeWheelLeft;
     std::unique_ptr<CANTalon> m_intakeWheelRight;
+    std::unique_ptr<DigitalInput> m_frontLeftLimit;
+    std::unique_ptr<DigitalInput> m_frontRightLimit;
     std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
     bool m_manual;
 
