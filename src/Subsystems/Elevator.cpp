@@ -220,6 +220,10 @@ void Elevator::resetEncoder() {
     resetEncoder(0, m_liftGrbx.get());
 }
 
+bool Elevator::isStacking() {
+	return m_state != STATE_IDLE;
+}
+
 void Elevator::resetEncoder(uint32_t interruptAssertedMask, void* param) {
     reinterpret_cast<decltype(m_liftGrbx.get())>(param)->resetEncoder();
 }

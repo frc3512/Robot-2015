@@ -86,10 +86,15 @@ public:
     void manualChangeSetpoint(double delta);
 
     void stackTotes();
+    bool isStacking();
 
     // Periodic
     void updateState();
     std::string to_string(ElevatorState state);
+
+    /****** AutoOneTote ******/
+    //...
+
 
 protected:
     std::unique_ptr<Settings> m_settings;

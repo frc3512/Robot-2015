@@ -50,4 +50,3 @@ void Robot::AutoOneTote() {
         ev->pollLimitSwitches();
     }
 }
-
