@@ -86,6 +86,8 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings->getDouble(
         "EV_HALF_TOTE_OFFSET");
 
+    m_toteHeights["EV_GARBAGECAN_LEVEL"] = m_settings->getDouble("EV_GARBAGECAN_LEVEL");
+
     reloadPID();
 }
 

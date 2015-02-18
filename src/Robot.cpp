@@ -28,6 +28,9 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
 
     pidGraph.setSendInterval(5);
 
+    m_autoState = STATE_IDLE;
+
+
     displayTimer->Start();
 }
 
@@ -66,10 +69,11 @@ void Robot::OperatorControl() {
         }
 
         // Automatic preset buttons (7-12)
+        // TODO: FIXME
         if (evButtons.releasedButton(7)) {
             // ev->raiseElevator("EV_TOTE_0" + offsetString);
             ev->setManualMode(true);
-            ev->setManualLiftSpeed(-0.1);
+            ev->setManualLiftSpeed(-0.4);
         }
         if (evButtons.releasedButton(8)) {
             ev->raiseElevator("EV_TOTE_1" + offsetString);
