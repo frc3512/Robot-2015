@@ -1,6 +1,6 @@
 DS_Port = 1130
 
-PID_DRIVE_P = 1.4
+PID_DRIVE_P = 3
 PID_DRIVE_I = 0
 PID_DRIVE_D = 0
 

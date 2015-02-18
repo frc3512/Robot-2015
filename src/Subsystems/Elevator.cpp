@@ -35,7 +35,8 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_liftGrbx->setDistancePerPulse((70.5 / 1.92442) * (26.0 / (48.0 * 360.0)));
 #else
     // For CANTalon PID loop
-    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, true, 7, 2);
+    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 7, 2);
+    m_liftGrbx->setEncoderReversed(true);
     m_liftGrbx->setDistancePerPulse(70.5 / 5090.0);
 
     m_liftGrbx->setProfile(false);

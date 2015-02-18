@@ -8,7 +8,6 @@
 #include <Solenoid.h>
 
 inline GearBox<CANTalon>::GearBox(int shifterChan,
-                                  bool reverseEncoder,
                                   int motor1,
                                   int motor2,
                                   int motor3) {
@@ -20,7 +19,7 @@ inline GearBox<CANTalon>::GearBox(int shifterChan,
     }
 
     m_isMotorReversed = false;
-    m_isEncoderReversed = reverseEncoder;
+    m_isEncoderReversed = false;
     m_distancePerPulse = 1.f;
 
     // Create motor controllers of specified template type
@@ -142,7 +141,8 @@ inline bool GearBox<CANTalon>::isMotorReversed() const {
 }
 
 inline void GearBox<CANTalon>::setEncoderReversed(bool reverse) {
-    m_motors[0]->SetSensorDirection(reverse);
+    m_isEncoderReversed = reverse;
+    m_motors[0]->SetSensorDirection(m_isEncoderReversed);
 }
 
 inline bool GearBox<CANTalon>::isEncoderReversed() const {

@@ -1,6 +1,6 @@
 #!/bin/bash
 HOST='10.35.12.2'
-USER='anonymous'
+USER='admin'
 PASSWD=''
 
 if [ $# -ne 1 ] ; then
@@ -9,29 +9,11 @@ if [ $# -ne 1 ] ; then
     exit 1
 fi
 
-# Add file names here to send them
-FILESRC=($1/'FRCUserProgram')
-PATHDEST=('/home/lvuser')
-FILEDEST=('FRCUserProgram')
+ssh $USER@$HOST 'echo 'kill `ps x | grep /home/lvuser/FRCUserProgram | grep -v grep | head -n 1 | sed 's/^ *//' | cut -d ' ' -f 1`' | bash -s'
 
-# script: login
-echo "quote USER $USER
-quote PASS $PASSWD" > /tmp/ftp.$$
+scp $1/FRCUserProgram $USER@$HOST:$PATHDEST
 
-# script: send files in list
-for (( i=0 ; i < ${#FILESRC[@]} ; i++ ));
-do
-    echo "cd ${PATHDEST[$i]}" >> /tmp/ftp.$$
-    echo "put ${FILESRC[$i]} ${FILEDEST[$i]}" >> /tmp/ftp.$$
-done
+ssh $USER@$HOST 'echo "/home/lvuser/FRCUserProgram &" | bash -s'
 
-# script: logout of FTP server
-echo "quit" >> /tmp/ftp.$$
-
-# execute script
-ftp -ivn $HOST < /tmp/ftp.$$
-
-# delete script and exit
-rm /tmp/ftp.$$
 exit 0
 
