@@ -12,17 +12,10 @@
 Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_grabSolenoid = std::make_unique<Solenoid>(3);
 
-    m_bottomLimit = std::make_unique<DigitalInput>(2);
-    m_bottomLimit->RequestInterrupts(resetEncoder, m_liftGrbx.get());
-    m_bottomLimit->SetUpSourceEdge(true, true);
-    m_bottomLimit->EnableInterrupts();
-
     m_intakeVertical = std::make_unique<Solenoid>(1);
     m_intakeGrabber = std::make_unique<Solenoid>(2);
     m_intakeWheelLeft = std::make_unique<CANTalon>(3);
     m_intakeWheelRight = std::make_unique<CANTalon>(6);
-    m_frontLeftLimit = std::make_unique<DigitalInput>(0);
-    m_frontRightLimit = std::make_unique<DigitalInput>(1);
     m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
     m_intakeState = S_STOPPED;
     m_manual = false;
@@ -105,7 +98,7 @@ void Elevator::elevatorGrab(bool state) {
     m_grabSolenoid->Set(!state);
 }
 
-bool Elevator::getElevatorGrab() {
+bool Elevator::isElevatorGrabbed() {
     return !m_grabSolenoid->Get();
 }
 
@@ -113,7 +106,7 @@ void Elevator::intakeGrab(bool state) {
     m_intakeGrabber->Set(state);
 }
 
-bool Elevator::getIntakeGrab() {
+bool Elevator::isIntakeGrabbed() {
     return m_intakeGrabber->Get();
 }
 
@@ -147,9 +140,17 @@ Elevator::IntakeMotorState Elevator::getIntakeDirection() {
 }
 
 void Elevator::setManualLiftSpeed(double value) {
-    if (m_manual == true) {
+    if (m_manual) {
         m_liftGrbx->setManual(value);
     }
+}
+
+double Elevator::getManualLiftSpeed() {
+	if(m_manual) {
+		return m_liftGrbx->get(Grbx::Raw);
+	}
+
+	return 0.0;
 }
 
 void Elevator::setManualMode(bool on) {
@@ -261,8 +262,7 @@ void Elevator::raiseElevator(std::string level) {
     if (m_state == STATE_IDLE) {
         std::cout << "Seeking to " << height << std::endl;
 
-        m_setpoint = height;
-        setProfileHeight(m_setpoint);
+        setProfileHeight(height);
     }
 }
 

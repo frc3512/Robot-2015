@@ -46,11 +46,11 @@ public:
 
     // Actuates elevator tines in/out
     void elevatorGrab(bool state);
-    bool getElevatorGrab();
+    bool isElevatorGrabbed();
 
     // Actuates intake arms in/out
     void intakeGrab(bool state);
-    bool getIntakeGrab();
+    bool isIntakeGrabbed();
 
     // Stows/unstows intake arms
     void stowIntake(bool state);
@@ -62,21 +62,24 @@ public:
 
     // Sets speed of lift gearbox directly if manual input is enabled
     void setManualLiftSpeed(double value);
+    double getManualLiftSpeed();
 
     void setManualMode(bool on);
     bool isManualMode();
 
     // Sets setpoint for elevator PID controller
     void setHeight(double height);
-
-    // Gets the current height as integrated from the encoder
     double getHeight();
 
     void reloadPID();
 
+    // TODO: probably shouldn't exist / should be private
+    // setGoal() is probably the correct function to use
     bool onTarget();
 
     void resetEncoder();
+
+    // Periodic
     void pollLimitSwitches();
 
     // Takes a string representing the name of the height
@@ -84,11 +87,13 @@ public:
     void setProfileHeight(double height);
     double getLevelHeight(std::string level) const;
 
+    void manualChangeSetpoint(double delta);
+
     void stackTotes();
+
+    // Periodic
     void updateState();
     std::string to_string(ElevatorState state);
-
-    void manualChangeSetpoint(double delta);
 
 protected:
     std::unique_ptr<Settings> m_settings;
@@ -105,8 +110,6 @@ private:
     std::unique_ptr<Solenoid> m_intakeGrabber;
     std::unique_ptr<CANTalon> m_intakeWheelLeft;
     std::unique_ptr<CANTalon> m_intakeWheelRight;
-    std::unique_ptr<DigitalInput> m_frontLeftLimit;
-    std::unique_ptr<DigitalInput> m_frontRightLimit;
     std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
     bool m_manual;
 

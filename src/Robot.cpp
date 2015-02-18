@@ -91,10 +91,10 @@ void Robot::OperatorControl() {
         ev->setManualLiftSpeed(evStick->GetY());
 
         if (evButtons.releasedButton(1)) {
-            ev->elevatorGrab(!ev->getElevatorGrab());
+            ev->elevatorGrab(!ev->isElevatorGrabbed());
         }
         if (evButtons.releasedButton(2)) {
-            ev->intakeGrab(!ev->getIntakeGrab());
+            ev->intakeGrab(!ev->isIntakeGrabbed());
         }
         if (evButtons.releasedButton(3)) {
             ev->stowIntake(!ev->isIntakeStowed());
@@ -139,11 +139,11 @@ void Robot::OperatorControl() {
          * tines are open
          */
         if (((ev->getSetpoint() < 11 && !ev->isManualMode()) ||
-             !ev->getElevatorGrab()) && ev->getIntakeGrab()) {
+             !ev->isElevatorGrabbed()) && ev->isIntakeGrabbed()) {
             ev->intakeGrab(false);
         }
 
-        if (ev->isIntakeStowed() && ev->getIntakeGrab()) {
+        if (ev->isIntakeStowed() && ev->isIntakeGrabbed()) {
             ev->intakeGrab(false);
         }
 
@@ -194,8 +194,8 @@ void Robot::DS_PrintOut() {
         dsDisplay.clear();
 
         dsDisplay.addData("EV_LEVEL_INCHES", ev->getHeight());
-        dsDisplay.addData("INTAKE_ARMS_CLOSED", ev->getIntakeGrab());
-        dsDisplay.addData("ARMS_CLOSED", ev->getElevatorGrab());
+        dsDisplay.addData("INTAKE_ARMS_CLOSED", ev->isIntakeGrabbed());
+        dsDisplay.addData("ARMS_CLOSED", ev->isElevatorGrabbed());
         dsDisplay.addData("ENCODER_LEFT", robotDrive->getLeftDist());
         dsDisplay.addData("ENCODER_RIGHT", robotDrive->getRightDist());
         std::cout << "EV_HEIGHT=" << std::left << std::setw(20) <<
