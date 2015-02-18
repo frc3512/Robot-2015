@@ -376,8 +376,6 @@ std::string Elevator::to_string(ElevatorState state) {
 }
 
 void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
-    double setpoint;
-
     std::cout << "oldState = " << to_string(oldState)
               << " newState = " << to_string(newState) << std::endl;
 
@@ -394,8 +392,7 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
     }
 
     if (newState == STATE_SEEK_GROUND) {
-        setpoint = m_toteHeights["EV_GROUND"];
-        setProfileHeight(setpoint);
+        setProfileHeight(m_toteHeights["EV_GROUND"]);
     }
 
     // Grab the new stack
@@ -407,8 +404,7 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
 
     // Off the ground a bit
     if (newState == STATE_SEEK_HALF_TOTE) {
-        setpoint = m_toteHeights["EV_TOTE_1"];
-        setProfileHeight(setpoint);
+        setProfileHeight(m_toteHeights["EV_TOTE_1"]);
     }
 
     if (newState == STATE_INTAKE_IN) {
