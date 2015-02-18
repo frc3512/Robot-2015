@@ -215,10 +215,6 @@ void Elevator::reloadPID() {
     m_liftGrbx->setF(f1);
 }
 
-//bool Elevator::onTarget() {
-//    return m_liftGrbx->onTarget();
-//}
-
 void Elevator::resetEncoder() {
     resetEncoder(0, m_liftGrbx.get());
 }
