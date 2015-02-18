@@ -73,10 +73,6 @@ public:
 
     void reloadPID();
 
-    // TODO: probably shouldn't exist / should be private
-    // setGoal() is probably the correct function to use
-   // bool onTarget();
-
     void resetEncoder();
 
     // Periodic
