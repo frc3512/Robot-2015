@@ -35,12 +35,14 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2),
     m_rightGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 5, 8);
 #else
     // For CANTalon PID loop
-    m_leftGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 4, 1);
-    m_rightGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 5, 8);
+    m_leftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 4, 1);
+    m_rightGrbx = std::make_unique<GearBox<CANTalon>>(-1, 5, 8);
 #endif
 
     m_leftGrbx->setMotorReversed(true);
     m_leftGrbx->setEncoderReversed(true);
+
+    m_rightGrbx->setEncoderReversed(true);
 
     m_leftGrbx->setDistancePerPulse(72.0 / 2800.0);
     m_rightGrbx->setDistancePerPulse(72.0 / 2800.0);

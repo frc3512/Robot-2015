@@ -114,7 +114,6 @@ template <>
 class GearBox<CANTalon> {
 public:
     GearBox(int shifterChan,
-            bool reverseEncoder,
             int motor1,
             int motor2 = -1,
             int motor3 = -1);
