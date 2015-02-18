@@ -15,9 +15,9 @@
 #define M_PI 3.14159265
 #endif
 
-const float DriveTrain::maxWheelSpeed = 274.f;
+const float DriveTrain::maxWheelSpeed = 13.0;
 
-DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
+DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2),
                            m_settings("/home/lvuser/RobotSettings.txt") {
     m_settings.update();
 
@@ -31,28 +31,21 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 3.f),
 
 #if 0
     // For WPILib PID loop
-    m_leftFrontGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 4);
-    m_leftBackGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 1);
-    m_rightFrontGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 5);
-    m_rightBackGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 8);
+    m_leftGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 4, 1);
+    m_rightGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 5, 8);
 #else
     // For CANTalon PID loop
-    m_leftFrontGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 4);
-    m_leftBackGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 1);
-    m_rightFrontGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 5);
-    m_rightBackGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 8);
+    m_leftGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 4, 1);
+    m_rightGrbx = std::make_unique<GearBox<CANTalon>>(-1, false, 5, 8);
 #endif
 
-    m_leftFrontGrbx->setMotorReversed(true);
-    m_leftBackGrbx->setMotorReversed(true);
+    m_leftGrbx->setMotorReversed(true);
+    m_leftGrbx->setEncoderReversed(true);
 
-    m_isDefencive = (false);
-    // c = PI * 10.16cm [wheel diameter]
-    // dPerP = c / pulses
-    m_leftFrontGrbx->setDistancePerPulse(72.0 / 2800.0);
-    m_rightFrontGrbx->setDistancePerPulse(72.0 / 2800.0);
-    m_leftBackGrbx->setDistancePerPulse(72.0 / 2800.0);
-    m_rightBackGrbx->setDistancePerPulse(72.0 / 2800.0);
+    m_leftGrbx->setDistancePerPulse(72.0 / 2800.0);
+    m_rightGrbx->setDistancePerPulse(72.0 / 2800.0);
+
+    setWidth(27.0);
 
     reloadPID();
 }
@@ -65,10 +58,6 @@ void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
 
     throttle *= -1;
 
-    if (m_isDefencive == true) {
-        throttle *= -1;
-        turn *= -1;
-    }
     // Limit values to [-1 .. 1]
     throttle = limit(throttle, 1.f);
     turn = limit(turn, 1.f);
@@ -184,10 +173,8 @@ void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
 
         rightPwm = -1.0;
     }
-    m_leftFrontGrbx->setManual(leftPwm);
-    m_rightFrontGrbx->setManual(rightPwm);
-    m_leftBackGrbx->setManual(leftPwm);
-    m_rightBackGrbx->setManual(rightPwm);
+    m_leftGrbx->setManual(leftPwm);
+    m_rightGrbx->setManual(rightPwm);
 }
 
 void DriveTrain::setDeadband(float band) {
@@ -195,10 +182,8 @@ void DriveTrain::setDeadband(float band) {
 }
 
 void DriveTrain::resetEncoders() {
-    m_leftFrontGrbx->resetEncoder();
-    m_rightFrontGrbx->resetEncoder();
-    m_leftBackGrbx->resetEncoder();
-    m_rightBackGrbx->resetEncoder();
+    m_leftGrbx->resetEncoder();
+    m_rightGrbx->resetEncoder();
 }
 
 void DriveTrain::reloadPID() {
@@ -212,65 +197,56 @@ void DriveTrain::reloadPID() {
     i = m_settings.getDouble("PID_DRIVE_I");
     d = m_settings.getDouble("PID_DRIVE_D");
 
-    m_leftFrontGrbx->setPID(p, i, d);
-    m_rightBackGrbx->setPID(p, i, d);
-    m_leftFrontGrbx->setPID(p, i, d);
-    m_rightBackGrbx->setPID(p, i, d);
+    m_leftGrbx->setPID(p, i, d);
+    m_leftGrbx->setPID(p, i, d);
 }
 
 void DriveTrain::setLeftSetpoint(double setpt) {
-    m_leftFrontGrbx->setSetpoint(setpt);
-    m_leftBackGrbx->setSetpoint(setpt);
+    m_leftGrbx->setSetpoint(setpt);
 }
 
 void DriveTrain::setRightSetpoint(double setpt) {
-    m_rightFrontGrbx->setSetpoint(setpt);
-    m_rightBackGrbx->setSetpoint(setpt);
+    m_rightGrbx->setSetpoint(setpt);
 }
 
 void DriveTrain::setLeftManual(float value) {
-    m_leftFrontGrbx->setManual(value);
-    m_leftBackGrbx->setManual(value);
+    m_leftGrbx->setManual(value);
 }
 
 void DriveTrain::setRightManual(float value) {
-    m_rightFrontGrbx->setManual(value);
-    m_rightBackGrbx->setManual(value);
+    m_rightGrbx->setManual(value);
 }
 
 double DriveTrain::getLeftDist() {
-    return (m_leftFrontGrbx->get(Grbx::Position) +
-            m_leftBackGrbx->get(Grbx::Position)) / 2.f;
+    std::cout << "left=" << m_leftGrbx->get(Grbx::Position) << std::endl;
+    return m_leftGrbx->get(Grbx::Position);
+
 }
 
 double DriveTrain::getRightDist() {
-    return (m_rightFrontGrbx->get(Grbx::Position) +
-            m_rightBackGrbx->get(Grbx::Position)) / 2.f;
+    std::cout << "right=" << m_rightGrbx->get(Grbx::Position) << std::endl;
+    return m_rightGrbx->get(Grbx::Position);
 }
 
 double DriveTrain::getLeftRate() {
-    return (m_leftFrontGrbx->get(Grbx::Speed) +
-            m_leftBackGrbx->get(Grbx::Speed)) / 2.f;
+    return m_leftGrbx->get(Grbx::Speed);
 }
 
 double DriveTrain::getRightRate() {
-    return (m_rightFrontGrbx->get(Grbx::Speed) +
-            m_rightBackGrbx->get(Grbx::Speed)) / 2.f;
+    return m_rightGrbx->get(Grbx::Speed);
 }
 
 double DriveTrain::getLeftSetpoint() {
-    return m_leftFrontGrbx->getSetpoint();
+    return m_leftGrbx->getSetpoint();
 }
 
 double DriveTrain::getRightSetpoint() {
-    return m_rightFrontGrbx->getSetpoint();
+    return m_rightGrbx->getSetpoint();
 }
 
 void DriveTrain::setControlMode(CANTalon::ControlMode ctrlMode) {
-    m_leftFrontGrbx->setControlMode(ctrlMode);
-    m_rightBackGrbx->setControlMode(ctrlMode);
-    m_leftFrontGrbx->setControlMode(ctrlMode);
-    m_rightBackGrbx->setControlMode(ctrlMode);
+    m_leftGrbx->setControlMode(ctrlMode);
+    m_rightGrbx->setControlMode(ctrlMode);
 }
 
 float DriveTrain::applyDeadband(float value) {

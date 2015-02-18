@@ -63,17 +63,13 @@ private:
     float m_deadband;
     float m_sensitivity;
 
-    bool m_isDefencive;
-
     // Cheesy Drive variables
     float m_oldTurn;
     float m_quickStopAccumulator;
     float m_negInertiaAccumulator;
 
-    std::unique_ptr<GearBox<CANTalon>> m_leftFrontGrbx;
-    std::unique_ptr<GearBox<CANTalon>> m_rightFrontGrbx;
-    std::unique_ptr<GearBox<CANTalon>> m_leftBackGrbx;
-    std::unique_ptr<GearBox<CANTalon>> m_rightBackGrbx;
+    std::unique_ptr<GearBox<CANTalon>> m_leftGrbx;
+    std::unique_ptr<GearBox<CANTalon>> m_rightGrbx;
 
     /* Zeroes value if its inside deadband range, and rescales values outside
      * of it
