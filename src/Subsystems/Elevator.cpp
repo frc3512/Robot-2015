@@ -87,60 +87,59 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_toteHeights["EV_GARBAGECAN_LEVEL"] = m_settings->getDouble(
         "EV_GARBAGECAN_LEVEL");
 
-    m_autoStackSM.addState(new State("IDLE"));
+    State* state = new State("IDLE");
+    m_autoStackSM.addState(state);
 
-    m_autoStackSM.addState(new State("WAIT_INITIAL_HEIGHT",
-                                     [this] { setProfileHeight(getGoal() - 5.0);
-                                     },
-                                     [this] () -> bool { return atGoal(); }));
+    state = new State("WAIT_INITIAL_HEIGHT");
+    state->initFunc = [this] { setProfileHeight(getGoal() - 5.0); };
+    state->advanceFunc = [this] { return atGoal(); };
+    m_autoStackSM.addState(state);
 
-    m_autoStackSM.addState(new State("SEEK_DROP_TOTES",
-                                     [this] { setProfileHeight(getGoal() - 5.0);
-                                     },
-                                     [this] () -> bool { return atGoal(); }));
+    state = new State("SEEK_DROP_TOTES");
+    state->initFunc = [this] { setProfileHeight(getGoal() - 5.0); };
+    state->advanceFunc = [this] { return atGoal(); };
+    m_autoStackSM.addState(state);
 
-    m_autoStackSM.addState(new State("RELEASE",
-                                     [this] {
+    state = new State("RELEASE");
+    state->initFunc = [this] {
         m_grabTimer->Reset();
         m_grabTimer->Start();
         elevatorGrab(false);
-    },
-                                     [this] () -> bool {
-        return m_grabTimer->
-        HasPeriodPassed(0.2);
-    }));
+    };
+    state->advanceFunc = [this] {
+        return m_grabTimer->HasPeriodPassed(0.2);
+    };
+    m_autoStackSM.addState(state);
 
-    m_autoStackSM.addState(
-        new State("SEEK_GROUND",
-                  [this] { setProfileHeight(m_toteHeights["EV_GROUND"]); },
-                  [this] () -> bool { return atGoal(); }));
+    state = new State("SEEK_GROUND");
+    state->initFunc = [this] { setProfileHeight(m_toteHeights["EV_GROUND"]); };
+    state->periodicFunc = [this] { return atGoal(); };
+    m_autoStackSM.addState(state);
 
-    m_autoStackSM.addState(
-        new State("GRAB",
-                  [this] {
+    state = new State("GRAB");
+    state->initFunc = [this] {
         m_grabTimer->Reset();
         m_grabTimer->Start();
         elevatorGrab(true);
-    },
-                  [this] () -> bool {
-        return m_grabTimer->HasPeriodPassed(0.2);
-    }));
+    };
+    state->advanceFunc = [this] { return m_grabTimer->HasPeriodPassed(0.2); };
+    m_autoStackSM.addState(state);
 
-    m_autoStackSM.addState(
-        new State("SEEK_HALF_TOTE",
-                  [this] { setProfileHeight(m_toteHeights["EV_TOTE_1"]); },
-                  [this] () -> bool { return atGoal(); }));
+    state = new State("SEEK_HALF_TOTE");
+    state->initFunc = [this] { setProfileHeight(m_toteHeights["EV_TOTE_1"]); };
+    state->advanceFunc = [this] { return atGoal(); };
+    m_autoStackSM.addState(state);
 
-    m_autoStackSM.addState(
-        new State("INTAKE_IN",
-                  [this] {
+    state = new State("INTAKE_IN");
+    state->initFunc = [this] {
         m_grabTimer->Reset();
         m_grabTimer->Start();
         intakeGrab(true);
-    },
-                  [this] () -> bool {
+    };
+    state->advanceFunc = [this] {
         return m_grabTimer->HasPeriodPassed(0.2);
-    }));
+    };
+    m_autoStackSM.addState(state);
 
     reloadPID();
 }

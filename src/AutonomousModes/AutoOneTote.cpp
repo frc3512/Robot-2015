@@ -9,28 +9,27 @@
 
 void Robot::AutoOneTote() {
     StateMachine oneToteSM;
-    State* idle = new State("IDLE");
-    idle->endFunc = [this] { ev->setIntakeDirection(Elevator::S_STOPPED); };
+    State* state = new State("IDLE");
+    state->endFunc = [this] { ev->setIntakeDirection(Elevator::S_STOPPED); };
 
-    oneToteSM.addState(idle);
+    oneToteSM.addState(state);
 
-    oneToteSM.addState(
-        new State("SEEK_GARBAGECAN_UP",
-                  [this] { ev->raiseElevator("EV_GARBAGECAN_LEVEL"); },
-                  [this] () -> bool { return ev->atGoal(); }));
+    state = new State("SEEK_GARBAGECAN_UP");
+    state->initFunc = [this] { ev->raiseElevator("EV_GARBAGECAN_LEVEL"); };
+    state->advanceFunc = [this] { return ev->atGoal(); };
+    oneToteSM.addState(state);
 
-    oneToteSM.addState(
-        new State("MOVE_TO_TOTE",
-                  [this] {
+    state = new State("MOVE_TO_TOTE");
+    state->initFunc = [this] {
         autoTimer->Reset();
         autoTimer->Start();
-    },
-                  [this] () -> bool { return autoTimer->HasPeriodPassed(1.0); },
-                  [this] { robotDrive->drive(-0.3, 0, false); }));
+    };
+    state->advanceFunc = [this] { return autoTimer->HasPeriodPassed(1.0); };
+    state->periodicFunc = [this] { robotDrive->drive(-0.3, 0, false); };
+    oneToteSM.addState(state);
 
-    oneToteSM.addState(
-        new State("AUTOSTACK",
-                  [this] {
+    state = new State("AUTOSTACK");
+    state->initFunc = [this] {
         autoTimer->Reset();
         autoTimer->Start();
         ev->stowIntake(false);
@@ -38,32 +37,32 @@ void Robot::AutoOneTote() {
         ev->setIntakeDirection(Elevator::S_REVERSED);
 
         // ev->stackTotes();
-    },
-                  [this] () -> bool { return autoTimer->HasPeriodPassed(1.0); }
-                  )
-        );
+    };
+    state->advanceFunc = [this] { return autoTimer->HasPeriodPassed(1.0); };
+    oneToteSM.addState(state);
 
-    oneToteSM.addState(
-        new State("TURN",
-                  [this] {
+    state = new State("TURN");
+    state->initFunc = [this] {
         autoTimer->Reset();
         autoTimer->Start();
         ev->setIntakeDirection(Elevator::S_REVERSED);
-    },
-                  [this] { return autoTimer->HasPeriodPassed(1.4); },
-                  [this] { robotDrive->drive(-0.3, -0.3, true); },
-                  [this] { robotDrive->drive(0.0, 0.0, false); }));
+    };
+    state->advanceFunc = [this] { return autoTimer->HasPeriodPassed(1.4); };
+    state->periodicFunc = [this] { robotDrive->drive(-0.3, -0.3, true); };
+    state->endFunc = [this] { robotDrive->drive(0.0, 0.0, false); };
+    oneToteSM.addState(state);
 
-    oneToteSM.addState(
-        new State("RUN_AWAY",
-                  [this] {
+    state = new State("RUN_AWAY");
+    state->initFunc = [this] {
         autoTimer->Reset();
         autoTimer->Start();
         ev->setIntakeDirection(Elevator::S_REVERSED);
-    },
-                  [this] () -> bool { return autoTimer->HasPeriodPassed(5.0); },
-                  [this] { robotDrive->drive(-0.3, 0, false); },
-                  [this] { robotDrive->drive(0, 0, false); }));
+    };
+    state->advanceFunc = [this] { return autoTimer->HasPeriodPassed(5.0); };
+    state->periodicFunc = [this] { robotDrive->drive(-0.3, 0, false); };
+    state->endFunc = [this] { robotDrive->drive(0, 0, false); };
+    oneToteSM.addState(state);
+
 
     ev->setManualMode(false);
     oneToteSM.start();
