@@ -11,9 +11,9 @@ fi
 
 ssh $USER@$HOST 'echo 'kill `ps x | grep /home/lvuser/FRCUserProgram | grep -v grep | head -n 1 | sed 's/^ *//' | cut -d ' ' -f 1`' | bash -s'
 
-scp $1/FRCUserProgram $USER@$HOST:$PATHDEST
+scp $1/FRCUserProgram $USER@$HOST:/home/lvuser
 
-ssh $USER@$HOST 'echo "/home/lvuser/FRCUserProgram &" | bash -s'
+ssh $USER@$HOST 'echo "/home/lvuser/FRCUserProgram" | bash -s'
 
 exit 0
 

@@ -112,7 +112,7 @@ const std::string DSDisplay::receiveFromDS() {
             *this << m_autonModes.name(curAutonMode);
 
             // Store newest autonomous choice to file for persistent storage
-            std::ofstream autonModeFile("autonMode.txt",
+            std::ofstream autonModeFile("/home/lvuser/autonMode.txt",
                                         std::ofstream::trunc);
             if (autonModeFile.is_open()) {
                 autonModeFile << curAutonMode;
@@ -140,7 +140,7 @@ DSDisplay::DSDisplay(unsigned short portNumber) :
     m_recvAmount = 0;
 
     // Retrieve stored autonomous index
-    std::ifstream autonModeFile("autonMode.txt");
+    std::ifstream autonModeFile("/home/lvuser/autonMode.txt");
     if (autonModeFile.is_open()) {
         autonModeFile >> curAutonMode;
 

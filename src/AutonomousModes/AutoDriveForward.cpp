@@ -20,9 +20,9 @@ void Robot::AutoDriveForward() {
 
     BezierCurve curve;
     curve.push_back(std::make_pair(0.0, 0.0));
-    curve.push_back(std::make_pair(0.0, 16.7));
-    curve.push_back(std::make_pair(0.0, 33.3));
     curve.push_back(std::make_pair(0.0, 50.0));
+    curve.push_back(std::make_pair(0.0, 100.0));
+    curve.push_back(std::make_pair(0.0, 150.0));
 
     robotDrive->resetEncoders();
 

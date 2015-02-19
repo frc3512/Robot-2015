@@ -86,6 +86,9 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings->getDouble(
         "EV_HALF_TOTE_OFFSET");
 
+    m_toteHeights["EV_GARBAGECAN_LEVEL"] = m_settings->getDouble(
+        "EV_GARBAGECAN_LEVEL");
+
     reloadPID();
 }
 
@@ -149,11 +152,11 @@ void Elevator::setManualLiftSpeed(double value) {
 }
 
 double Elevator::getManualLiftSpeed() {
-	if(m_manual) {
-		return m_liftGrbx->get(Grbx::Raw);
-	}
+    if (m_manual) {
+        return m_liftGrbx->get(Grbx::Raw);
+    }
 
-	return 0.0;
+    return 0.0;
 }
 
 void Elevator::setManualMode(bool on) {
@@ -221,7 +224,7 @@ void Elevator::resetEncoder() {
 }
 
 bool Elevator::isStacking() {
-	return m_state != STATE_IDLE;
+    return m_state != STATE_IDLE;
 }
 
 void Elevator::resetEncoder(uint32_t interruptAssertedMask, void* param) {

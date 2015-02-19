@@ -8,7 +8,6 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  drive1Buttons(0),
                  drive2Buttons(1),
                  evButtons(2),
-                 manualAverage(5),
                  dsDisplay(DSDisplay::getInstance(
                                settings.getInt("DS_Port"))),
                  pidGraph(3513) {
@@ -27,6 +26,9 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
     dsDisplay.addAutoMethod("Noop Auton", &Robot::AutoNoop, this);
 
     pidGraph.setSendInterval(5);
+
+    m_autoState = STATE_IDLE;
+
 
     displayTimer->Start();
 }
@@ -66,10 +68,11 @@ void Robot::OperatorControl() {
         }
 
         // Automatic preset buttons (7-12)
+        // TODO: FIXME
         if (evButtons.releasedButton(7)) {
             // ev->raiseElevator("EV_TOTE_0" + offsetString);
             ev->setManualMode(true);
-            ev->setManualLiftSpeed(-0.1);
+            ev->setManualLiftSpeed(-0.4);
         }
         if (evButtons.releasedButton(8)) {
             ev->raiseElevator("EV_TOTE_1" + offsetString);
@@ -122,16 +125,16 @@ void Robot::OperatorControl() {
         double evStickY = evStick->GetY();
         evStickY = 0;
         manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
-        if (fabs(manualAverage.getAverage()) > 0.05 && fabs(evStickY) > 0.05) {
+        if (fabs(manualAverage.get()) > 0.05 && fabs(evStickY) > 0.05) {
             // TODO: probably wrong
             // TODO: magic number
-            if (ev->getSetpoint() + manualAverage.getAverage() > 0
-                && ev->getSetpoint() + manualAverage.getAverage() < 70.0) {
+            if (ev->getSetpoint() + manualAverage.get() > 0
+                && ev->getSetpoint() + manualAverage.get() < 70.0) {
                 std::cout << "manualChangeSetpoint("
-                          << manualAverage.getAverage()
+                          << manualAverage.get()
                           << ")"
                           << std::endl;
-                ev->manualChangeSetpoint(manualAverage.getAverage());
+                ev->manualChangeSetpoint(manualAverage.get());
             }
         }
 

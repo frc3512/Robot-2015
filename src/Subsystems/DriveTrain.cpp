@@ -15,7 +15,7 @@
 #define M_PI 3.14159265
 #endif
 
-const float DriveTrain::maxWheelSpeed = 13.0;
+const float DriveTrain::maxWheelSpeed = 80.0;
 
 DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2),
                            m_settings("/home/lvuser/RobotSettings.txt") {
@@ -46,6 +46,9 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2),
 
     m_leftGrbx->setDistancePerPulse(72.0 / 2800.0);
     m_rightGrbx->setDistancePerPulse(72.0 / 2800.0);
+
+    m_leftGrbx->setSetpoint(0.0);
+    m_rightGrbx->setSetpoint(0.0);
 
     setWidth(27.0);
 
@@ -195,12 +198,15 @@ void DriveTrain::reloadPID() {
     float i = 0.f;
     float d = 0.f;
 
-    p = m_settings.getDouble("PID_DRIVE_P");
-    i = m_settings.getDouble("PID_DRIVE_I");
-    d = m_settings.getDouble("PID_DRIVE_D");
+    p = m_settings.getDouble("PID_DRIVE_LEFT_P");
+    i = m_settings.getDouble("PID_DRIVE_LEFT_I");
+    d = m_settings.getDouble("PID_DRIVE_LEFT_D");
+    m_leftGrbx->setPID(p, i, d);
 
-    m_leftGrbx->setPID(p, i, d);
-    m_leftGrbx->setPID(p, i, d);
+    p = m_settings.getDouble("PID_DRIVE_RIGHT_P");
+    i = m_settings.getDouble("PID_DRIVE_RIGHT_I");
+    d = m_settings.getDouble("PID_DRIVE_RIGHT_D");
+    m_rightGrbx->setPID(p, i, d);
 }
 
 void DriveTrain::setLeftSetpoint(double setpt) {
@@ -220,13 +226,10 @@ void DriveTrain::setRightManual(float value) {
 }
 
 double DriveTrain::getLeftDist() {
-    std::cout << "left=" << m_leftGrbx->get(Grbx::Position) << std::endl;
     return m_leftGrbx->get(Grbx::Position);
-
 }
 
 double DriveTrain::getRightDist() {
-    std::cout << "right=" << m_rightGrbx->get(Grbx::Position) << std::endl;
     return m_rightGrbx->get(Grbx::Position);
 }
 
