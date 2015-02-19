@@ -34,12 +34,12 @@ public:
     void DS_PrintOut();
 
     enum AutoState {
-      STATE_IDLE,
-      STATE_SEEK_GARBAGECAN_UP,
-      STATE_MOVE_TO_TOTE,
-      STATE_AUTOSTACK,
-      STATE_TURN,
-      STATE_RUN_AWAY
+        STATE_IDLE,
+        STATE_SEEK_GARBAGECAN_UP,
+        STATE_MOVE_TO_TOTE,
+        STATE_AUTOSTACK,
+        STATE_TURN,
+        STATE_RUN_AWAY
     };
 
     AutoState m_autoState;
@@ -65,7 +65,7 @@ private:
     std::unique_ptr<Timer> displayTimer;
     std::unique_ptr<Timer> accumTimer;
 
-    RollingAverage<double> manualAverage;
+    RollingAverage<double, 5> manualAverage;
 
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay;

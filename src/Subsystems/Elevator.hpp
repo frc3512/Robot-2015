@@ -93,7 +93,7 @@ public:
     std::string to_string(ElevatorState state);
 
     /****** AutoOneTote ******/
-    //...
+    // ...
 
 
 protected:

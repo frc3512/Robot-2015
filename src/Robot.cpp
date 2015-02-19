@@ -8,7 +8,6 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  drive1Buttons(0),
                  drive2Buttons(1),
                  evButtons(2),
-                 manualAverage(5),
                  dsDisplay(DSDisplay::getInstance(
                                settings.getInt("DS_Port"))),
                  pidGraph(3513) {
@@ -126,16 +125,16 @@ void Robot::OperatorControl() {
         double evStickY = evStick->GetY();
         evStickY = 0;
         manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
-        if (fabs(manualAverage.getAverage()) > 0.05 && fabs(evStickY) > 0.05) {
+        if (fabs(manualAverage.get()) > 0.05 && fabs(evStickY) > 0.05) {
             // TODO: probably wrong
             // TODO: magic number
-            if (ev->getSetpoint() + manualAverage.getAverage() > 0
-                && ev->getSetpoint() + manualAverage.getAverage() < 70.0) {
+            if (ev->getSetpoint() + manualAverage.get() > 0
+                && ev->getSetpoint() + manualAverage.get() < 70.0) {
                 std::cout << "manualChangeSetpoint("
-                          << manualAverage.getAverage()
+                          << manualAverage.get()
                           << ")"
                           << std::endl;
-                ev->manualChangeSetpoint(manualAverage.getAverage());
+                ev->manualChangeSetpoint(manualAverage.get());
             }
         }
 

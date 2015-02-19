@@ -7,7 +7,6 @@
 #include "../Robot.hpp"
 
 void Robot::AutoOneTote() {
-
     ev->setManualMode(false);
     autonStart();
 
@@ -16,7 +15,7 @@ void Robot::AutoOneTote() {
 
         autonUpdateState();
         ev->updateState();
-        //ev->intakeGrab(false);
+        // ev->intakeGrab(false);
 
         Wait(0.01);
     }
@@ -30,7 +29,7 @@ void Robot::autonStart() {
 }
 
 void Robot::autonUpdateState() {
-    if (m_autoState == STATE_SEEK_GARBAGECAN_UP && ev-> atGoal()) {
+    if (m_autoState == STATE_SEEK_GARBAGECAN_UP && ev->atGoal()) {
         m_autoState = STATE_MOVE_TO_TOTE;
         autonStateChanged(STATE_SEEK_GARBAGECAN_UP, m_autoState);
     }
@@ -45,7 +44,8 @@ void Robot::autonUpdateState() {
         robotDrive->drive(-0.3, 0, false);
     }
 
-    if (m_autoState == STATE_AUTOSTACK && autoTimer->HasPeriodPassed(1.0) /* !ev->isStacking() */) {
+    if (m_autoState == STATE_AUTOSTACK &&
+        autoTimer->HasPeriodPassed(1.0) /* !ev->isStacking() */) {
         m_autoState = STATE_TURN;
         autonStateChanged(STATE_AUTOSTACK, m_autoState);
     }
@@ -70,12 +70,13 @@ void Robot::autonUpdateState() {
         robotDrive->drive(-0.3, 0, false);
     }
 
-    if(m_autoState == STATE_AUTOSTACK || m_autoState == STATE_TURN || m_autoState == STATE_RUN_AWAY) {
+    if (m_autoState == STATE_AUTOSTACK || m_autoState == STATE_TURN ||
+        m_autoState == STATE_RUN_AWAY) {
         ev->setIntakeDirection(Elevator::S_REVERSED);
     }
 
     // TODO: Do this in a state transition
-    if(m_autoState == STATE_IDLE) {
+    if (m_autoState == STATE_IDLE) {
         ev->setIntakeDirection(Elevator::S_STOPPED);
     }
 }
@@ -96,7 +97,7 @@ void Robot::autonStateChanged(AutoState oldState, AutoState newState) {
         ev->stowIntake(false);
         ev->intakeGrab(true);
 
-        //ev->stackTotes();
+        // ev->stackTotes();
     }
 
     if (newState == STATE_TURN) {
@@ -108,5 +109,5 @@ void Robot::autonStateChanged(AutoState oldState, AutoState newState) {
         autoTimer->Reset();
         autoTimer->Start();
     }
-
 }
+
