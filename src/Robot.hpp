@@ -34,12 +34,12 @@ public:
     void DS_PrintOut();
 
     enum AutoState {
-      STATE_IDLE,
-      STATE_SEEK_GARBAGECAN_UP,
-      STATE_MOVE_TO_TOTE,
-      STATE_AUTOSTACK,
-      STATE_TURN,
-      STATE_RUN_AWAY
+        STATE_IDLE,
+        STATE_SEEK_GARBAGECAN_UP,
+        STATE_MOVE_TO_TOTE,
+        STATE_AUTOSTACK,
+        STATE_TURN,
+        STATE_RUN_AWAY
     };
 
     AutoState m_autoState;

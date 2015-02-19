@@ -53,8 +53,6 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_updateProfile = true;
     m_profileUpdater = nullptr;
 
-    m_state = STATE_IDLE;
-
     m_setpoint = 0.0;
 
     m_profileUpdater = new std::thread([this] {
@@ -86,7 +84,63 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings->getDouble(
         "EV_HALF_TOTE_OFFSET");
 
-    m_toteHeights["EV_GARBAGECAN_LEVEL"] = m_settings->getDouble("EV_GARBAGECAN_LEVEL");
+    m_toteHeights["EV_GARBAGECAN_LEVEL"] = m_settings->getDouble(
+        "EV_GARBAGECAN_LEVEL");
+
+    m_autoStackSM.addState(new State("IDLE"));
+
+    m_autoStackSM.addState(new State("WAIT_INITIAL_HEIGHT",
+                                     [this] { setProfileHeight(getGoal() - 5.0);
+                                     },
+                                     [this] () -> bool { return atGoal(); }));
+
+    m_autoStackSM.addState(new State("SEEK_DROP_TOTES",
+                                     [this] { setProfileHeight(getGoal() - 5.0);
+                                     },
+                                     [this] () -> bool { return atGoal(); }));
+
+    m_autoStackSM.addState(new State("RELEASE",
+                                     [this] {
+        m_grabTimer->Reset();
+        m_grabTimer->Start();
+        elevatorGrab(false);
+    },
+                                     [this] () -> bool {
+        return m_grabTimer->
+        HasPeriodPassed(0.2);
+    }));
+
+    m_autoStackSM.addState(
+        new State("SEEK_GROUND",
+                  [this] { setProfileHeight(m_toteHeights["EV_GROUND"]); },
+                  [this] () -> bool { return atGoal(); }));
+
+    m_autoStackSM.addState(
+        new State("GRAB",
+                  [this] {
+        m_grabTimer->Reset();
+        m_grabTimer->Start();
+        elevatorGrab(true);
+    },
+                  [this] () -> bool {
+        return m_grabTimer->HasPeriodPassed(0.2);
+    }));
+
+    m_autoStackSM.addState(
+        new State("SEEK_HALF_TOTE",
+                  [this] { setProfileHeight(m_toteHeights["EV_TOTE_1"]); },
+                  [this] () -> bool { return atGoal(); }));
+
+    m_autoStackSM.addState(
+        new State("INTAKE_IN",
+                  [this] {
+        m_grabTimer->Reset();
+        m_grabTimer->Start();
+        intakeGrab(true);
+    },
+                  [this] () -> bool {
+        return m_grabTimer->HasPeriodPassed(0.2);
+    }));
 
     reloadPID();
 }
@@ -151,11 +205,11 @@ void Elevator::setManualLiftSpeed(double value) {
 }
 
 double Elevator::getManualLiftSpeed() {
-	if(m_manual) {
-		return m_liftGrbx->get(Grbx::Raw);
-	}
+    if (m_manual) {
+        return m_liftGrbx->get(Grbx::Raw);
+    }
 
-	return 0.0;
+    return 0.0;
 }
 
 void Elevator::setManualMode(bool on) {
@@ -186,44 +240,34 @@ void Elevator::reloadPID() {
     m_settings->update();
 
     // First profile
-    double p0 = 0.f;
-    double i0 = 0.f;
-    double d0 = 0.f;
-    double f0 = 0.f;
+    double p = 0.f;
+    double i = 0.f;
+    double d = 0.f;
+    double f = 0.f;
 
     // Set elevator PID
-    p0 = m_settings->getDouble("PID_ELEVATOR_DOWN_P");
-    i0 = m_settings->getDouble("PID_ELEVATOR_DOWN_I");
-    d0 = m_settings->getDouble("PID_ELEVATOR_DOWN_D");
-    f0 = m_settings->getDouble("PID_ELEVATOR_DOWN_F");
+    p = m_settings->getDouble("PID_ELEVATOR_DOWN_P");
+    i = m_settings->getDouble("PID_ELEVATOR_DOWN_I");
+    d = m_settings->getDouble("PID_ELEVATOR_DOWN_D");
+    f = m_settings->getDouble("PID_ELEVATOR_DOWN_F");
 
     m_liftGrbx->setProfile(false);
-    m_liftGrbx->setPID(p0, i0, d0);
-    m_liftGrbx->setF(f0);
-
-    // Second profile
-    double p1 = 0.f;
-    double i1 = 0.f;
-    double d1 = 0.f;
-    double f1 = 0.f;
+    m_liftGrbx->setPID(p, i, d);
+    m_liftGrbx->setF(f);
 
     // Set elevator PID
-    p1 = m_settings->getDouble("PID_ELEVATOR_UP_P");
-    i1 = m_settings->getDouble("PID_ELEVATOR_UP_I");
-    d1 = m_settings->getDouble("PID_ELEVATOR_UP_D");
-    f1 = m_settings->getDouble("PID_ELEVATOR_UP_F");
+    p = m_settings->getDouble("PID_ELEVATOR_UP_P");
+    i = m_settings->getDouble("PID_ELEVATOR_UP_I");
+    d = m_settings->getDouble("PID_ELEVATOR_UP_D");
+    f = m_settings->getDouble("PID_ELEVATOR_UP_F");
 
     m_liftGrbx->setProfile(true);
-    m_liftGrbx->setPID(p1, i1, d1);
-    m_liftGrbx->setF(f1);
+    m_liftGrbx->setPID(p, i, d);
+    m_liftGrbx->setF(f);
 }
 
 void Elevator::resetEncoder() {
     resetEncoder(0, m_liftGrbx.get());
-}
-
-bool Elevator::isStacking() {
-	return m_state != STATE_IDLE;
 }
 
 void Elevator::resetEncoder(uint32_t interruptAssertedMask, void* param) {
@@ -264,7 +308,7 @@ void Elevator::raiseElevator(std::string level) {
     /* Only allow changing the elevator height manually if not currently
      * auto-stacking
      */
-    if (m_state == STATE_IDLE) {
+    if (m_autoStackSM.isStopped()) {
         std::cout << "Seeking to " << height << std::endl;
 
         setProfileHeight(height);
@@ -313,109 +357,20 @@ double Elevator::getLevelHeight(std::string level) const {
 }
 
 void Elevator::stackTotes() {
-    if (m_state == STATE_IDLE) {
-        m_state = STATE_WAIT_INITIAL_HEIGHT;
-        stateChanged(STATE_IDLE, m_state);
-    }
+    m_autoStackSM.start();
+}
+
+bool Elevator::isStacking() {
+    return m_autoStackSM.isStopped();
+}
+
+void Elevator::cancelStack() {
+    m_autoStackSM.cancel();
 }
 
 void Elevator::updateState() {
-    if (m_state == STATE_WAIT_INITIAL_HEIGHT && atGoal()) {
-        m_state = STATE_SEEK_DROP_TOTES;
-        stateChanged(STATE_WAIT_INITIAL_HEIGHT, m_state);
-    }
-    if (m_state == STATE_SEEK_DROP_TOTES && atGoal()) {
-        m_state = STATE_RELEASE;
-        stateChanged(STATE_SEEK_DROP_TOTES, m_state);
-    }
-    else if (m_state == STATE_RELEASE && m_grabTimer->HasPeriodPassed(0.2)) {
-        m_state = STATE_SEEK_GROUND;
-        stateChanged(STATE_RELEASE, m_state);
-    }
-    else if (m_state == STATE_SEEK_GROUND && atGoal()) {
-        m_state = STATE_GRAB;
-        stateChanged(STATE_SEEK_GROUND, m_state);
-    }
-    else if (m_state == STATE_GRAB && m_grabTimer->HasPeriodPassed(0.2)) {
-        m_state = STATE_SEEK_HALF_TOTE;
-        stateChanged(STATE_GRAB, m_state);
-    }
-    else if (m_state == STATE_SEEK_HALF_TOTE && atGoal()) {
-        m_state = STATE_INTAKE_IN;
-        stateChanged(STATE_SEEK_HALF_TOTE, m_state);
-    }
-    else if (m_state == STATE_INTAKE_IN && m_grabTimer->HasPeriodPassed(0.2)) {
-        m_state = STATE_IDLE;
-        stateChanged(STATE_INTAKE_IN, m_state);
-    }
-    else if (m_state != STATE_IDLE && isManualMode()) {
-        // FIXME Hack
-        m_state = STATE_IDLE;
-    }
+    m_autoStackSM.run();
 }
-
-std::string Elevator::to_string(ElevatorState state) {
-    switch (state) {
-    case STATE_IDLE:
-        return "STATE_IDLE";
-    case STATE_WAIT_INITIAL_HEIGHT:
-        return "STATE_WAIT_INITIAL_HEIGHT";
-    case STATE_SEEK_DROP_TOTES:
-        return "STATE_SEEK_DROP_TOTES";
-    case STATE_RELEASE:
-        return "STATE_RELEASE";
-    case STATE_SEEK_GROUND:
-        return "STATE_SEEK_GROUND";
-    case STATE_GRAB:
-        return "STATE_GRAB";
-    case STATE_SEEK_HALF_TOTE:
-        return "STATE_SEEK_HALF_TOTE";
-    case STATE_INTAKE_IN:
-        return "STATE_INTAKE_IN";
-    }
-
-    return "UNKNOWN STATE";
-}
-
-void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
-    std::cout << "oldState = " << to_string(oldState)
-              << " newState = " << to_string(newState) << std::endl;
-
-    if (newState == STATE_SEEK_DROP_TOTES) {
-        // TODO: magic number
-        setProfileHeight(getGoal() - 5.0);
-    }
-
-    // Release the totes
-    if (newState == STATE_RELEASE) {
-        m_grabTimer->Reset();
-        m_grabTimer->Start();
-        elevatorGrab(false);
-    }
-
-    if (newState == STATE_SEEK_GROUND) {
-        setProfileHeight(m_toteHeights["EV_GROUND"]);
-    }
-
-    // Grab the new stack
-    if (newState == STATE_GRAB) {
-        m_grabTimer->Reset();
-        m_grabTimer->Start();
-        elevatorGrab(true);
-    }
-
-    // Off the ground a bit
-    if (newState == STATE_SEEK_HALF_TOTE) {
-        setProfileHeight(m_toteHeights["EV_TOTE_1"]);
-    }
-
-    if (newState == STATE_INTAKE_IN) {
-        m_grabTimer->Reset();
-        m_grabTimer->Start();
-        intakeGrab(true);
-    }
-}
-
 
 void Elevator::manualChangeSetpoint(double delta) {
     double newSetpoint = delta + m_setpoint;

@@ -131,10 +131,6 @@ void Robot::OperatorControl() {
             // TODO: magic number
             if (ev->getSetpoint() + manualAverage.getAverage() > 0
                 && ev->getSetpoint() + manualAverage.getAverage() < 70.0) {
-                std::cout << "manualChangeSetpoint("
-                          << manualAverage.getAverage()
-                          << ")"
-                          << std::endl;
                 ev->manualChangeSetpoint(manualAverage.getAverage());
             }
         }
@@ -156,6 +152,9 @@ void Robot::OperatorControl() {
 
         // Update the elevator automatic stacking state
         ev->updateState();
+        if (ev->isStacking() && ev->isManualMode()) {
+            ev->cancelStack();
+        }
 
         drive1Buttons.updateButtons();
         drive2Buttons.updateButtons();
@@ -185,6 +184,9 @@ void Robot::Disabled() {
 }
 
 void Robot::DS_PrintOut() {
+    std::cout << "left=" << robotDrive->getLeftRate() << std::endl;
+    std::cout << "right=" << robotDrive->getRightRate() << std::endl;
+
     if (pidGraph.hasIntervalPassed()) {
         pidGraph.graphData(ev->getHeight(), "Distance (EV)");
         pidGraph.graphData(ev->getSetpoint(), "Setpoint (EV)");
@@ -204,15 +206,6 @@ void Robot::DS_PrintOut() {
         dsDisplay.addData("ARMS_CLOSED", ev->isElevatorGrabbed());
         dsDisplay.addData("ENCODER_LEFT", robotDrive->getLeftDist());
         dsDisplay.addData("ENCODER_RIGHT", robotDrive->getRightDist());
-        std::cout << "EV_HEIGHT=" << std::left << std::setw(20) <<
-            ev->getHeight()
-            /* << "EV_RAWHEIGHT=" << std::left << std::setw(20) <<
-             *  ev->getRawHeight() */
-                  << "EV_SETPOINT=" << std::left << std::setw(20) <<
-            ev->getSetpoint()
-                  << std::endl;
-
-        std::cout << "At goal: " << ev->atGoal() << std::endl;
 
         std::string name("EL_LEVEL_");
         for (int i = 0; i < 6; i++) {

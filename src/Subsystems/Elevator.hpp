@@ -20,21 +20,11 @@ class CANTalon;
 #include <string>
 
 #include "GearBox.hpp"
+#include "../StateMachine.hpp"
 #include "../Settings.hpp"
 
 class Elevator : public TrapezoidProfile {
 public:
-    enum ElevatorState {
-        STATE_IDLE,
-        STATE_WAIT_INITIAL_HEIGHT,
-        STATE_SEEK_DROP_TOTES,
-        STATE_RELEASE,
-        STATE_SEEK_GROUND,
-        STATE_GRAB,
-        STATE_SEEK_HALF_TOTE,
-        STATE_INTAKE_IN
-    };
-
     enum IntakeMotorState {
         S_STOPPED,
         S_FORWARD,
@@ -87,21 +77,15 @@ public:
 
     void stackTotes();
     bool isStacking();
+    void cancelStack();
 
     // Periodic
     void updateState();
-    std::string to_string(ElevatorState state);
-
-    /****** AutoOneTote ******/
-    //...
-
 
 protected:
     std::unique_ptr<Settings> m_settings;
 
 private:
-    void stateChanged(ElevatorState oldState, ElevatorState newState);
-
     std::unique_ptr<Solenoid> m_grabSolenoid;
     std::unique_ptr<DigitalInput> m_bottomLimit;
 
@@ -121,7 +105,7 @@ private:
     std::atomic<bool> m_updateProfile;
     std::thread* m_profileUpdater;
 
-    ElevatorState m_state;
+    StateMachine m_autoStackSM;
     std::unique_ptr<Timer> m_grabTimer;
 
     double m_maxHeight;
