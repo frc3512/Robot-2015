@@ -56,14 +56,15 @@ void Robot::autonUpdateState() {
         autonStateChanged(STATE_TURN, m_autoState);
     }
 
-    if (m_autoState == STATE_TURN) {
-        robotDrive->drive(-0.3, -0.3, true);
-    }
-
     if (m_autoState == STATE_RUN_AWAY && autoTimer->HasPeriodPassed(5.0)) {
         robotDrive->drive(0, 0, false);
         m_autoState = STATE_IDLE;
         autonStateChanged(STATE_RUN_AWAY, m_autoState);
+    }
+
+    // Continuously update motors
+    if (m_autoState == STATE_TURN) {
+        robotDrive->drive(-0.3, -0.3, true);
     }
 
     if (m_autoState == STATE_RUN_AWAY) {
@@ -73,11 +74,6 @@ void Robot::autonUpdateState() {
     if (m_autoState == STATE_AUTOSTACK || m_autoState == STATE_TURN ||
         m_autoState == STATE_RUN_AWAY) {
         ev->setIntakeDirection(Elevator::S_REVERSED);
-    }
-
-    // TODO: Do this in a state transition
-    if (m_autoState == STATE_IDLE) {
-        ev->setIntakeDirection(Elevator::S_STOPPED);
     }
 }
 
@@ -108,6 +104,10 @@ void Robot::autonStateChanged(AutoState oldState, AutoState newState) {
     if (newState == STATE_RUN_AWAY) {
         autoTimer->Reset();
         autoTimer->Start();
+    }
+
+    if (newState == STATE_IDLE && oldState == STATE_RUN_AWAY) {
+        ev->setIntakeDirection(Elevator::S_STOPPED);
     }
 }
 

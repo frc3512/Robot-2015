@@ -126,6 +126,14 @@ private:
 
     double m_maxHeight;
 
+    // Maximum velocity and time to maximum
+    // velocity constants to load from the
+    // config file
+    double m_maxv_a;
+    double m_ttmaxv_a;
+    double m_maxv_b;
+    double m_ttmaxv_b;
+
     static void resetEncoder(uint32_t interruptAssertedMask, void* param);
 };
 

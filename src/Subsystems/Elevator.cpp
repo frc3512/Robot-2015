@@ -72,8 +72,12 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
         }
     });
 
-    m_maxHeight = m_settings->getDouble("EV_MAX_HEIGHT");
+    m_maxv_a = m_settings->getDouble("EV_MAX_VELOCITY_PROFILE_A");
+    m_ttmaxva = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_A");
+    m_maxv_b = m_settings->getDouble("EV_MAX_VELOCITY_PROFILE_B");
+    m_ttmaxvb = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_B");
 
+    m_maxHeight = m_settings->getDouble("EV_MAX_HEIGHT");
     m_toteHeights["EV_GROUND"] = m_settings->getDouble("EV_GROUND");
 
     double height = 0;
@@ -85,9 +89,10 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_toteHeights["EV_STEP"] = m_settings->getDouble("EV_STEP");
     m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings->getDouble(
         "EV_HALF_TOTE_OFFSET");
-
     m_toteHeights["EV_GARBAGECAN_LEVEL"] = m_settings->getDouble(
         "EV_GARBAGECAN_LEVEL");
+    m_toteHeights["EV_AUTO_DROP_LENGTH"] = m_settings->getDouble(
+        "EV_AUTO_DROP_LENGTH");
 
     reloadPID();
 }
@@ -166,6 +171,11 @@ void Elevator::setManualMode(bool on) {
     }
     else {
         m_manual = on;
+    }
+
+    // Stop any auto stacking we're working on when we switch to manual mode
+    if (on && !m_manual) {
+        m_state = STATE_IDLE;
     }
 }
 
@@ -278,7 +288,6 @@ void Elevator::setProfileHeight(double height) {
      *   return;
      *  } */
 
-    // TODO: magic number
     if (height > m_maxHeight) {
         height = m_maxHeight;
     }
@@ -314,6 +323,8 @@ double Elevator::getLevelHeight(std::string level) const {
 }
 
 void Elevator::stackTotes() {
+    // Note: We must be in automatic mode for this to work
+
     if (m_state == STATE_IDLE) {
         m_state = STATE_WAIT_INITIAL_HEIGHT;
         stateChanged(STATE_IDLE, m_state);
@@ -349,10 +360,6 @@ void Elevator::updateState() {
         m_state = STATE_IDLE;
         stateChanged(STATE_INTAKE_IN, m_state);
     }
-    else if (m_state != STATE_IDLE && isManualMode()) {
-        // FIXME Hack
-        m_state = STATE_IDLE;
-    }
 }
 
 std::string Elevator::to_string(ElevatorState state) {
@@ -383,8 +390,7 @@ void Elevator::stateChanged(ElevatorState oldState, ElevatorState newState) {
               << " newState = " << to_string(newState) << std::endl;
 
     if (newState == STATE_SEEK_DROP_TOTES) {
-        // TODO: magic number
-        setProfileHeight(getGoal() - 5.0);
+        setProfileHeight(getGoal() - m_toteHeights["EV_AUTO_DROP_LENGTH"]);
     }
 
     // Release the totes
@@ -429,14 +435,14 @@ void Elevator::manualChangeSetpoint(double delta) {
     // Set PID constant profile
     if (newSetpoint > m_setpoint) {
         // Going up.
-        setMaxVelocity(88.0);
-        setTimeToMaxV(0.4);
+        setMaxVelocity(m_maxv_a);
+        setTimeToMaxV(m_ttmaxv_a);
         m_liftGrbx->setProfile(true);
     }
     else {
         // Going down.
-        setMaxVelocity(91.26);
-        setTimeToMaxV(0.4);
+        setMaxVelocity(m_maxv_b);
+        setTimeToMaxV(m_ttmaxv_b);
         m_liftGrbx->setProfile(false);
     }
 
