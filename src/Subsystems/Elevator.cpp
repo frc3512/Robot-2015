@@ -73,9 +73,9 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     });
 
     m_maxv_a = m_settings->getDouble("EV_MAX_VELOCITY_PROFILE_A");
-    m_ttmaxva = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_A");
+    m_ttmaxv_a = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_A");
     m_maxv_b = m_settings->getDouble("EV_MAX_VELOCITY_PROFILE_B");
-    m_ttmaxvb = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_B");
+    m_ttmaxv_b = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_B");
 
     m_maxHeight = m_settings->getDouble("EV_MAX_HEIGHT");
     m_toteHeights["EV_GROUND"] = m_settings->getDouble("EV_GROUND");
