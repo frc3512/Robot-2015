@@ -23,7 +23,6 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2),
 
     m_deadband = 0.02f;
     m_sensitivity = m_settings.getDouble("LOW_GEAR_SENSITIVE");
-    // TODO Does robot start in low gear?
 
     m_oldTurn = 0.f;
     m_quickStopAccumulator = 0.f;

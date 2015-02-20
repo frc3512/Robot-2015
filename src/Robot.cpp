@@ -8,7 +8,6 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  drive1Buttons(0),
                  drive2Buttons(1),
                  evButtons(2),
-                 manualAverage(5),
                  dsDisplay(DSDisplay::getInstance(
                                settings.getInt("DS_Port"))),
                  pidGraph(3513) {
@@ -69,11 +68,9 @@ void Robot::OperatorControl() {
         }
 
         // Automatic preset buttons (7-12)
-        // TODO: FIXME
+        // TODO: Special case for level 0
         if (evButtons.releasedButton(7)) {
-            // ev->raiseElevator("EV_TOTE_0" + offsetString);
-            ev->setManualMode(true);
-            ev->setManualLiftSpeed(-0.4);
+            ev->raiseElevator("EV_TOTE_0" + offsetString);
         }
         if (evButtons.releasedButton(8)) {
             ev->raiseElevator("EV_TOTE_1" + offsetString);
@@ -126,12 +123,17 @@ void Robot::OperatorControl() {
         double evStickY = evStick->GetY();
         evStickY = 0;
         manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
-        if (fabs(manualAverage.getAverage()) > 0.05 && fabs(evStickY) > 0.05) {
-            // TODO: probably wrong
-            // TODO: magic number
-            if (ev->getSetpoint() + manualAverage.getAverage() > 0
-                && ev->getSetpoint() + manualAverage.getAverage() < 70.0) {
-                ev->manualChangeSetpoint(manualAverage.getAverage());
+
+        // Deadband
+        if (fabs(manualAverage.get()) > 0.05 && fabs(evStickY) > 0.05) {
+            if (ev->getSetpoint() + manualAverage.get() > 0
+                && ev->getSetpoint() + manualAverage.get() <
+                settings.getDouble("EV_MAX_HEIGHT")) {
+                std::cout << "manualChangeSetpoint("
+                          << manualAverage.get()
+                          << ")"
+                          << std::endl;
+                ev->manualChangeSetpoint(manualAverage.get());
             }
         }
 

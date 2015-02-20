@@ -70,8 +70,12 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
         }
     });
 
-    m_maxHeight = m_settings->getDouble("EV_MAX_HEIGHT");
+    m_maxv_a = m_settings->getDouble("EV_MAX_VELOCITY_PROFILE_A");
+    m_ttmaxv_a = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_A");
+    m_maxv_b = m_settings->getDouble("EV_MAX_VELOCITY_PROFILE_B");
+    m_ttmaxv_b = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_B");
 
+    m_maxHeight = m_settings->getDouble("EV_MAX_HEIGHT");
     m_toteHeights["EV_GROUND"] = m_settings->getDouble("EV_GROUND");
 
     double height = 0;
@@ -83,9 +87,10 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_toteHeights["EV_STEP"] = m_settings->getDouble("EV_STEP");
     m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings->getDouble(
         "EV_HALF_TOTE_OFFSET");
-
     m_toteHeights["EV_GARBAGECAN_LEVEL"] = m_settings->getDouble(
         "EV_GARBAGECAN_LEVEL");
+    m_toteHeights["EV_AUTO_DROP_LENGTH"] = m_settings->getDouble(
+        "EV_AUTO_DROP_LENGTH");
 
     State* state = new State("IDLE");
     m_autoStackSM.addState(state);
@@ -219,6 +224,11 @@ void Elevator::setManualMode(bool on) {
     else {
         m_manual = on;
     }
+
+    // Stop any auto stacking we're working on when we switch to manual mode
+    if (on && !m_manual) {
+        m_autoStackSM.cancel();
+    }
 }
 
 bool Elevator::isManualMode() {
@@ -320,7 +330,6 @@ void Elevator::setProfileHeight(double height) {
      *   return;
      *  } */
 
-    // TODO: magic number
     if (height > m_maxHeight) {
         height = m_maxHeight;
     }
@@ -382,14 +391,14 @@ void Elevator::manualChangeSetpoint(double delta) {
     // Set PID constant profile
     if (newSetpoint > m_setpoint) {
         // Going up.
-        setMaxVelocity(88.0);
-        setTimeToMaxV(0.4);
+        setMaxVelocity(m_maxv_a);
+        setTimeToMaxV(m_ttmaxv_a);
         m_liftGrbx->setProfile(true);
     }
     else {
         // Going down.
-        setMaxVelocity(91.26);
-        setTimeToMaxV(0.4);
+        setMaxVelocity(m_maxv_b);
+        setTimeToMaxV(m_ttmaxv_b);
         m_liftGrbx->setProfile(false);
     }
 

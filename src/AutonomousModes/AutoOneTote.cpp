@@ -63,7 +63,6 @@ void Robot::AutoOneTote() {
     state->endFunc = [this] { robotDrive->drive(0, 0, false); };
     oneToteSM.addState(state);
 
-
     ev->setManualMode(false);
     oneToteSM.start();
 
