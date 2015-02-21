@@ -133,8 +133,6 @@ private:
     double m_ttmaxv_a;
     double m_maxv_b;
     double m_ttmaxv_b;
-
-    static void resetEncoder(uint32_t interruptAssertedMask, void* param);
 };
 
 #endif // ELEVATOR_HPP
