@@ -254,16 +254,21 @@ void Elevator::raiseElevator(std::string level) {
     size_t newpos;
     double height = 0;
 
-    pos = level.find("+");
+    pos = std::min(level.find('+'), level.find('-'));
     auto it = m_toteHeights.find(level.substr(0, pos));
     if (it != m_toteHeights.end()) {
         height = it->second;
     }
     while (pos != std::string::npos) {
-        newpos = level.find("+", pos + 1);
+        newpos = std::min(level.find('+', pos + 1), level.find('-', pos + 1));
         it = m_toteHeights.find(level.substr(pos + 1, newpos));
         if (it != m_toteHeights.end()) {
-            height += it->second;
+            if (level[newpos] == '+') {
+                height += it->second;
+            }
+            else if (level[newpos] == '-') {
+                height -= it->second;
+            }
         }
         pos = newpos;
     }
