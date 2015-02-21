@@ -33,7 +33,7 @@ public:
     void addState(std::unique_ptr<State> state);
 
     template <class... Args>
-    void emplaceState(Args&&... args);
+    void emplaceState(Args&& ... args);
 
     /* Moves the state machine to the given state. If the next state is found,
      * endFunc() for the current state and initFunc() for the next state. 'true'

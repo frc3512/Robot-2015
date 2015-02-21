@@ -91,3 +91,4 @@ bool StateMachine::isStopped() {
 void StateMachine::cancel() {
     setState("IDLE");
 }
+

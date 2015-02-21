@@ -5,6 +5,7 @@
 // =============================================================================
 
 template <class... Args>
-void StateMachine::emplaceState(Args&&... args) {
-    m_states.push_back(std::make_unique<State>(std::forward<Args>(args)...));
+void StateMachine::emplaceState(Args&& ... args) {
+    m_states.push_back(std::make_unique<State>(std::forward<Args>(args) ...));
 }
+

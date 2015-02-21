@@ -20,8 +20,9 @@ public:
      * periodicFunc() is run while the state machine is in that state.
      * endFunc() is run when the state is being transitioned away from.
      */
-    State(std::string name, std::function<void()> initFunc = [] {},
-          std::function<std::string()> advanceFunc = [] { return ""; },
+    State(std::string name, std::function<void()> initFunc = [] {
+    }, std::function<std::string()> advanceFunc =
+            [] { return ""; },
           std::function<void()> periodicFunc = [] {},
           std::function<void()> endFunc = [] {});
 
