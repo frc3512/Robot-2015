@@ -7,7 +7,7 @@
 #include "State.hpp"
 
 State::State(std::string name, std::function<void()> initFunc,
-             std::function<bool()> advanceFunc,
+             std::function<std::string()> advanceFunc,
              std::function<void()> periodicFunc,
              std::function<void()> endFunc) {
     this->name = name;
