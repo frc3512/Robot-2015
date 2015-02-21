@@ -195,13 +195,7 @@ void Robot::DS_PrintOut() {
     }
 
     if (displayTimer->HasPeriodPassed(0.5)) {
-        dsDisplay.clear();
-
-        dsDisplay.addData("EV_LEVEL_INCHES", ev->getHeight());
-        dsDisplay.addData("INTAKE_ARMS_CLOSED", ev->isIntakeGrabbed());
-        dsDisplay.addData("ARMS_CLOSED", ev->isElevatorGrabbed());
-        dsDisplay.addData("ENCODER_LEFT", robotDrive->getLeftDist());
-        dsDisplay.addData("ENCODER_RIGHT", robotDrive->getRightDist());
+        // Debug printing
         std::cout << "EV_HEIGHT=" << std::left << std::setw(20) <<
             ev->getHeight()
             /* << "EV_RAWHEIGHT=" << std::left << std::setw(20) <<
@@ -210,7 +204,16 @@ void Robot::DS_PrintOut() {
             ev->getSetpoint()
                   << std::endl;
 
-        std::cout << "At goal: " << ev->atGoal() << std::endl;
+        /* std::cout << "At goal: " << ev->atGoal() << std::endl; */
+
+        // Send things to DS display
+        dsDisplay.clear();
+
+        dsDisplay.addData("EV_LEVEL_INCHES", ev->getHeight());
+        dsDisplay.addData("INTAKE_ARMS_CLOSED", ev->isIntakeGrabbed());
+        dsDisplay.addData("ARMS_CLOSED", ev->isElevatorGrabbed());
+        dsDisplay.addData("ENCODER_LEFT", robotDrive->getLeftDist());
+        dsDisplay.addData("ENCODER_RIGHT", robotDrive->getRightDist());
 
         std::string name("EL_LEVEL_");
         for (int i = 0; i < 6; i++) {

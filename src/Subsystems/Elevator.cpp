@@ -72,11 +72,13 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
         }
     });
 
+    // Load motion profile constants from the configuration file
     m_maxv_a = m_settings->getDouble("EV_MAX_VELOCITY_PROFILE_A");
     m_ttmaxv_a = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_A");
     m_maxv_b = m_settings->getDouble("EV_MAX_VELOCITY_PROFILE_B");
     m_ttmaxv_b = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_B");
 
+    // Load elevator levels from the configuration file
     m_maxHeight = m_settings->getDouble("EV_MAX_HEIGHT");
     m_toteHeights["EV_GROUND"] = m_settings->getDouble("EV_GROUND");
 
@@ -94,6 +96,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_toteHeights["EV_AUTO_DROP_LENGTH"] = m_settings->getDouble(
         "EV_AUTO_DROP_LENGTH");
 
+    // Reload PID constants from the configuration file
     reloadPID();
 }
 
@@ -432,7 +435,6 @@ void Elevator::manualChangeSetpoint(double delta) {
         newSetpoint = m_maxHeight;
     }
 
-    // TODO: Magic numbers
     // Set PID constant profile
     if (newSetpoint > m_setpoint) {
         // Going up.
