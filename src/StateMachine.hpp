@@ -17,13 +17,6 @@
 
 class StateMachine {
 public:
-    /* Pass in a state here if changing the IDLE state is needed. If it isn't
-     * already named "IDLE", it will be renamed to that.
-     */
-    StateMachine(State* state);
-    StateMachine(std::unique_ptr<State> state);
-    StateMachine();
-
     virtual ~StateMachine();
 
     /* Ownership of 'state' will be transferred to this class, which will handle
@@ -44,25 +37,12 @@ public:
     // Returns name of current state
     std::string getState();
 
-    // Sets starting state
-    void setInitialState(std::string initState);
-
     // Call this periodically to operate the state machine
     void run();
-
-    // Initiates the state machine (advances past initial state)
-    void start();
-
-    // Returns true if state machine is in initial state
-    bool isStopped();
-
-    // Stops running the state machine and resets it to the initial state
-    void cancel();
 
 private:
     std::vector<std::unique_ptr<State>> m_states;
     State* m_currentState{nullptr};
-    std::string m_initStateName{"IDLE"};
 };
 
 #include "StateMachine.inl"

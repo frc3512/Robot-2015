@@ -92,7 +92,20 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_toteHeights["EV_AUTO_DROP_LENGTH"] = m_settings->getDouble(
         "EV_AUTO_DROP_LENGTH");
 
-    State* state = new State("WAIT_INITIAL_HEIGHT");
+    State* state = new State("IDLE");
+    state->initFunc = [this] { m_startAutoStacking = false; };
+    state->advanceFunc = [this] {
+        if (m_startAutoStacking) {
+            return "WAIT_INITIAL_HEIGHT";
+        }
+        else {
+            return "";
+        }
+    };
+    m_autoStackSM.addState(state);
+    m_autoStackSM.setState("IDLE");
+
+    state = new State("WAIT_INITIAL_HEIGHT");
     state->initFunc = [this] { setProfileHeight(getGoal() - 5.0); };
     state->advanceFunc = [this] {
         if (atGoal()) {
@@ -103,7 +116,6 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
         }
     };
     m_autoStackSM.addState(state);
-    m_autoStackSM.setInitialState("WAIT_INITIAL_HEIGHT");
 
     state = new State("SEEK_DROP_TOTES");
     state->initFunc = [this] { setProfileHeight(getGoal() - 5.0); };
@@ -257,13 +269,11 @@ void Elevator::setManualMode(bool on) {
         m_manual = false;
         setProfileHeight(getHeight());
     }
-    else {
-        m_manual = on;
-    }
+    else if (on && !m_manual) {
+        m_manual = true;
 
-    // Stop any auto stacking we're working on when we switch to manual mode
-    if (on && !m_manual) {
-        m_autoStackSM.cancel();
+        // Stop any auto-stacking when we switch to manual mode
+        m_autoStackSM.setState("IDLE");
     }
 }
 
@@ -349,7 +359,7 @@ void Elevator::raiseElevator(std::string level) {
     /* Only allow changing the elevator height manually if not currently
      * auto-stacking
      */
-    if (m_autoStackSM.isStopped()) {
+    if (!isStacking()) {
         std::cout << "Seeking to " << height << std::endl;
 
         setProfileHeight(height);
@@ -397,15 +407,16 @@ double Elevator::getLevelHeight(std::string level) const {
 }
 
 void Elevator::stackTotes() {
-    m_autoStackSM.start();
+    setManualMode(false);
+    m_startAutoStacking = true;
 }
 
 bool Elevator::isStacking() {
-    return m_autoStackSM.isStopped();
+    return m_autoStackSM.getState() != "IDLE";
 }
 
 void Elevator::cancelStack() {
-    m_autoStackSM.cancel();
+    m_autoStackSM.setState("IDLE");
 }
 
 void Elevator::updateState() {

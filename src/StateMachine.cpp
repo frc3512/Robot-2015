@@ -7,21 +7,6 @@
 #include "StateMachine.hpp"
 #include <iostream>
 
-StateMachine::StateMachine(State* state) :
-    StateMachine(std::unique_ptr<State>(state)) {
-}
-
-StateMachine::StateMachine(std::unique_ptr<State> state) {
-    if (state->name != "IDLE") {
-        state->name = "IDLE";
-    }
-    addState(std::move(state));
-}
-
-StateMachine::StateMachine() {
-    addState(new State("IDLE"));
-}
-
 StateMachine::~StateMachine() {
     if (m_currentState != nullptr) {
         m_currentState->endFunc();
@@ -39,7 +24,9 @@ void StateMachine::addState(std::unique_ptr<State> state) {
 bool StateMachine::setState(std::string newState) {
     for (auto& i : m_states) {
         if (i->name == newState) {
-            m_currentState->endFunc();
+            if (m_currentState != nullptr) {
+                m_currentState->endFunc();
+            }
             m_currentState = i.get();
             m_currentState->initFunc();
 
@@ -59,10 +46,6 @@ std::string StateMachine::getState() {
     }
 }
 
-void StateMachine::setInitialState(std::string initState) {
-    m_initStateName = initState;
-}
-
 void StateMachine::run() {
     if (m_currentState == nullptr) {
         return;
@@ -78,17 +61,5 @@ void StateMachine::run() {
             std::cout << "[" << nextState << "] is not a known state\n";
         }
     }
-}
-
-void StateMachine::start() {
-    setState(m_initStateName);
-}
-
-bool StateMachine::isStopped() {
-    return m_currentState->name == "IDLE";
-}
-
-void StateMachine::cancel() {
-    setState("IDLE");
 }
 

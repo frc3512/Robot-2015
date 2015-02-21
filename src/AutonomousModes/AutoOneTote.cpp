@@ -8,10 +8,13 @@
 #include "../StateMachine.hpp"
 
 void Robot::AutoOneTote() {
-    State* state = new State("IDLE");
-    state->endFunc = [this] { ev->setIntakeDirection(Elevator::S_STOPPED); };
+    StateMachine oneToteSM;
 
-    StateMachine oneToteSM(state);
+    State* state = new State("IDLE");
+    state->advanceFunc = [this] { return "SEEK_GARBAGECAN_UP"; };
+    state->endFunc = [this] { ev->setIntakeDirection(Elevator::S_STOPPED); };
+    oneToteSM.addState(state);
+    oneToteSM.setState("IDLE");
 
     state = new State("SEEK_GARBAGECAN_UP");
     state->initFunc = [this] { ev->raiseElevator("EV_GARBAGECAN_LEVEL"); };
@@ -24,7 +27,6 @@ void Robot::AutoOneTote() {
         }
     };
     oneToteSM.addState(state);
-    oneToteSM.setInitialState("SEEK_GARBAGECAN_UP");
 
     state = new State("MOVE_TO_TOTE");
     state->initFunc = [this] {
@@ -99,7 +101,6 @@ void Robot::AutoOneTote() {
     oneToteSM.addState(state);
 
     ev->setManualMode(false);
-    oneToteSM.start();
 
     while (IsAutonomous() && IsEnabled()) {
         DS_PrintOut();

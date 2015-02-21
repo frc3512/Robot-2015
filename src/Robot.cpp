@@ -154,9 +154,6 @@ void Robot::OperatorControl() {
 
         // Update the elevator automatic stacking state
         ev->updateState();
-        if (ev->isStacking() && ev->isManualMode()) {
-            ev->cancelStack();
-        }
 
         drive1Buttons.updateButtons();
         drive2Buttons.updateButtons();
