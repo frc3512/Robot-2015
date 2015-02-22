@@ -70,11 +70,13 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
         }
     });
 
+    // Load motion profile constants from the configuration file
     m_maxv_a = m_settings->getDouble("EV_MAX_VELOCITY_PROFILE_A");
     m_ttmaxv_a = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_A");
     m_maxv_b = m_settings->getDouble("EV_MAX_VELOCITY_PROFILE_B");
     m_ttmaxv_b = m_settings->getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_B");
 
+    // Load elevator levels from the configuration file
     m_maxHeight = m_settings->getDouble("EV_MAX_HEIGHT");
     m_toteHeights["EV_GROUND"] = m_settings->getDouble("EV_GROUND");
 
@@ -202,6 +204,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     };
     m_autoStackSM.addState(state);
 
+    // Reload PID constants from the configuration file
     reloadPID();
 }
 
@@ -350,16 +353,21 @@ void Elevator::raiseElevator(std::string level) {
     size_t newpos;
     double height = 0;
 
-    pos = level.find("+");
+    pos = std::min(level.find('+'), level.find('-'));
     auto it = m_toteHeights.find(level.substr(0, pos));
     if (it != m_toteHeights.end()) {
         height = it->second;
     }
     while (pos != std::string::npos) {
-        newpos = level.find("+", pos + 1);
+        newpos = std::min(level.find('+', pos + 1), level.find('-', pos + 1));
         it = m_toteHeights.find(level.substr(pos + 1, newpos));
         if (it != m_toteHeights.end()) {
-            height += it->second;
+            if (level[newpos] == '+') {
+                height += it->second;
+            }
+            else if (level[newpos] == '-') {
+                height -= it->second;
+            }
         }
         pos = newpos;
     }

@@ -198,6 +198,7 @@ void Robot::DS_PrintOut() {
     }
 
     if (displayTimer->HasPeriodPassed(0.5)) {
+        // Send things to DS display
         dsDisplay.clear();
 
         dsDisplay.addData("EV_LEVEL_INCHES", ev->getHeight());
