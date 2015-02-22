@@ -106,7 +106,6 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_autoStackSM.setState("IDLE");
 
     state = new State("WAIT_INITIAL_HEIGHT");
-    state->initFunc = [this] { setProfileHeight(getGoal() - 5.0); };
     state->advanceFunc = [this] {
         if (atGoal()) {
             return "SEEK_DROP_TOTES";
@@ -118,7 +117,9 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_autoStackSM.addState(state);
 
     state = new State("SEEK_DROP_TOTES");
-    state->initFunc = [this] { setProfileHeight(getGoal() - 5.0); };
+    state->initFunc = [this] {
+        setProfileHeight(getGoal() - m_toteHeights["EV_AUTO_DROP_LENGTH"]);
+    };
     state->advanceFunc = [this] {
         if (atGoal()) {
             return "RELEASE";
@@ -147,7 +148,14 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
     state = new State("SEEK_GROUND");
     state->initFunc = [this] { setProfileHeight(m_toteHeights["EV_GROUND"]); };
-    state->periodicFunc = [this] { return atGoal(); };
+    state->advanceFunc = [this] {
+        if (atGoal()) {
+            return "GRAB";
+        }
+        else {
+            return "";
+        }
+    };
     m_autoStackSM.addState(state);
 
     state = new State("GRAB");
@@ -430,7 +438,6 @@ void Elevator::manualChangeSetpoint(double delta) {
         newSetpoint = m_maxHeight;
     }
 
-    // TODO: Magic numbers
     // Set PID constant profile
     if (newSetpoint > m_setpoint) {
         // Going up.
