@@ -27,9 +27,6 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
 
     pidGraph.setSendInterval(5);
 
-    m_autoState = STATE_IDLE;
-
-
     displayTimer->Start();
 }
 

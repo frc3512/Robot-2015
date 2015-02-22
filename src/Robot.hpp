@@ -19,8 +19,6 @@
 
 class Robot : public SampleRobot {
 public:
-
-
     Robot();
     virtual ~Robot();
     void OperatorControl();
@@ -32,21 +30,6 @@ public:
     void AutoNoop();
 
     void DS_PrintOut();
-
-    enum AutoState {
-        STATE_IDLE,
-        STATE_SEEK_GARBAGECAN_UP,
-        STATE_MOVE_TO_TOTE,
-        STATE_AUTOSTACK,
-        STATE_TURN,
-        STATE_RUN_AWAY
-    };
-
-    AutoState m_autoState;
-
-    void autonStart();
-    void autonUpdateState();
-    void autonStateChanged(AutoState oldState, AutoState newState);
 private:
     Settings settings;
 
