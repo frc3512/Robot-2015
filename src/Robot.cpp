@@ -134,13 +134,12 @@ void Robot::OperatorControl() {
         /* Opens intake if the elevator is at the same level as it or if the
          * tines are open
          */
-        if (((ev->getSetpoint() < 11 && !ev->isManualMode()) ||
-             !ev->isElevatorGrabbed()) && ev->isIntakeGrabbed()) {
-            ev->intakeGrab(false);
-        }
-
-        if (ev->isIntakeStowed() && ev->isIntakeGrabbed()) {
-            ev->intakeGrab(false);
+        if (ev->isIntakeGrabbed()) {
+            if ((ev->getSetpoint() < 11 && !ev->isManualMode()) ||
+                !ev->isElevatorGrabbed() ||
+                ev->isIntakeStowed()) {
+                ev->intakeGrab(false);
+            }
         }
 
         // Poll the limit reset limit switch
