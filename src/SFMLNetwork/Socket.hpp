@@ -32,7 +32,6 @@
 #ifndef SFML_SOCKET_HPP
 #define SFML_SOCKET_HPP
 
-#include "../SFML/System/NonCopyable.hpp"
 #include <vector>
 
 #include <sys/types.h>
@@ -51,8 +50,11 @@ class SocketSelector;
 /// \brief Base class for all the socket types
 ///
 ////////////////////////////////////////////////////////////
-class Socket : NonCopyable {
+class Socket {
 public:
+    Socket(const Socket&) = delete;
+    Socket& operator=(const Socket) = delete;
+
     friend class IpAddress;
 
     typedef socklen_t AddrLength;
