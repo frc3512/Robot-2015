@@ -4,7 +4,6 @@
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
 
-#include <Encoder.h>
 #include <Solenoid.h>
 
 inline GearBox<CANTalon>::GearBox(int shifterChan,

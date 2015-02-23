@@ -1,15 +1,12 @@
 #include "Robot.hpp"
 #include <cmath>
-#include "DriverStation.h"
 #include <iostream>
-#include <iomanip>
 
 Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
                  drive1Buttons(0),
                  drive2Buttons(1),
                  evButtons(2),
-                 dsDisplay(DSDisplay::getInstance(
-                               settings.getInt("DS_Port"))),
+                 dsDisplay(DSDisplay::getInstance(settings.getInt("DS_Port"))),
                  pidGraph(3513) {
     robotDrive = std::make_unique<DriveTrain>();
     ev = std::make_unique<Elevator>();
@@ -112,7 +109,7 @@ void Robot::OperatorControl() {
             ev->resetEncoder();
         }
 
-        // Accumulate assised automatic mode
+        // Accumulate assisted automatic mode
         double deltaT = accumTimer->Get();
         accumTimer->Reset();
         accumTimer->Start();

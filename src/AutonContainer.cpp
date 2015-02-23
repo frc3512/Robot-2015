@@ -14,7 +14,7 @@ AutonMethod::AutonMethod(const std::string& methodName,
 
 void AutonContainer::addMethod(const std::string& methodName,
                                std::function<void()> func) {
-    m_functionList.push_back(AutonMethod(methodName, func));
+    m_functionList.emplace_back(methodName, func);
 }
 
 void AutonContainer::deleteAllMethods() {

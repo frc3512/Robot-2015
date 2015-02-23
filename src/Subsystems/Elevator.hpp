@@ -111,9 +111,9 @@ private:
 
     double m_maxHeight;
 
-    // Maximum velocity and time to maximum
-    // velocity constants to load from the
-    // config file
+    /* Maximum velocity and time to maximum velocity constants to load from the
+     * config file
+     */
     double m_maxv_a;
     double m_ttmaxv_a;
     double m_maxv_b;
