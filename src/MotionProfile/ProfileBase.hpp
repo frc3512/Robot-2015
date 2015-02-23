@@ -7,6 +7,8 @@
 #ifndef PROFILE_BASE_HPP
 #define PROFILE_BASE_HPP
 
+#include <mutex>
+
 typedef enum {
     distance,
     velocity
@@ -21,7 +23,27 @@ public:
 
     // Should return initial setpoint for start of profile
     virtual double setGoal(double t, double goal, double curSource) = 0;
-    virtual bool atGoal() = 0;
+    virtual bool atGoal();
+
+    double getGoal() const;
+    double getSetpoint() const;
+
+    virtual void resetProfile();
+
+    // Tells algorithm whether to use distance or velocity as setpoint
+    void setMode(SetpointMode mode);
+    SetpointMode getMode() const;
+
+protected:
+    // Use this to make updateSetpoint() and setGoal() thread-safe
+    std::recursive_mutex m_varMutex;
+
+    double m_goal;
+    double m_setpoint;
+    double m_lastTime;
+    double m_timeTotal;
+
+    SetpointMode m_mode;
 };
 
 #endif // PROFILE_BASE_HPP

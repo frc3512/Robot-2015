@@ -7,12 +7,9 @@
 #include "TrapezoidProfile.hpp"
 #include <cmath>
 
-TrapezoidProfile::TrapezoidProfile(double maxV, double timeToMaxV) :
-    m_setpoint(0.0) {
+TrapezoidProfile::TrapezoidProfile(double maxV, double timeToMaxV) {
     setMaxVelocity(maxV);
     setTimeToMaxV(timeToMaxV);
-    setMode(SetpointMode::distance);
-    resetProfile();
 }
 
 TrapezoidProfile::~TrapezoidProfile() {
@@ -139,37 +136,12 @@ double TrapezoidProfile::setGoal(double t, double goal, double curSource) {
     }
 }
 
-bool TrapezoidProfile::atGoal() {
-    return m_lastTime >= m_timeTotal;
-}
-
 void TrapezoidProfile::setMaxVelocity(double v) {
     m_velocity = v;
 }
 
 void TrapezoidProfile::setTimeToMaxV(double timeToMaxV) {
     m_acceleration = m_velocity / timeToMaxV;
-}
-
-void TrapezoidProfile::resetProfile() {
-    m_lastTime = 0.0;
-    m_setpoint = 0.0;
-}
-
-void TrapezoidProfile::setMode(SetpointMode mode) {
-    m_mode = mode;
-}
-
-double TrapezoidProfile::getSetpoint() const {
-    return m_setpoint;
-}
-
-SetpointMode TrapezoidProfile::getMode() const {
-    return m_mode;
-}
-
-double TrapezoidProfile::getGoal() const {
-    return m_goal;
 }
 
 double TrapezoidProfile::getMaxVelocity() const {

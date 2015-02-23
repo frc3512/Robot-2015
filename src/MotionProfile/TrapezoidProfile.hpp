@@ -18,7 +18,6 @@
 #define TRAPEZOID_PROFILE_HPP
 
 #include "ProfileBase.hpp"
-#include <mutex>
 
 class TrapezoidProfile : public ProfileBase {
 public:
@@ -43,37 +42,17 @@ public:
      */
     virtual double setGoal(double t, double goal, double curSource = 0.0);
 
-    bool atGoal();
-    double getGoal() const;
-
-    double getSetpoint() const;
-
     void setMaxVelocity(double v);
     double getMaxVelocity() const;
     void setTimeToMaxV(double timeToMaxV);
 
-    virtual void resetProfile();
-
-    // Tells algorithm whether to use distance or velocity as setpoint
-    void setMode(SetpointMode mode);
-    SetpointMode getMode() const;
-
 protected:
-    double m_setpoint;
-
-    double m_lastTime;
     double m_acceleration;
     double m_velocity;
     double m_profileMaxVelocity;
     double m_timeFromMaxVelocity;
     double m_timeToMaxVelocity;
     double m_sign;
-    double m_timeTotal;
-    double m_goal;
-
-    SetpointMode m_mode;
-
-    std::recursive_mutex m_varMutex;
 };
 
 #endif // TRAPEZOID_PROFILE_HPP
