@@ -16,53 +16,39 @@ TrapezoidProfile::~TrapezoidProfile() {
 }
 
 double TrapezoidProfile::updateSetpoint(double curTime, double curSource) {
-    double period = curTime - m_lastTime;
+    std::lock_guard<decltype(m_varMutex)> lock(m_varMutex);
 
-    m_varMutex.lock();
+    double tmpSP = 0.0;
+
+    if (curTime < m_timeToMaxVelocity) {
+        // Accelerate up
+        tmpSP = (m_acceleration * curTime) * m_sign;
+    }
+    else if (curTime < m_timeFromMaxVelocity) {
+        // Maintain max velocity
+        tmpSP = m_profileMaxVelocity * m_sign;
+    }
+    else if (curTime < m_timeTotal) {
+        // Accelerate down
+        double decelTime = curTime - m_timeFromMaxVelocity;
+        double v = m_profileMaxVelocity - m_acceleration * decelTime;
+
+        tmpSP = v * m_sign;
+    }
 
     if (m_mode == SetpointMode::distance) {
-        if (curTime < m_timeToMaxVelocity) {
-            // Accelerate up
-            m_setpoint += (m_acceleration * curTime) * period * m_sign;
-        }
-        else if (curTime < m_timeFromMaxVelocity) {
-            // Maintain max velocity
-            m_setpoint += (m_profileMaxVelocity * period * m_sign);
-        }
-        else if (curTime < m_timeTotal) {
-            // Accelerate down
-            double decelTime = curTime - m_timeFromMaxVelocity;
-            double v = m_profileMaxVelocity - m_acceleration * decelTime;
-
-            m_setpoint += v * period * m_sign;
-        }
+        m_setpoint += tmpSP * (curTime - m_lastTime);
     }
     else if (m_mode == SetpointMode::velocity) {
-        if (curTime < m_timeToMaxVelocity) {
-            // Accelerate up
-            m_setpoint = (m_acceleration * curTime) * m_sign;
-        }
-        else if (curTime < m_timeFromMaxVelocity) {
-            // Maintain max velocity
-            m_setpoint = m_profileMaxVelocity * m_sign;
-        }
-        else if (curTime < m_timeTotal) {
-            // Accelerate down
-            double decelTime = curTime - m_timeFromMaxVelocity;
-            double v = m_profileMaxVelocity - m_acceleration * decelTime;
-
-            m_setpoint = v * m_sign;
-        }
+        m_setpoint = tmpSP;
     }
-
-    m_varMutex.unlock();
 
     m_lastTime = curTime;
     return m_setpoint;
 }
 
 double TrapezoidProfile::setGoal(double t, double goal, double curSource) {
-    m_varMutex.lock();
+    std::lock_guard<decltype(m_varMutex)> lock(m_varMutex);
 
     m_goal = goal;
     m_setpoint = goal - curSource;
@@ -116,8 +102,6 @@ double TrapezoidProfile::setGoal(double t, double goal, double curSource) {
         m_profileMaxVelocity = m_velocity;
     }
 
-    m_varMutex.unlock();
-
     m_lastTime = t;
 
     if (m_mode == SetpointMode::distance) {
@@ -140,11 +124,11 @@ void TrapezoidProfile::setMaxVelocity(double v) {
     m_velocity = v;
 }
 
-void TrapezoidProfile::setTimeToMaxV(double timeToMaxV) {
-    m_acceleration = m_velocity / timeToMaxV;
-}
-
 double TrapezoidProfile::getMaxVelocity() const {
     return m_velocity;
+}
+
+void TrapezoidProfile::setTimeToMaxV(double timeToMaxV) {
+    m_acceleration = m_velocity / timeToMaxV;
 }
 

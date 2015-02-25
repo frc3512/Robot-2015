@@ -40,3 +40,4 @@ void ProfileBase::setMode(SetpointMode mode) {
 SetpointMode ProfileBase::getMode() const {
     return m_mode;
 }
+
