@@ -119,7 +119,8 @@ void Robot::OperatorControl() {
         manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
 
         // Deadband
-        if (fabs(manualAverage.get()) > 0.05 && fabs(evStickY) > 0.05) {
+        if (applyDeadband(manualAverage.get(), 0.05) &&
+            applyDeadband(evStickY, 0.05)) {
             if (ev->getSetpoint() + manualAverage.get() > 0
                 && ev->getSetpoint() + manualAverage.get() <
                 settings.getDouble("EV_MAX_HEIGHT")) {
@@ -224,6 +225,20 @@ void Robot::DS_PrintOut() {
     }
 
     dsDisplay.receiveFromDS();
+}
+
+float Robot::applyDeadband(float value, float deadband) {
+    if (fabs(value) > deadband) {
+        if (value > 0) {
+            return (value - deadband) / (1 - deadband);
+        }
+        else {
+            return (value + deadband) / (1 - deadband);
+        }
+    }
+    else {
+        return 0.f;
+    }
 }
 
 START_ROBOT_CLASS(Robot);

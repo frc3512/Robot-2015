@@ -30,6 +30,9 @@ public:
     void AutoNoop();
 
     void DS_PrintOut();
+
+    static float applyDeadband(float value, float deadband);
+
 private:
     Settings settings;
 
