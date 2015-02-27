@@ -7,14 +7,14 @@
 #ifndef DRIVE_TRAIN_HPP
 #define DRIVE_TRAIN_HPP
 
-#include "../Settings.hpp"
+#include "SubsystemBase.hpp"
 #include "../MotionProfile/BezierTrapezoidProfile.hpp"
 #include "GearBox.hpp"
 
 #include <memory>
 #include <CANTalon.h>
 
-class DriveTrain : public BezierTrapezoidProfile {
+class DriveTrain : public SubsystemBase, public BezierTrapezoidProfile {
 public:
     DriveTrain();
     virtual ~DriveTrain();
@@ -27,11 +27,11 @@ public:
     // Sets joystick deadband
     void setDeadband(float band);
 
-    // Set encoder distances to 0
-    void resetEncoders();
-
     // Reload PID constants
     void reloadPID();
+
+    // Set encoder distances to 0
+    void resetEncoders();
 
     // Set wheel setpoints (see GearBox::setSetpoint(float))
     void setLeftSetpoint(double setpt);
@@ -58,8 +58,6 @@ public:
     const static float maxWheelSpeed;
 
 private:
-    Settings m_settings;
-
     float m_deadband;
     float m_sensitivity;
 

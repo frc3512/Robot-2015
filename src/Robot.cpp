@@ -1,3 +1,9 @@
+// =============================================================================
+// File Name: Robot.cpp
+// Description: Implements the main robot class
+// Author: FRC Team 3512, Spartatroniks
+// =============================================================================
+
 #include "Robot.hpp"
 #include <cmath>
 #include <iostream>
@@ -31,9 +37,6 @@ Robot::~Robot() {
 }
 
 void Robot::OperatorControl() {
-    robotDrive->reloadPID();
-    ev->reloadPID();
-
     while (IsEnabled() && IsOperatorControl()) {
         if (driveStick2->GetRawButton(2)) {
             robotDrive->drive(driveStick1->GetY(), driveStick2->GetX(),
@@ -106,7 +109,7 @@ void Robot::OperatorControl() {
         }
 
         if (drive2Buttons.releasedButton(12)) {
-            ev->resetEncoder();
+            ev->resetEncoders();
         }
 
         // Accumulate assisted automatic mode
@@ -174,6 +177,9 @@ void Robot::Disabled() {
         DS_PrintOut();
         Wait(0.1);
     }
+
+    robotDrive->reloadPID();
+    ev->reloadPID();
 }
 
 void Robot::DS_PrintOut() {

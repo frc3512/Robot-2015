@@ -11,6 +11,7 @@ class Solenoid;
 class DigitalInput;
 class CANTalon;
 
+#include "SubsystemBase.hpp"
 #include "../MotionProfile/TrapezoidProfile.hpp"
 #include <vector>
 #include <memory>
@@ -21,9 +22,8 @@ class CANTalon;
 
 #include "GearBox.hpp"
 #include "../StateMachine.hpp"
-#include "../Settings.hpp"
 
-class Elevator : public TrapezoidProfile {
+class Elevator : public SubsystemBase, public TrapezoidProfile {
 public:
     enum IntakeMotorState {
         S_STOPPED,
@@ -62,8 +62,7 @@ public:
     double getHeight();
 
     void reloadPID();
-
-    void resetEncoder();
+    void resetEncoders();
 
     // Periodic
     void pollLimitSwitches();
@@ -81,9 +80,6 @@ public:
 
     // Periodic
     void updateState();
-
-protected:
-    std::unique_ptr<Settings> m_settings;
 
 private:
     std::unique_ptr<Solenoid> m_grabSolenoid;

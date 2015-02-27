@@ -13,10 +13,7 @@ void Robot::AutoDriveForward() {
     robotDrive->setRightSetpoint(0.f);
     robotDrive->resetProfile();
 
-    // Reload drive PID constants
-    settings.update();
     robotDrive->setControlMode(CANTalon::kPosition);
-    robotDrive->reloadPID();
 
     BezierCurve curve;
     curve.push_back(std::make_pair(0.0, 0.0));

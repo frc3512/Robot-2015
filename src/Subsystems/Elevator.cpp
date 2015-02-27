@@ -18,7 +18,6 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_intakeWheelRight = std::make_unique<CANTalon>(6);
     m_frontLeftLimit = std::make_unique<DigitalInput>(0);
     m_frontRightLimit = std::make_unique<DigitalInput>(1);
-    m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
     m_intakeState = S_STOPPED;
     m_manual = false;
 
@@ -332,7 +331,7 @@ void Elevator::reloadPID() {
     m_liftGrbx->setF(f);
 }
 
-void Elevator::resetEncoder() {
+void Elevator::resetEncoders() {
     m_liftGrbx->resetEncoder();
 }
 
