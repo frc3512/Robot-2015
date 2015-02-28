@@ -15,15 +15,13 @@ DSDisplay& DSDisplay::getInstance(unsigned short dsPort) {
 }
 
 void DSDisplay::clear() {
-    sf::Packet::clear();
+    m_packet.clear();
 }
 
 void DSDisplay::sendToDS(sf::Packet* userData) {
     if (m_dsIP != sf::IpAddress::None) {
         if (userData == nullptr) {
-            m_socket.send(*static_cast<sf::Packet*>(this),
-                          m_dsIP,
-                          m_dsPort);
+            m_socket.send(m_packet, m_dsIP, m_dsPort);
         }
         else {
             m_socket.send(*userData, m_dsIP, m_dsPort);
@@ -33,9 +31,7 @@ void DSDisplay::sendToDS(sf::Packet* userData) {
     // Used for testing purposes
     sf::IpAddress testIP(10, 35, 12, 42);
     if (userData == nullptr) {
-        m_socket.send(*static_cast<sf::Packet*>(this),
-                      testIP,
-                      m_dsPort);
+        m_socket.send(m_packet, testIP, m_dsPort);
     }
     else {
         m_socket.send(*userData, testIP, m_dsPort);
@@ -53,7 +49,7 @@ const std::string DSDisplay::receiveFromDS() {
             // Send GUI element file to DS
             clear();
 
-            *this << static_cast<std::string>("guiCreate\r\n");
+            m_packet << static_cast<std::string>("guiCreate\r\n");
 
             // Open the file
             // FIXME: May crash if file has \n for newlines instead of \r\n
@@ -66,14 +62,14 @@ const std::string DSDisplay::receiveFromDS() {
                 guiFile.seekg(0, guiFile.beg);
 
                 // Send the length
-                *this << static_cast<uint32_t>(fileSize);
+                m_packet << static_cast<uint32_t>(fileSize);
 
                 // Allocate a buffer for the file
                 char* tempBuf = new char[fileSize];
 
                 // Send the data TODO: htonl() the data before it's sent
                 guiFile.read(tempBuf, fileSize);
-                append(tempBuf, fileSize);
+                m_packet.append(tempBuf, fileSize);
 
                 delete[] tempBuf;
                 guiFile.close();
@@ -84,10 +80,10 @@ const std::string DSDisplay::receiveFromDS() {
             // Send a list of available autonomous modes
             clear();
 
-            *this << static_cast<std::string>("autonList\r\n");
+            m_packet << static_cast<std::string>("autonList\r\n");
 
             for (unsigned int i = 0; i < m_autonModes.size(); i++) {
-                *this << m_autonModes.name(i);
+                m_packet << m_autonModes.name(i);
             }
 
             sendToDS();
@@ -95,8 +91,8 @@ const std::string DSDisplay::receiveFromDS() {
             // Make sure driver knows which autonomous mode is selected
             clear();
 
-            *this << static_cast<std::string>("autonConfirmed\r\n");
-            *this << m_autonModes.name(curAutonMode);
+            m_packet << static_cast<std::string>("autonConfirmed\r\n");
+            m_packet << m_autonModes.name(curAutonMode);
 
             sendToDS();
 
@@ -108,8 +104,8 @@ const std::string DSDisplay::receiveFromDS() {
 
             clear();
 
-            *this << static_cast<std::string>("autonConfirmed\r\n");
-            *this << m_autonModes.name(curAutonMode);
+            m_packet << static_cast<std::string>("autonConfirmed\r\n");
+            m_packet << m_autonModes.name(curAutonMode);
 
             // Store newest autonomous choice to file for persistent storage
             std::ofstream autonModeFile("/home/lvuser/autonMode.txt",
@@ -161,102 +157,98 @@ void DSDisplay::execAutonomous() {
 
 void DSDisplay::addData(std::string ID, StatusLight data) {
     // If packet is empty, add "display\r\n" header to packet
-    if (sf::Packet::getData() == nullptr) {
-        *this << std::string("display\r\n");
+    if (m_packet.getData() == nullptr) {
+        m_packet << std::string("display\r\n");
     }
 
-    *this << static_cast<int8_t>('c');
-    *this << ID;
-    *this << static_cast<int8_t>(data);
+    m_packet << static_cast<int8_t>('c');
+    m_packet << ID;
+    m_packet << static_cast<int8_t>(data);
 }
 
 void DSDisplay::addData(std::string ID, bool data) {
     // If packet is empty, add "display\r\n" header to packet
-    if (sf::Packet::getData() == nullptr) {
-        *this << std::string("display\r\n");
+    if (m_packet.getData() == nullptr) {
+        m_packet << std::string("display\r\n");
     }
 
-    *this << static_cast<int8_t>('c');
-    *this << ID;
+    m_packet << static_cast<int8_t>('c');
+    m_packet << ID;
 
     if (data == true) {
-        *this << static_cast<int8_t>(DSDisplay::active);
+        m_packet << static_cast<int8_t>(DSDisplay::active);
     }
     else {
-        *this <<
+        m_packet <<
             static_cast<int8_t>(DSDisplay::inactive);
     }
 }
 
 void DSDisplay::addData(std::string ID, int8_t data) {
     // If packet is empty, add "display\r\n" header to packet
-    if (sf::Packet::getData() == nullptr) {
-        *this << std::string("display\r\n");
+    if (m_packet.getData() == nullptr) {
+        m_packet << std::string("display\r\n");
     }
 
-    *this << static_cast<int8_t>('c');
-    *this << ID;
-    *this << static_cast<int8_t>(data);
+    m_packet << static_cast<int8_t>('c');
+    m_packet << ID;
+    m_packet << static_cast<int8_t>(data);
 }
 
 void DSDisplay::addData(std::string ID, int32_t data) {
     // If packet is empty, add "display\r\n" header to packet
-    if (sf::Packet::getData() == nullptr) {
-        *this << std::string("display\r\n");
+    if (m_packet.getData() == nullptr) {
+        m_packet << std::string("display\r\n");
     }
 
-    *this << static_cast<int8_t>('i');
-    *this << ID;
-    *this << static_cast<int32_t>(data);
+    m_packet << static_cast<int8_t>('i');
+    m_packet << ID;
+    m_packet << static_cast<int32_t>(data);
 }
 
 void DSDisplay::addData(std::string ID, uint32_t data) {
     // If packet is empty, add "display\r\n" header to packet
-    if (sf::Packet::getData() == nullptr) {
-        *this << std::string("display\r\n");
+    if (m_packet.getData() == nullptr) {
+        m_packet << std::string("display\r\n");
     }
 
-    *this << static_cast<int8_t>('u');
-    *this << ID;
-    *this << static_cast<uint32_t>(data);
+    m_packet << static_cast<int8_t>('u');
+    m_packet << ID;
+    m_packet << static_cast<uint32_t>(data);
 }
 
 void DSDisplay::addData(std::string ID, std::string data) {
     // If packet is empty, add "display\r\n" header to packet
-    if (sf::Packet::getData() == nullptr) {
-        *this << std::string("display\r\n");
+    if (m_packet.getData() == nullptr) {
+        m_packet << std::string("display\r\n");
     }
 
-    *this << static_cast<int8_t>('s');
-    *this << ID;
-    *this << data;
+    m_packet << static_cast<int8_t>('s');
+    m_packet << ID;
+    m_packet << data;
 }
 
 void DSDisplay::addData(std::string ID, float data) {
     // If packet is empty, add "display\r\n" header to packet
-    if (sf::Packet::getData() == nullptr) {
-        *this << std::string("display\r\n");
+    if (m_packet.getData() == nullptr) {
+        m_packet << std::string("display\r\n");
     }
 
-    *this << static_cast<int8_t>('s');
-    *this << ID;
+    m_packet << static_cast<int8_t>('s');
+    m_packet << ID;
 
-    std::stringstream ss;
-    ss << data;
-    *this << ss.str();
+    m_packet << std::to_string(data);
 }
 
 void DSDisplay::addData(std::string ID, double data) {
     // If packet is empty, add "display\r\n" header to packet
-    if (sf::Packet::getData() == nullptr) {
-        *this << std::string("display\r\n");
+    if (m_packet.getData() == nullptr) {
+        m_packet << std::string("display\r\n");
     }
 
-    *this << static_cast<int8_t>('s');
-    *this << ID;
+    m_packet << static_cast<int8_t>('s');
+    m_packet << ID;
 
-    std::stringstream ss;
-    ss << data;
-    *this << ss.str();
+    m_packet << std::to_string(data);
 }
 

@@ -47,11 +47,10 @@
 #include <cstring>
 #include <cstdint>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <functional>
 
-class DSDisplay : public sf::Packet {
+class DSDisplay {
 public:
     enum StatusLight {
         active,
@@ -110,6 +109,8 @@ private:
 
     DSDisplay(const DSDisplay&);
     DSDisplay& operator=(const DSDisplay&) = delete;
+
+    sf::Packet m_packet;
 
     sf::UdpSocket m_socket; // socket for sending data to Driver Station
     sf::IpAddress m_dsIP; // IP address of Driver Station
