@@ -9,6 +9,7 @@
 
 SCurveProfile::SCurveProfile(double maxV, double maxA, double timeToMaxA) {
     setMaxVelocity(maxV);
+    setMaxAcceleration(maxA);
     setTimeToMaxA(timeToMaxA);
 }
 
