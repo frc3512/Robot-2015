@@ -28,7 +28,9 @@ public:
     enum IntakeMotorState {
         S_STOPPED,
         S_FORWARD,
-        S_REVERSED
+        S_REVERSE,
+        S_ROTATE_CCW,
+        S_ROTATE_CW
     };
 
     Elevator();

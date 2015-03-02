@@ -250,8 +250,16 @@ void Elevator::setIntakeDirection(IntakeMotorState state) {
         m_intakeWheelLeft->Set(1);
         m_intakeWheelRight->Set(-1);
     }
-    else if (state == S_REVERSED) {
+    else if (state == S_REVERSE) {
         m_intakeWheelLeft->Set(-1);
+        m_intakeWheelRight->Set(1);
+    }
+    else if (state == S_ROTATE_CCW) {
+        m_intakeWheelLeft->Set(-1);
+        m_intakeWheelRight->Set(-1);
+    }
+    else if (state == S_ROTATE_CW) {
+        m_intakeWheelLeft->Set(1);
         m_intakeWheelRight->Set(1);
     }
 }

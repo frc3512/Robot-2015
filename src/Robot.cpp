@@ -101,8 +101,14 @@ void Robot::OperatorControl() {
         if (evStick->GetPOV() == 0) {
             ev->setIntakeDirection(Elevator::S_FORWARD);
         }
+        else if (evStick->GetPOV() == 90) {
+            ev->setIntakeDirection(Elevator::S_ROTATE_CCW);
+        }
         else if (evStick->GetPOV() == 180) {
-            ev->setIntakeDirection(Elevator::S_REVERSED);
+            ev->setIntakeDirection(Elevator::S_REVERSE);
+        }
+        else if (evStick->GetPOV() == 270) {
+            ev->setIntakeDirection(Elevator::S_ROTATE_CW);
         }
         else {
             ev->setIntakeDirection(Elevator::S_STOPPED);

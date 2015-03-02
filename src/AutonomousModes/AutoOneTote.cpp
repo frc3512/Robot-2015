@@ -50,7 +50,7 @@ void Robot::AutoOneTote() {
         autoTimer->Start();
         ev->stowIntake(false);
         ev->intakeGrab(true);
-        ev->setIntakeDirection(Elevator::S_REVERSED);
+        ev->setIntakeDirection(Elevator::S_REVERSE);
 
         // ev->stackTotes();
     };
@@ -68,7 +68,7 @@ void Robot::AutoOneTote() {
     state->initFunc = [this] {
         autoTimer->Reset();
         autoTimer->Start();
-        ev->setIntakeDirection(Elevator::S_REVERSED);
+        ev->setIntakeDirection(Elevator::S_REVERSE);
     };
     state->advanceFunc = [this] {
         if (autoTimer->HasPeriodPassed(1.4)) {
@@ -86,7 +86,7 @@ void Robot::AutoOneTote() {
     state->initFunc = [this] {
         autoTimer->Reset();
         autoTimer->Start();
-        ev->setIntakeDirection(Elevator::S_REVERSED);
+        ev->setIntakeDirection(Elevator::S_REVERSE);
     };
     state->advanceFunc = [this] {
         if (autoTimer->HasPeriodPassed(5.0)) {
