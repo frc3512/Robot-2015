@@ -21,18 +21,6 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_intakeState = S_STOPPED;
     m_manual = false;
 
-#if 0
-    // For WPILib PID loop
-    m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 2, 3, 2, 7);
-
-    /* gear ratio is 48 driver to 26 driven from output of gearbox (where
-     * encoder shaft is located), therefore:
-     * distance per pulse = 26/48/(number of pulses per revolution)
-     *                    = 26/48/360
-     *                    = 26/(48*360)
-     */
-    m_liftGrbx->setDistancePerPulse((70.5 / 1.92442) * (26.0 / (48.0 * 360.0)));
-#else
     // For CANTalon PID loop
     m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 7, 2);
     m_liftGrbx->setEncoderReversed(true);
@@ -45,7 +33,6 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_liftGrbx->setProfile(true);
     m_liftGrbx->setIZone(80);
     m_liftGrbx->setCloseLoopRampRate(1.0);
-#endif
 
     m_profileTimer = std::make_unique<Timer>();
     m_grabTimer = std::make_unique<Timer>();

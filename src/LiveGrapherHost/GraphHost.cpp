@@ -361,32 +361,32 @@ int GraphHost::socket_accept(int listenfd) {
         if (fcntl(new_fd, F_SETFL, flags | O_NONBLOCK) == -1) {
             throw -1;
         }
-    }
 #endif
-        catch (int e) {
-            perror("");
-            if (new_fd != -1) {
-                close(new_fd);
-            }
-            return -1;
-        }
-
-        return new_fd;
     }
+    catch (int e) {
+        perror("");
+        if (new_fd != -1) {
+            close(new_fd);
+        }
+        return -1;
+    }
+
+    return new_fd;
+}
 
 // If the dataset name isn't in the list already, add it
-    int GraphHost::addGraph(std::string& dataset) {
-        // Add the graph name to the list of available graphs
-        for (std::string& elem : SocketConnection::graphNames) {
-            // Graph is already in list
-            if (elem == dataset) {
-                return 1;
-            }
+int GraphHost::addGraph(std::string& dataset) {
+    // Add the graph name to the list of available graphs
+    for (std::string& elem : SocketConnection::graphNames) {
+        // Graph is already in list
+        if (elem == dataset) {
+            return 1;
         }
-
-        // Graph wasn't in the list, so add it
-        SocketConnection::graphNames.push_back(dataset);
-
-        return 0;
     }
+
+    // Graph wasn't in the list, so add it
+    SocketConnection::graphNames.push_back(dataset);
+
+    return 0;
+}
 

@@ -18,8 +18,6 @@
 const float DriveTrain::maxWheelSpeed = 80.0;
 
 DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2) {
-    m_settings->update();
-
     m_deadband = 0.02f;
     m_sensitivity = m_settings->getDouble("LOW_GEAR_SENSITIVE");
 
@@ -27,15 +25,9 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2) {
     m_quickStopAccumulator = 0.f;
     m_negInertiaAccumulator = 0.f;
 
-#if 0
-    // For WPILib PID loop
-    m_leftGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 4, 1);
-    m_rightGrbx = std::make_unique<GearBox<CANTalon>>(-1, -1, -1, 5, 8);
-#else
     // For CANTalon PID loop
     m_leftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 4, 1);
     m_rightGrbx = std::make_unique<GearBox<CANTalon>>(-1, 5, 8);
-#endif
 
     m_leftGrbx->setMotorReversed(true);
     m_leftGrbx->setEncoderReversed(true);
