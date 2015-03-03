@@ -67,7 +67,7 @@ void Robot::OperatorControl() {
         // Automatic preset buttons (7-12)
         // TODO: Special case for level 0
         if (evButtons.releasedButton(7)) {
-            ev->raiseElevator("EV_TOTE_0" + offsetString);
+            ev->raiseElevator("EV_GROUND" + offsetString);
         }
         if (evButtons.releasedButton(8)) {
             ev->raiseElevator("EV_TOTE_1" + offsetString);
@@ -213,26 +213,28 @@ void Robot::DS_PrintOut() {
         dsDisplay.addData("ENCODER_LEFT", robotDrive->getLeftDist());
         dsDisplay.addData("ENCODER_RIGHT", robotDrive->getRightDist());
 
-        std::string name("EL_LEVEL_");
-        for (int i = 0; i < 6; i++) {
-            std::string name("EL_LEVEL_");
+        auto func = [this] (const std::string& name,
+                            const std::string& nextName) {
+                        if (ev->getHeight() == ev->getLevelHeight(name) &&
+                            ev->atGoal()) {
+                            dsDisplay.addData(name, DSDisplay::active);
+                        }
+                        else if (ev->getHeight() <
+                                 ev->getLevelHeight(nextName)) {
+                            dsDisplay.addData(name, DSDisplay::standby);
+                            dsDisplay.addData(nextName, DSDisplay::standby);
+                        }
+                        else {
+                            dsDisplay.addData(name, DSDisplay::inactive);
+                        }
+                    };
 
-            if (ev->getHeight() ==
-                ev->getLevelHeight(name + std::to_string(i)) &&
-                ev->atGoal()) {
-                dsDisplay.addData(name + std::to_string(i), DSDisplay::active);
-            }
-            else if (ev->getHeight() <
-                     ev->getLevelHeight(name + std::to_string(i + 1))) {
-                dsDisplay.addData(name + std::to_string(i), DSDisplay::standby);
-                dsDisplay.addData(name + std::to_string(
-                                      i + 1), DSDisplay::standby);
-            }
-            else {
-                dsDisplay.addData(name + std::to_string(i),
-                                  DSDisplay::inactive);
-            }
+        func("EV_GROUND", "EV_TOTE_1");
+        for (int i = 1; i < 6; i++) {
+            func("EV_TOTE_" + std::to_string(i),
+                 "EV_TOTE_" + std::to_string(i + 1));
         }
+
         dsDisplay.sendToDS();
     }
 
