@@ -1,7 +1,7 @@
 // =============================================================================
 // File Name: Settings.cpp
 // Description: Opens a given file and creates an STL map of its name-value
-//             pairs
+//              pairs
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
 
@@ -33,8 +33,8 @@ void Settings::update() {
         std::getline(settings, m_rawStr);
 
         m_index = 0;
-        name = extractDataFromString(true);
-        value = extractDataFromString(false);
+        name = extractKey();
+        value = extractValue();
 
         // Add name-value pair to map
         m_values[name] = value;
@@ -50,7 +50,8 @@ const std::string Settings::getString(const std::string& key) const {
 
     // If the element wasn't found
     if (index == m_values.end()) {
-        std::cout << "Settings Error: '" << key << "' not found\n";
+        std::cout << "Settings: " << m_fileName << ": '" << key <<
+            "' not found\n";
         return "NOT_FOUND";
     }
 
@@ -63,7 +64,8 @@ const double Settings::getDouble(const std::string& key) const {
 
     // If the element wasn't found
     if (index == m_values.end()) {
-        std::cout << "Settings Error: '" << key << "' not found\n";
+        std::cout << "Settings: " << m_fileName << ": '" << key <<
+            "' not found\n";
         return 0.f;
     }
 
@@ -76,7 +78,8 @@ const int Settings::getInt(const std::string& key) const {
 
     // If the element wasn't found
     if (index == m_values.end()) {
-        std::cout << "Settings Error: '" << key << "' not found\n";
+        std::cout << "Settings: " << m_fileName << ": '" << key <<
+            "' not found\n";
         return 0;
     }
 
@@ -85,8 +88,8 @@ const int Settings::getInt(const std::string& key) const {
 }
 
 void Settings::saveToFile(const std::string& fileName) {
-    std::ofstream outFile(
-        fileName.c_str(), std::ios_base::out | std::ios_base::trunc);
+    std::ofstream outFile(fileName, std::ios_base::out | std::ios_base::trunc);
+
     if (outFile.is_open()) {
         for (auto index : m_values) {
             outFile << index.first << " = " << index.second << "\n";
@@ -96,53 +99,33 @@ void Settings::saveToFile(const std::string& fileName) {
     }
 }
 
-std::string Settings::extractDataFromString(const bool& isName) {
-    std::string value;
-    bool hasEquals = false;
-
+std::string Settings::extractKey() {
     // Find start of name
-    while ((m_rawStr[m_index] == ' ' || m_rawStr[m_index] == '\t') &&
-           m_index < m_rawStr.length()) {
-        m_index++;
+    m_index = m_rawStr.find_first_not_of(" \t", m_index);
+    if (m_index == std::string::npos) {
+        return "";
     }
-    if (m_index == m_rawStr.length()) {
-        return value;
+
+    size_t keyStart = m_index;
+
+    // Find end of name
+    m_index = m_rawStr.find_first_of(" \t=", m_index);
+
+    return m_rawStr.substr(keyStart, m_index - keyStart);
+}
+
+std::string Settings::extractValue() {
+    // Find start of value
+    m_index = m_rawStr.find_first_not_of(" \t=", m_index);
+    if (m_index == std::string::npos) {
+        return "";
     }
 
     size_t valueStart = m_index;
 
-    // Find end of name
-    while (m_rawStr[m_index] != ' ' && m_rawStr[m_index] != '\t' &&
-           m_rawStr[m_index] != '=' && m_index < m_rawStr.length()) {
-        m_index++;
-    }
-    if (m_index == m_rawStr.length() && isName) {
-        return value;
-    }
+    // Find end of value
+    m_index = m_rawStr.find_first_of(" \t", m_index);
 
-    value = m_rawStr.substr(valueStart, m_index - valueStart);
-
-    if (isName) {
-        // If end of name was delimited by an equals sign
-        if (m_rawStr[m_index] == '=') {
-            hasEquals = true;
-        }
-
-        // Find an equals sign if there wasn't already one
-        while (!hasEquals && m_rawStr[m_index] != '=' &&
-               m_index < m_rawStr.length()) {
-            m_index++;
-        }
-        if (m_index == m_rawStr.length()) {
-            return value;
-        }
-
-        /* Since the last character was an equals sign in either case,
-         * advance to the next character for finding the value
-         */
-        m_index++;
-    }
-
-    return value;
+    return m_rawStr.substr(valueStart, m_index - valueStart);
 }
 

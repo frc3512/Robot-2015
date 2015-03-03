@@ -67,7 +67,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_toteHeights["EV_GROUND"] = m_settings->getDouble("EV_GROUND");
 
     double height = 0;
-    for (int i = 0; i <= 6; i++) {
+    for (int i = 1; i <= 6; i++) {
         height = m_settings->getDouble("EV_TOTE_" + std::to_string(i));
         m_toteHeights["EV_TOTE_" + std::to_string(i)] = height;
     }
@@ -343,27 +343,45 @@ void Elevator::pollLimitSwitches() {
 }
 
 void Elevator::raiseElevator(std::string level) {
-    size_t pos;
-    size_t newpos;
+    size_t op = 0;
+    size_t pos = 0;
+    size_t nextPos = 0;
     double height = 0;
+    decltype(m_toteHeights)::iterator it;
 
-    pos = std::min(level.find('+'), level.find('-'));
-    auto it = m_toteHeights.find(level.substr(0, pos));
-    if (it != m_toteHeights.end()) {
-        height = it->second;
-    }
+    bool firstNumber = true;
     while (pos != std::string::npos) {
-        newpos = std::min(level.find('+', pos + 1), level.find('-', pos + 1));
-        it = m_toteHeights.find(level.substr(pos + 1, newpos));
+        if (!firstNumber) {
+            op = level.find_first_of("+-", pos);
+            if (op == std::string::npos) {
+                break;
+            }
+        }
+        else {
+            /* There is no operator associated with the first number, so keep
+             * 'op' 0. This special case will be checked below so the number
+             * is added to the total
+             */
+            firstNumber = false;
+        }
+
+        pos = level.find_first_not_of("+- ", op);
+        if (pos == std::string::npos) {
+            break;
+        }
+        nextPos = level.find_first_of("+- ", pos);
+
+        it = m_toteHeights.find(level.substr(pos, nextPos - pos));
         if (it != m_toteHeights.end()) {
-            if (level[newpos] == '+') {
+            if (level[op] == '+' || op == 0) {
                 height += it->second;
             }
-            else if (level[newpos] == '-') {
+            else if (level[op] == '-') {
                 height -= it->second;
             }
         }
-        pos = newpos;
+
+        pos = nextPos;
     }
 
     /* Only allow changing the elevator height manually if not currently

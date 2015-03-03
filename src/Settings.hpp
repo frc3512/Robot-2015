@@ -47,7 +47,8 @@ private:
     // Used when stepping through m_rawStr
     size_t m_index;
 
-    std::string extractDataFromString(const bool& isName);
+    std::string extractKey();
+    std::string extractValue();
 };
 
 #endif // SETTINGS_HPP
