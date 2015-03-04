@@ -46,14 +46,29 @@ void Robot::OperatorControl() {
             robotDrive->drive(driveStick1->GetY(), driveStick2->GetX());
         }
 
-        // Manual state machine
-        if (evButtons.releasedButton(5)) {
+        // Open/close tines
+        if (evButtons.releasedButton(1)) {
+            ev->elevatorGrab(!ev->isElevatorGrabbed());
+        }
+
+        // Open/close intake
+        if (evButtons.releasedButton(2)) {
+            ev->intakeGrab(!ev->isIntakeGrabbed());
+        }
+
+        // Start auto-stacking mode
+        if (evButtons.releasedButton(3)) {
+            ev->stackTotes();
+        }
+
+        // Manual height control
+        if (evButtons.releasedButton(4)) {
             ev->setManualMode(!ev->isManualMode());
         }
 
-        // Auto-stacking mode
-        if (evButtons.releasedButton(4)) {
-            ev->stackTotes();
+        // Stow intake
+        if (evButtons.releasedButton(5)) {
+            ev->stowIntake(!ev->isIntakeStowed());
         }
 
         std::string offsetString;
@@ -66,37 +81,27 @@ void Robot::OperatorControl() {
 
         // Automatic preset buttons (7-12)
         // TODO: Special case for level 0
-        if (evButtons.releasedButton(7)) {
+        if (evButtons.releasedButton(8)) {
             ev->raiseElevator("EV_GROUND" + offsetString);
         }
-        if (evButtons.releasedButton(8)) {
+        if (evButtons.releasedButton(7)) {
             ev->raiseElevator("EV_TOTE_1" + offsetString);
         }
-        if (evButtons.releasedButton(9)) {
+        if (evButtons.releasedButton(10)) {
             ev->raiseElevator("EV_TOTE_2" + offsetString);
         }
-        if (evButtons.releasedButton(10)) {
+        if (evButtons.releasedButton(9)) {
             ev->raiseElevator("EV_TOTE_3" + offsetString);
         }
-        if (evButtons.releasedButton(11)) {
+        if (evButtons.releasedButton(12)) {
             ev->raiseElevator("EV_TOTE_4" + offsetString);
         }
-        if (evButtons.releasedButton(12)) {
+        if (evButtons.releasedButton(11)) {
             ev->raiseElevator("EV_TOTE_5" + offsetString);
         }
 
         // Set manual value
         ev->setManualLiftSpeed(evStick->GetY());
-
-        if (evButtons.releasedButton(1)) {
-            ev->elevatorGrab(!ev->isElevatorGrabbed());
-        }
-        if (evButtons.releasedButton(2)) {
-            ev->intakeGrab(!ev->isIntakeGrabbed());
-        }
-        if (evButtons.releasedButton(3)) {
-            ev->stowIntake(!ev->isIntakeStowed());
-        }
 
         if (evStick->GetPOV() == 0) {
             ev->setIntakeDirection(Elevator::S_FORWARD);
