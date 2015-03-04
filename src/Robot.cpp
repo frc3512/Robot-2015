@@ -39,8 +39,7 @@ Robot::~Robot() {
 void Robot::OperatorControl() {
     while (IsEnabled() && IsOperatorControl()) {
         if (driveStick2->GetRawButton(2)) {
-            robotDrive->drive(driveStick1->GetY(), driveStick2->GetX(),
-                              true);
+            robotDrive->drive(driveStick1->GetY(), driveStick2->GetX(), true);
         }
         else {
             robotDrive->drive(driveStick1->GetY(), driveStick2->GetX());
@@ -74,9 +73,17 @@ void Robot::OperatorControl() {
         std::string offsetString;
         if (evStick->GetThrottle() > 0) {
             offsetString = "+EV_HALF_TOTE_OFFSET";
+
+            if (!ev->isFeeding()) {
+                ev->setFeeding(true);
+            }
         }
         else {
             offsetString = "";
+
+            if (ev->isFeeding()) {
+                ev->setFeeding(false);
+            }
         }
 
         // Automatic preset buttons (7-12)

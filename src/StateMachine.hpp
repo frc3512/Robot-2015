@@ -35,7 +35,7 @@ public:
     bool setState(std::string nextState);
 
     // Returns name of current state
-    std::string getState();
+    std::string getState() const;
 
     // Call this periodically to operate the state machine
     void run();

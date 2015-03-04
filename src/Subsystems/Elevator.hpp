@@ -38,30 +38,36 @@ public:
 
     // Actuates elevator tines in/out
     void elevatorGrab(bool state);
-    bool isElevatorGrabbed();
+    bool isElevatorGrabbed() const;
 
     // Actuates intake arms in/out
     void intakeGrab(bool state);
-    bool isIntakeGrabbed();
+    bool isIntakeGrabbed() const;
 
     // Stows/unstows intake arms
     void stowIntake(bool state);
-    bool isIntakeStowed();
+    bool isIntakeStowed() const;
 
     // Sets direction of intake wheels
     void setIntakeDirection(IntakeMotorState state);
-    IntakeMotorState getIntakeDirection();
+    IntakeMotorState getIntakeDirection() const;
 
     // Sets speed of lift gearbox directly if manual input is enabled
     void setManualLiftSpeed(double value);
-    double getManualLiftSpeed();
+    double getManualLiftSpeed() const;
 
     void setManualMode(bool on);
-    bool isManualMode();
+    bool isManualMode() const;
+
+    /* If feeding is enabled, auto stacking levels will be shifted up by one
+     * tote to accommodate the feeder station.
+     */
+    void setFeeding(bool feed);
+    bool isFeeding() const;
 
     // Sets setpoint for elevator PID controller
     void setHeight(double height);
-    double getHeight();
+    double getHeight() const;
 
     void reloadPID();
     void resetEncoders();
@@ -77,7 +83,7 @@ public:
     void manualChangeSetpoint(double delta);
 
     void stackTotes();
-    bool isStacking();
+    bool isStacking() const;
     void cancelStack();
 
     // Periodic
@@ -97,6 +103,7 @@ private:
     std::unique_ptr<DigitalInput> m_frontRightLimit;
     std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
     bool m_manual;
+    bool m_feeding;
 
     std::map<std::string, double> m_toteHeights;
     std::unique_ptr<Timer> m_profileTimer;

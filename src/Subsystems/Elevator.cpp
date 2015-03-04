@@ -20,6 +20,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_frontRightLimit = std::make_unique<DigitalInput>(1);
     m_intakeState = S_STOPPED;
     m_manual = false;
+    m_feeding = false;
 
     // For CANTalon PID loop
     m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 7, 2);
@@ -135,7 +136,14 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_autoStackSM.addState(state);
 
     state = new State("SEEK_GROUND");
-    state->initFunc = [this] { setProfileHeight(m_toteHeights["EV_GROUND"]); };
+    state->initFunc = [this] {
+        if (isFeeding()) {
+            setProfileHeight(m_toteHeights["EV_TOTE_1"]);
+        }
+        else {
+            setProfileHeight(m_toteHeights["EV_GROUND"]);
+        }
+    };
     state->advanceFunc = [this] {
         if (atGoal()) {
             return "GRAB";
@@ -163,7 +171,14 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_autoStackSM.addState(state);
 
     state = new State("SEEK_HALF_TOTE");
-    state->initFunc = [this] { setProfileHeight(m_toteHeights["EV_TOTE_1"]); };
+    state->initFunc = [this] {
+        if (isFeeding()) {
+            setProfileHeight(m_toteHeights["EV_TOTE_2"]);
+        }
+        else {
+            setProfileHeight(m_toteHeights["EV_TOTE_1"]);
+        }
+    };
     state->advanceFunc = [this] {
         if (atGoal()) {
             return "INTAKE_IN";
@@ -206,7 +221,7 @@ void Elevator::elevatorGrab(bool state) {
     m_grabSolenoid->Set(!state);
 }
 
-bool Elevator::isElevatorGrabbed() {
+bool Elevator::isElevatorGrabbed() const {
     return !m_grabSolenoid->Get();
 }
 
@@ -214,7 +229,7 @@ void Elevator::intakeGrab(bool state) {
     m_intakeGrabber->Set(state);
 }
 
-bool Elevator::isIntakeGrabbed() {
+bool Elevator::isIntakeGrabbed() const {
     return m_intakeGrabber->Get();
 }
 
@@ -222,7 +237,7 @@ void Elevator::stowIntake(bool state) {
     m_intakeVertical->Set(!state);
 }
 
-bool Elevator::isIntakeStowed() {
+bool Elevator::isIntakeStowed() const {
     return !m_intakeVertical->Get();
 }
 
@@ -251,7 +266,7 @@ void Elevator::setIntakeDirection(IntakeMotorState state) {
     }
 }
 
-Elevator::IntakeMotorState Elevator::getIntakeDirection() {
+Elevator::IntakeMotorState Elevator::getIntakeDirection() const {
     return m_intakeState;
 }
 
@@ -261,7 +276,7 @@ void Elevator::setManualLiftSpeed(double value) {
     }
 }
 
-double Elevator::getManualLiftSpeed() {
+double Elevator::getManualLiftSpeed() const {
     if (m_manual) {
         return m_liftGrbx->get(Grbx::Raw);
     }
@@ -282,8 +297,16 @@ void Elevator::setManualMode(bool on) {
     }
 }
 
-bool Elevator::isManualMode() {
+bool Elevator::isManualMode() const {
     return m_manual;
+}
+
+void Elevator::setFeeding(bool feed) {
+    m_feeding = feed;
+}
+
+bool Elevator::isFeeding() const {
+    return m_feeding;
 }
 
 void Elevator::setHeight(double height) {
@@ -292,7 +315,7 @@ void Elevator::setHeight(double height) {
     }
 }
 
-double Elevator::getHeight() {
+double Elevator::getHeight() const {
     return m_liftGrbx->get(Grbx::Position);
 }
 
@@ -439,7 +462,7 @@ void Elevator::stackTotes() {
     m_startAutoStacking = true;
 }
 
-bool Elevator::isStacking() {
+bool Elevator::isStacking() const {
     return m_autoStackSM.getState() != "IDLE";
 }
 
