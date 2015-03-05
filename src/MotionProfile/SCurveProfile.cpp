@@ -23,44 +23,39 @@ double SCurveProfile::updateSetpoint(double curTime, double curSource) {
 
     if (curTime < m_timeToMaxA) {
         // Ramp up acceleration
-        tmpSP = (0.5 * m_jerk * pow(curTime, 2)) * m_sign;
+        tmpSP = 0.5 * m_jerk * pow(curTime, 2);
     }
     else if (curTime < m_t2) {
         // Increase speed at max acceleration
-        tmpSP = (0.5 * m_jerk * pow(m_timeToMaxA, 2) + m_acceleration *
-                 (curTime - m_timeToMaxA)) * m_sign;
+        tmpSP = m_acceleration * (curTime - 0.5 * m_timeToMaxA);
     }
     else if (curTime < m_t3) {
         // Ramp down acceleration
-        tmpSP = (0.5 * m_jerk * pow(m_timeToMaxA, 2) + m_acceleration *
-                 (m_t2 - m_timeToMaxA) - 0.5 * m_jerk *
-                 pow(m_t2 - curTime, 2)) *
-                m_sign;
+        tmpSP = m_acceleration * m_t2 - 0.5 * m_jerk * pow(m_t2 - curTime, 2);
     }
     else if (curTime < m_t4) {
         // Maintain max velocity
-        tmpSP = m_profileMaxVelocity * m_sign;
+        tmpSP = m_profileMaxVelocity;
     }
     else if (curTime < m_t5) {
         // Ramp down acceleration
-        tmpSP = m_profileMaxVelocity - 0.5 * m_jerk * pow(curTime - m_t4, 2) *
-                m_sign;
+        tmpSP = m_profileMaxVelocity - 0.5 * m_jerk * pow(curTime - m_t4, 2);
     }
     else if (curTime < m_t6) {
         // Decrease speed at max acceleration
-        tmpSP = m_jerk * pow(m_timeToMaxA, 2) + m_acceleration *
-                (m_t2 - m_timeToMaxA + m_t5 - curTime) * m_sign;
+        tmpSP = m_acceleration * m_timeToMaxA + m_acceleration *
+                (m_t2 - m_timeToMaxA + m_t5 - curTime);
     }
     else if (curTime < m_t7) {
         // Ramp down acceleration
-        tmpSP = 0.5 * pow(m_t6 - curTime, 2) * m_sign;
+        tmpSP = 0.5 * m_jerk * pow(m_t6 - curTime, 2);
     }
 
     if (m_mode == SetpointMode::distance) {
-        m_setpoint += tmpSP * (curTime - m_lastTime);
+        m_setpoint += tmpSP * m_sign * (curTime - m_lastTime);
     }
     else if (m_mode == SetpointMode::velocity) {
-        m_setpoint = tmpSP;
+        m_setpoint = tmpSP * m_sign;
     }
 
     m_lastTime = curTime;
@@ -76,9 +71,8 @@ double SCurveProfile::setGoal(double t, double goal, double curSource) {
     m_sign = (m_setpoint < 0) ? -1.0 : 1.0;
 
     // If profile can't accelerate up to max velocity before decelerating
-    bool shortProfile = 2.0 / 3.0 * m_acceleration * pow(m_timeToMaxA, 2) +
-                        pow(m_maxVelocity, 2) / m_acceleration + m_timeToMaxA *
-                        m_maxVelocity > m_sign * m_setpoint;
+    bool shortProfile = m_maxVelocity * (m_timeToMaxA + m_maxVelocity /
+                                         m_acceleration) > m_sign * m_setpoint;
 
     if (shortProfile) {
         m_profileMaxVelocity = m_acceleration * (sqrt(m_sign * m_setpoint /
@@ -98,8 +92,7 @@ double SCurveProfile::setGoal(double t, double goal, double curSource) {
         m_t4 = m_t3;
     }
     else {
-        m_t4 = m_sign * m_setpoint / m_profileMaxVelocity - 2.0 / 3.0 *
-               pow(m_timeToMaxA, 2) / m_t2 + 2 * m_t2 - m_timeToMaxA;
+        m_t4 = m_sign * m_setpoint / m_profileMaxVelocity;
     }
     m_t5 = m_t4 + m_timeToMaxA;
     m_t6 = m_t4 + m_t2;
