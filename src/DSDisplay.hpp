@@ -4,8 +4,8 @@
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
 
-#ifndef DRIVER_STATION_DISPLAY_HPP
-#define DRIVER_STATION_DISPLAY_HPP
+#ifndef DS_DISPLAY_HPP
+#define DS_DISPLAY_HPP
 
 /* This class allows you to pack data into an SFML packet and send it to an
  * application on the DriverStation that displays it in a GUI.
@@ -44,11 +44,8 @@
 
 #include "AutonContainer.hpp"
 
-#include <cstring>
 #include <cstdint>
-#include <fstream>
 #include <string>
-#include <functional>
 
 class DSDisplay {
 public:
@@ -107,7 +104,7 @@ public:
 private:
     DSDisplay(unsigned short portNumber);
 
-    DSDisplay(const DSDisplay&);
+    DSDisplay(const DSDisplay&) = delete;
     DSDisplay& operator=(const DSDisplay&) = delete;
 
     sf::Packet m_packet;
@@ -127,5 +124,5 @@ private:
 
 #include "DSDisplay.inl"
 
-#endif // DRIVER_STATION_DISPLAY_HPP
+#endif // DS_DISPLAY_HPP
 

@@ -4,7 +4,10 @@
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
 
-#include <DSDisplay.hpp>
+#include "DSDisplay.hpp"
+#include <functional>
+#include <fstream>
+#include <cstring>
 
 DSDisplay::~DSDisplay() {
 }
@@ -179,8 +182,7 @@ void DSDisplay::addData(std::string ID, bool data) {
         m_packet << static_cast<int8_t>(DSDisplay::active);
     }
     else {
-        m_packet <<
-            static_cast<int8_t>(DSDisplay::inactive);
+        m_packet << static_cast<int8_t>(DSDisplay::inactive);
     }
 }
 
@@ -236,7 +238,6 @@ void DSDisplay::addData(std::string ID, float data) {
 
     m_packet << static_cast<int8_t>('s');
     m_packet << ID;
-
     m_packet << std::to_string(data);
 }
 
@@ -248,7 +249,6 @@ void DSDisplay::addData(std::string ID, double data) {
 
     m_packet << static_cast<int8_t>('s');
     m_packet << ID;
-
     m_packet << std::to_string(data);
 }
 

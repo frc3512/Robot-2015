@@ -29,10 +29,8 @@ double BezierCurve::getArcLength(double start, double end) const {
     double length = 0.0;
 
     for (double t = start; t < end; t += 0.0001) {
-        length +=
-            std::sqrt(std::pow(getDerivative(t, true),
-                               2.0) +
-                      std::pow(getDerivative(t, false), 2.0)) * 0.0001;
+        length += std::hypot(getDerivative(t, true), getDerivative(t, false)) *
+                  0.0001;
     }
 
     return length;
