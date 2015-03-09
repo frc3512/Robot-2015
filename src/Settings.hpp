@@ -22,17 +22,17 @@ public:
     /* Returns value associated with the given key
      * Returns "NOT_FOUND" if there is no entry for that name-value pair
      */
-    const std::string getString(const std::string& key) const;
+    std::string getString(const std::string& key) const;
 
     /* Returns value associated with the given key
      * Returns 0 if there is no entry for that name-value pair
      */
-    const double getDouble(const std::string& key) const;
+    double getDouble(const std::string& key) const;
 
     /* Returns value associated with the given key
      * Returns 0 if there is no entry for that name-value pair
      */
-    const int getInt(const std::string& key) const;
+    int getInt(const std::string& key) const;
 
     // Saves all name-value pairs to external file with the given name
     void saveToFile(const std::string& fileName);

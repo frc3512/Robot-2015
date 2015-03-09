@@ -45,7 +45,7 @@ void Settings::update() {
     std::cout << "Settings loaded from " << m_fileName << "\n";
 }
 
-const std::string Settings::getString(const std::string& key) const {
+std::string Settings::getString(const std::string& key) const {
     auto index = m_values.find(key);
 
     // If the element wasn't found
@@ -59,7 +59,7 @@ const std::string Settings::getString(const std::string& key) const {
     return index->second;
 }
 
-const double Settings::getDouble(const std::string& key) const {
+double Settings::getDouble(const std::string& key) const {
     auto index = m_values.find(key);
 
     // If the element wasn't found
@@ -73,7 +73,7 @@ const double Settings::getDouble(const std::string& key) const {
     return atof(index->second.c_str());
 }
 
-const int Settings::getInt(const std::string& key) const {
+int Settings::getInt(const std::string& key) const {
     auto index = m_values.find(key);
 
     // If the element wasn't found
