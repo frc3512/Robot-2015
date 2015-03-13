@@ -56,7 +56,7 @@ const std::string DSDisplay::receiveFromDS() {
 
             // Open the file
             // FIXME: May crash if file has \n for newlines instead of \r\n
-            std::ifstream guiFile("GUISettings.txt", std::ifstream::binary);
+            std::ifstream guiFile("/home/lvuser/GUISettings.txt", std::ifstream::binary);
 
             if (guiFile.is_open()) {
                 // Get its length
