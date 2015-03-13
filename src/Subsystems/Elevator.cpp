@@ -138,7 +138,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     state = new State("SEEK_GROUND");
     state->initFunc = [this] {
         if (isFeeding()) {
-            setProfileHeight(m_toteHeights["EV_TOTE_1"]-4);
+            setProfileHeight(m_toteHeights["EV_TOTE_1"] - 4);
         }
         else {
             setProfileHeight(m_toteHeights["EV_GROUND"]);
@@ -246,11 +246,9 @@ void Elevator::setIntakeDirectionLeft(IntakeMotorState state) {
 
     if (state == S_STOPPED) {
         m_intakeWheelLeft->Set(0);
-
     }
     else if (state == S_FORWARD) {
         m_intakeWheelLeft->Set(1);
-
     }
     else if (state == S_REVERSE) {
         m_intakeWheelLeft->Set(-1);
@@ -374,11 +372,11 @@ void Elevator::pollLimitSwitches() {
     // Check encoder reset limit switch
     if (m_liftGrbx->isRevLimitSwitchClosed()) {
         m_liftGrbx->resetEncoder();
-
     }
 
     // Check front limit switches
-    if (!m_frontLeftLimit->Get() && !m_frontRightLimit->Get() && !isManualMode()) {
+    if (!m_frontLeftLimit->Get() && !m_frontRightLimit->Get() &&
+        !isManualMode()) {
         stackTotes();
     }
 }
