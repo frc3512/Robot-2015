@@ -34,6 +34,7 @@ public:
     void AutoDriveForward();
     void AutoOneTote();
     void AutoNoop();
+    void AutoMotionProfile();
 
     void DS_PrintOut();
 
