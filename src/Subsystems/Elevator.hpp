@@ -49,7 +49,8 @@ public:
     bool isIntakeStowed() const;
 
     // Sets direction of intake wheels
-    void setIntakeDirection(IntakeMotorState state);
+    void setIntakeDirectionLeft(IntakeMotorState state);
+    void setIntakeDirectionRight(IntakeMotorState state);
     IntakeMotorState getIntakeDirection() const;
 
     // Sets speed of lift gearbox directly if manual input is enabled

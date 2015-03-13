@@ -111,19 +111,37 @@ void Robot::OperatorControl() {
         ev->setManualLiftSpeed(evStick->GetY());
 
         if (evStick->GetPOV() == 0) {
-            ev->setIntakeDirection(Elevator::S_FORWARD);
+            ev->setIntakeDirectionLeft(Elevator::S_FORWARD);
+            ev->setIntakeDirectionRight(Elevator::S_FORWARD);
         }
         else if (evStick->GetPOV() == 90) {
-            ev->setIntakeDirection(Elevator::S_ROTATE_CCW);
+            ev->setIntakeDirectionLeft(Elevator::S_ROTATE_CCW);
+            ev->setIntakeDirectionRight(Elevator::S_ROTATE_CCW);
         }
         else if (evStick->GetPOV() == 180) {
-            ev->setIntakeDirection(Elevator::S_REVERSE);
+            ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
+            ev->setIntakeDirectionRight(Elevator::S_REVERSE);
         }
         else if (evStick->GetPOV() == 270) {
-            ev->setIntakeDirection(Elevator::S_ROTATE_CW);
+            ev->setIntakeDirectionLeft(Elevator::S_ROTATE_CW);
+            ev->setIntakeDirectionRight(Elevator::S_ROTATE_CW);
         }
         else {
-            ev->setIntakeDirection(Elevator::S_STOPPED);
+            ev->setIntakeDirectionLeft(Elevator::S_STOPPED);
+            ev->setIntakeDirectionRight(Elevator::S_STOPPED);
+        }
+
+        if (driveStick1->GetRawButton(1)) {
+            ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
+        }
+        if (driveStick2->GetRawButton(1)) {
+            ev->setIntakeDirectionRight(Elevator::S_REVERSE);
+        }
+        if (driveStick1->GetPOV() == 0) {
+            ev->setIntakeDirectionLeft(Elevator::S_FORWARD);
+        }
+        if (driveStick2->GetPOV() == 0) {
+            ev->setIntakeDirectionRight(Elevator::S_FORWARD);
         }
 
         if (drive2Buttons.releasedButton(12)) {
