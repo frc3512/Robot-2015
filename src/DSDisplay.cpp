@@ -56,8 +56,8 @@ const std::string DSDisplay::receiveFromDS() {
             m_packet << static_cast<std::string>("guiCreate\r\n");
 
             // Open the file
-            // FIXME: May crash if file has \n for newlines instead of \r\n
-            std::ifstream guiFile("/home/lvuser/GUISettings.txt", std::ifstream::binary);
+            std::ifstream guiFile("/home/lvuser/GUISettings.txt",
+                    std::ifstream::binary);
 
             if (guiFile.is_open()) {
                 // Get its length
@@ -112,12 +112,13 @@ const std::string DSDisplay::receiveFromDS() {
             m_packet << m_autonModes.name(m_curAutonMode);
 
             // Store newest autonomous choice to file for persistent storage
-            std::ofstream autonModeFile("/home/lvuser/autonMode.txt",
-                                        std::ofstream::trunc);
-            if (autonModeFile.is_open()) {
-                autonModeFile << m_curAutonMode;
+            FILE* autonModeFile = fopen("/home/lvuser/autonMode.txt", "w");
+            if (autonModeFile) {
+                char temp[] = "auto";
+                fwrite(temp, 1, 4, autonModeFile);
+                fwrite(&m_curAutonMode, 1, sizeof(m_curAutonMode), autonModeFile);
 
-                autonModeFile.close();
+                fclose(autonModeFile);
             }
             else {
                 std::cout << "DSDisplay: autonSelect: failed to open autonMode.txt\n";
@@ -143,11 +144,33 @@ DSDisplay::DSDisplay(unsigned short portNumber) :
     m_recvAmount = 0;
 
     // Retrieve stored autonomous index
-    std::ifstream autonModeFile("/home/lvuser/autonMode.txt");
-    if (autonModeFile.is_open()) {
-        autonModeFile >> m_curAutonMode;
+#if 0
+    std::ifstream autonModeFile("/home/lvuser/autonMode.txt",
+            std::fstream::trunc);
+    if (autonModeFile.good()) {
+        char temp[4];
+        autonModeFile.read(temp, 4);
 
-        autonModeFile.close();
+        autonModeFile >> m_curAutonMode;
+    }
+    else {
+        m_curAutonMode = 0;
+    }
+#endif
+
+    FILE* autonModeFile = fopen("/home/lvuser/autonMode.txt", "r");
+    if (autonModeFile) {
+        char temp[4];
+        fread(temp, 1, 4, autonModeFile);
+
+        if (std::strcmp(temp, "auto") == 0) {
+            fread(&m_curAutonMode, 1, sizeof(m_curAutonMode), autonModeFile);
+        }
+        else {
+            m_curAutonMode = 0;
+        }
+
+        fclose(autonModeFile);
     }
     else {
         m_curAutonMode = 0;
@@ -160,6 +183,10 @@ void DSDisplay::deleteAllMethods() {
 
 void DSDisplay::execAutonomous() {
     m_autonModes.execAutonomous(m_curAutonMode);
+}
+
+char DSDisplay::getAutonID() const {
+    return m_curAutonMode;
 }
 
 void DSDisplay::addData(std::string ID, StatusLight data) {

@@ -81,6 +81,9 @@ public:
     // Runs autonomous function currently selected
     void execAutonomous();
 
+    // Returns position of currently selected autonomous in function array
+    char getAutonID() const;
+
     /* Add UI element data to packet
      *
      * The types allowed for 'data' are char, int, unsigned int, std::wstring,

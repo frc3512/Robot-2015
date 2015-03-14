@@ -26,7 +26,6 @@
 class Robot : public SampleRobot {
 public:
     Robot();
-    virtual ~Robot();
     void OperatorControl();
     void Autonomous();
     void Disabled();

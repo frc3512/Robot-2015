@@ -33,9 +33,6 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
     displayTimer->Start();
 }
 
-Robot::~Robot() {
-}
-
 void Robot::OperatorControl() {
     while (IsEnabled() && IsOperatorControl()) {
         if (driveStick2->GetRawButton(2)) {
@@ -198,12 +195,14 @@ void Robot::OperatorControl() {
     }
 }
 
-
 void Robot::Autonomous() {
     autoTimer->Reset();
     autoTimer->Start();
 
-    dsDisplay.execAutonomous();
+    std::cout << "Robot: running autonomous mode " <<
+            static_cast<int>(dsDisplay.getAutonID()) << "\n";
+    AutoNoop();
+    //dsDisplay.execAutonomous();
 
     autoTimer->Stop();
 }
