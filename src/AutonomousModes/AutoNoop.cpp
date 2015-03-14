@@ -2,7 +2,9 @@
 #include <Timer.h>
 
 void Robot::AutoNoop() {
-    while (IsAutonomous()) {
+    while (IsAutonomous() && IsEnabled()) {
+        DS_PrintOut();
+
         Wait(0.01);
     }
 }

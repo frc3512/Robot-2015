@@ -20,7 +20,10 @@ void Robot::AutoOneTote() {
     oneToteSM.setState("IDLE");
 
     state = new State("SEEK_GARBAGECAN_UP");
-    state->initFunc = [this] { ev->raiseElevator("EV_GARBAGECAN_LEVEL"); };
+    state->initFunc = [this] {
+        ev->raiseElevator("EV_GARBAGECAN_LEVEL");
+        ev->stowIntake(false);
+    };
     state->advanceFunc = [this] {
         if (ev->atGoal()) {
             return "MOVE_TO_TOTE";
@@ -51,7 +54,6 @@ void Robot::AutoOneTote() {
     state->initFunc = [this] {
         autoTimer->Reset();
         autoTimer->Start();
-        ev->stowIntake(false);
         ev->intakeGrab(true);
         ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
         ev->setIntakeDirectionRight(Elevator::S_REVERSE);
@@ -76,7 +78,7 @@ void Robot::AutoOneTote() {
         ev->setIntakeDirectionRight(Elevator::S_REVERSE);
     };
     state->advanceFunc = [this] {
-        if (autoTimer->HasPeriodPassed(1.4)) {
+        if (autoTimer->HasPeriodPassed(1.0)) {
             return "RUN_AWAY";
         }
         else {
@@ -95,7 +97,7 @@ void Robot::AutoOneTote() {
         ev->setIntakeDirectionRight(Elevator::S_REVERSE);
     };
     state->advanceFunc = [this] {
-        if (autoTimer->HasPeriodPassed(5.0)) {
+        if (autoTimer->HasPeriodPassed(3.0)) {
             return "IDLE";
         }
         else {

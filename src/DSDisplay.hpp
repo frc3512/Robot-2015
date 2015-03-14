@@ -119,7 +119,7 @@ private:
     size_t m_recvAmount; // holds number of bytes received from Driver Station
 
     AutonContainer m_autonModes;
-    char curAutonMode;
+    char m_curAutonMode;
 };
 
 #include "DSDisplay.inl"

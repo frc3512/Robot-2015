@@ -8,6 +8,7 @@
 #include <functional>
 #include <fstream>
 #include <cstring>
+#include <iostream>
 
 DSDisplay::~DSDisplay() {
 }
@@ -95,7 +96,7 @@ const std::string DSDisplay::receiveFromDS() {
             clear();
 
             m_packet << static_cast<std::string>("autonConfirmed\r\n");
-            m_packet << m_autonModes.name(curAutonMode);
+            m_packet << m_autonModes.name(m_curAutonMode);
 
             sendToDS();
 
@@ -103,20 +104,23 @@ const std::string DSDisplay::receiveFromDS() {
         }
         else if (std::strncmp(m_recvBuffer, "autonSelect\r\n", 13) == 0) {
             // Next byte after command is selection choice
-            curAutonMode = m_recvBuffer[13];
+            m_curAutonMode = m_recvBuffer[13];
 
             clear();
 
             m_packet << static_cast<std::string>("autonConfirmed\r\n");
-            m_packet << m_autonModes.name(curAutonMode);
+            m_packet << m_autonModes.name(m_curAutonMode);
 
             // Store newest autonomous choice to file for persistent storage
             std::ofstream autonModeFile("/home/lvuser/autonMode.txt",
                                         std::ofstream::trunc);
             if (autonModeFile.is_open()) {
-                autonModeFile << curAutonMode;
+                autonModeFile << m_curAutonMode;
 
                 autonModeFile.close();
+            }
+            else {
+                std::cout << "DSDisplay: autonSelect: failed to open autonMode.txt\n";
             }
 
             sendToDS();
@@ -141,12 +145,12 @@ DSDisplay::DSDisplay(unsigned short portNumber) :
     // Retrieve stored autonomous index
     std::ifstream autonModeFile("/home/lvuser/autonMode.txt");
     if (autonModeFile.is_open()) {
-        autonModeFile >> curAutonMode;
+        autonModeFile >> m_curAutonMode;
 
         autonModeFile.close();
     }
     else {
-        curAutonMode = 0;
+        m_curAutonMode = 0;
     }
 }
 
@@ -155,7 +159,7 @@ void DSDisplay::deleteAllMethods() {
 }
 
 void DSDisplay::execAutonomous() {
-    m_autonModes.execAutonomous(curAutonMode);
+    m_autonModes.execAutonomous(m_curAutonMode);
 }
 
 void DSDisplay::addData(std::string ID, StatusLight data) {

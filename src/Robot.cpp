@@ -24,9 +24,9 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
     displayTimer = std::make_unique<Timer>();
     accumTimer = std::make_unique<Timer>();
 
+    dsDisplay.addAutoMethod("Noop Auton", &Robot::AutoNoop, this);
     dsDisplay.addAutoMethod("DriveForward", &Robot::AutoDriveForward, this);
     dsDisplay.addAutoMethod("OneTote", &Robot::AutoOneTote, this);
-    dsDisplay.addAutoMethod("Noop Auton", &Robot::AutoNoop, this);
 
     pidGraph.setSendInterval(5);
 
@@ -219,9 +219,6 @@ void Robot::Disabled() {
 }
 
 void Robot::DS_PrintOut() {
-    std::cout << "left=" << robotDrive->getLeftRate() << std::endl;
-    std::cout << "right=" << robotDrive->getRightRate() << std::endl;
-
     if (pidGraph.hasIntervalPassed()) {
         pidGraph.graphData(ev->getHeight(), "Distance (EV)");
         pidGraph.graphData(ev->getSetpoint(), "Setpoint (EV)");
