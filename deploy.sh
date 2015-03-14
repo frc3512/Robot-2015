@@ -1,7 +1,6 @@
 #!/bin/bash
 HOST='10.35.12.2'
-USER='admin'
-PASSWD=''
+USER='lvuser'
 
 if [ $# -ne 1 ] ; then
     echo usage: ./deploy.sh DIRECTORY
@@ -9,11 +8,7 @@ if [ $# -ne 1 ] ; then
     exit 1
 fi
 
-ssh $USER@$HOST 'echo 'kill `ps x | grep /home/lvuser/FRCUserProgram | grep -v grep | head -n 1 | sed 's/^ *//' | cut -d ' ' -f 1`' | bash -s'
-
+ssh $USER@$HOST "killall FRCUserProgram"
 scp $1/FRCUserProgram $USER@$HOST:/home/lvuser
-
-ssh $USER@$HOST 'echo "/home/lvuser/FRCUserProgram" | bash -s'
-
-exit 0
+ssh $USER@$HOST "/home/lvuser/FRCUserProgram &"
 
