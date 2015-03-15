@@ -196,15 +196,12 @@ void Robot::OperatorControl() {
 }
 
 void Robot::Autonomous() {
-    autoTimer->Reset();
-    autoTimer->Start();
+	while(IsAutonomous() && IsEnabled()) {
+		robotDrive->drive(0.0, 0.0, false);
+		Wait(0.1);
+	}
 
-    std::cout << "Robot: running autonomous mode " <<
-            static_cast<int>(dsDisplay.getAutonID()) << "\n";
-    AutoNoop();
-    //dsDisplay.execAutonomous();
-
-    autoTimer->Stop();
+	return;
 }
 
 void Robot::Disabled() {

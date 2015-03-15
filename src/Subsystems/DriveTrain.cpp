@@ -37,8 +37,8 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2) {
     m_leftGrbx->setDistancePerPulse(72.0 / 2800.0);
     m_rightGrbx->setDistancePerPulse(72.0 / 2800.0);
 
-    m_leftGrbx->setSetpoint(0.0);
-    m_rightGrbx->setSetpoint(0.0);
+    m_leftGrbx->setManual(0.0);
+    m_rightGrbx->setManual(0.0);
 
     setWidth(27.0);
 

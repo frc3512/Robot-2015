@@ -10,7 +10,7 @@ void Robot::AutoDriveForward() {
     Timer timer;
     timer.Start();
 
-    while (!timer.HasPeriodPassed(3.0) && IsAutonomous() && IsEnabled()) {
+    while (!timer.HasPeriodPassed(1.0) && IsAutonomous() && IsEnabled()) {
         DS_PrintOut();
         robotDrive->drive(-0.3, 0.0, false);
     }
