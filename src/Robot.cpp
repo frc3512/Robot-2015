@@ -236,7 +236,8 @@ void Robot::DS_PrintOut() {
         dsDisplay.addData("ENCODER_LEFT", robotDrive->getLeftDist());
         dsDisplay.addData("ENCODER_RIGHT", robotDrive->getRightDist());
 
-        auto func = [this] (const std::string& name,
+        auto func = [this] (const std::string& lastName,
+                            const std::string& name,
                             const std::string& nextName) {
                         if (ev->getHeight() == ev->getLevelHeight(name) &&
                             ev->atGoal()) {
@@ -252,9 +253,11 @@ void Robot::DS_PrintOut() {
                         }
                     };
 
-        func("EV_GROUND", "EV_TOTE_1");
+        func("", "EV_GROUND", "EV_TOTE_1");
+        func("EV_GROUND", "EV_TOTE_1", "EV_TOTE_2");
         for (int i = 1; i < 6; i++) {
-            func("EV_TOTE_" + std::to_string(i),
+            func("EV_TOTE_" + std::to_string(i - 1),
+                 "EV_TOTE_" + std::to_string(i),
                  "EV_TOTE_" + std::to_string(i + 1));
         }
 
