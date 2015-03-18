@@ -55,8 +55,6 @@ public:
         inactive
     };
 
-    virtual ~DSDisplay();
-
     static DSDisplay& getInstance(unsigned short dsPort);
 
     // Empties internal packet of data

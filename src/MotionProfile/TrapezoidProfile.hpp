@@ -22,7 +22,7 @@
 class TrapezoidProfile : public ProfileBase {
 public:
     TrapezoidProfile(double maxV, double timeToMaxV);
-    virtual ~TrapezoidProfile();
+    virtual ~TrapezoidProfile() = default;
 
     /* If distance:
      *     curSetpoint is current distance set to which to travel

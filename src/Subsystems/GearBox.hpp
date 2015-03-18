@@ -20,7 +20,6 @@ class GearBox : public GearBoxBase<T>, public PIDOutput {
 public:
     GearBox(int shifterChan, int encA, int encB,
             int motor1, int motor2 = -1, int motor3 = -1);
-    virtual ~GearBox();
 
     // Enables PID controller automatically and sets its setpoint
     void setSetpoint(float setpoint);
@@ -84,7 +83,6 @@ public:
             int motor1,
             int motor2 = -1,
             int motor3 = -1);
-    virtual ~GearBox();
 
     // Enables PID controller automatically and sets its setpoint
     void setSetpoint(float setpoint);

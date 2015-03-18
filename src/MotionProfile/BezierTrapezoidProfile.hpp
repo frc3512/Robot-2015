@@ -24,7 +24,6 @@
 class BezierTrapezoidProfile : public TrapezoidProfile {
 public:
     BezierTrapezoidProfile(double maxV, double timeToMaxV);
-    virtual ~BezierTrapezoidProfile();
 
     /* curTime is current time
      *

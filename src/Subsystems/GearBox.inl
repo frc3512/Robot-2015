@@ -33,10 +33,6 @@ GearBox<T>::GearBox(int shifterChan,
 }
 
 template <class T>
-GearBox<T>::~GearBox() {
-}
-
-template <class T>
 void GearBox<T>::setSetpoint(float setpoint) {
     if (m_pid != nullptr) {
         if (!m_pid->IsEnabled()) {

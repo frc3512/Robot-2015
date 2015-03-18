@@ -17,7 +17,7 @@ typedef enum {
 class ProfileBase {
 public:
     ProfileBase();
-    virtual ~ProfileBase();
+    virtual ~ProfileBase() = default;
 
     virtual double updateSetpoint(double curTime, double curSource = 0.0) = 0;
 

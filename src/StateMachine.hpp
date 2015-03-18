@@ -17,7 +17,7 @@
 
 class StateMachine {
 public:
-    virtual ~StateMachine();
+    ~StateMachine();
 
     /* Ownership of 'state' will be transferred to this class, which will handle
      * destroying it.

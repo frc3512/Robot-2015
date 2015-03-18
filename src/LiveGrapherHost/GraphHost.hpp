@@ -58,7 +58,7 @@ struct[[gnu::packed]] graph_list_t{
 class GraphHost {
 public:
     GraphHost(int port);
-    virtual ~GraphHost();
+    ~GraphHost();
 
     /* * Send data (y value) for a given dataset to remote client
      * * The current time is sent as the x value

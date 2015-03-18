@@ -22,7 +22,7 @@ public:
     };
 
     SocketConnection(int nfd, int ipcWriteSock);
-    virtual ~SocketConnection();
+    ~SocketConnection();
     SocketConnection(SocketConnection&&) = default;
     SocketConnection& operator=(SocketConnection&&) = default;
 

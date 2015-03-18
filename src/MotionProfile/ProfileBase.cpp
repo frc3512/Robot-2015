@@ -11,9 +11,6 @@ ProfileBase::ProfileBase() {
     resetProfile();
 }
 
-ProfileBase::~ProfileBase() {
-}
-
 bool ProfileBase::atGoal() {
     return m_lastTime >= m_timeTotal;
 }

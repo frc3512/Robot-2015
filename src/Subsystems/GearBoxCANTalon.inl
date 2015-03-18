@@ -31,9 +31,6 @@ inline GearBox<CANTalon>::GearBox(int shifterChan,
     }
 }
 
-inline GearBox<CANTalon>::~GearBox() {
-}
-
 inline void GearBox<CANTalon>::setSetpoint(float setpoint) {
     m_motors[0]->SetControlMode(CANTalon::kPosition);
 

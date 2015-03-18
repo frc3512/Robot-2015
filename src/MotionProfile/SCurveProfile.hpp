@@ -22,7 +22,6 @@
 class SCurveProfile : public ProfileBase {
 public:
     SCurveProfile(double maxV, double maxA, double timeToMaxA);
-    virtual ~SCurveProfile();
 
     /* If distance:
      *     curSetpoint is current distance set to which to travel

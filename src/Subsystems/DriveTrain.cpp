@@ -45,9 +45,6 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2) {
     reloadPID();
 }
 
-DriveTrain::~DriveTrain() {
-}
-
 void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
     // Modified Cheesy Drive; base code courtesy of FRC Team 254
 

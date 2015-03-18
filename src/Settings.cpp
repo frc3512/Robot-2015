@@ -14,9 +14,6 @@ Settings::Settings(std::string fileName) : m_fileName(fileName),
     update();
 }
 
-Settings::~Settings() {
-}
-
 void Settings::update() {
     std::string name;
     std::string value;

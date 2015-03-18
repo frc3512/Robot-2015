@@ -17,7 +17,6 @@
 class DriveTrain : public SubsystemBase, public BezierTrapezoidProfile {
 public:
     DriveTrain();
-    virtual ~DriveTrain();
 
     /* Drives robot with given speed and turn values [-1..1].
      * This is a convenience function for use in Operator Control.

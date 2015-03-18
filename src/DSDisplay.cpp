@@ -10,9 +10,6 @@
 #include <cstring>
 #include <iostream>
 
-DSDisplay::~DSDisplay() {
-}
-
 DSDisplay& DSDisplay::getInstance(unsigned short dsPort) {
     static DSDisplay dsDisplay(dsPort);
     return dsDisplay;
@@ -57,7 +54,7 @@ const std::string DSDisplay::receiveFromDS() {
 
             // Open the file
             std::ifstream guiFile("/home/lvuser/GUISettings.txt",
-                    std::ifstream::binary);
+                                  std::ifstream::binary);
 
             if (guiFile.is_open()) {
                 // Get its length
@@ -116,12 +113,14 @@ const std::string DSDisplay::receiveFromDS() {
             if (autonModeFile) {
                 char temp[] = "auto";
                 fwrite(temp, 1, 4, autonModeFile);
-                fwrite(&m_curAutonMode, 1, sizeof(m_curAutonMode), autonModeFile);
+                fwrite(&m_curAutonMode, 1, sizeof(m_curAutonMode),
+                       autonModeFile);
 
                 fclose(autonModeFile);
             }
             else {
-                std::cout << "DSDisplay: autonSelect: failed to open autonMode.txt\n";
+                std::cout <<
+                "DSDisplay: autonSelect: failed to open autonMode.txt\n";
             }
 
             sendToDS();
@@ -146,7 +145,7 @@ DSDisplay::DSDisplay(unsigned short portNumber) :
     // Retrieve stored autonomous index
 #if 0
     std::ifstream autonModeFile("/home/lvuser/autonMode.txt",
-            std::fstream::trunc);
+                                std::fstream::trunc);
     if (autonModeFile.good()) {
         char temp[4];
         autonModeFile.read(temp, 4);

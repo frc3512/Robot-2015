@@ -13,9 +13,6 @@ SCurveProfile::SCurveProfile(double maxV, double maxA, double timeToMaxA) {
     setTimeToMaxA(timeToMaxA);
 }
 
-SCurveProfile::~SCurveProfile() {
-}
-
 double SCurveProfile::updateSetpoint(double curTime, double curSource) {
     std::lock_guard<decltype(m_varMutex)> lock(m_varMutex);
 

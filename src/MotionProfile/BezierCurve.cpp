@@ -22,9 +22,6 @@ BezierCurve::BezierCurve(const std::pair<double, double>& pt1,
     push_back(pt4);
 }
 
-BezierCurve::~BezierCurve() {
-}
-
 double BezierCurve::getArcLength(double start, double end) const {
     double length = 0.0;
 

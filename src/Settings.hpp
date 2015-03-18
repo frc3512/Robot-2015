@@ -14,7 +14,6 @@
 class Settings {
 public:
     Settings(std::string fileName);
-    virtual ~Settings();
 
     // Updates list of values from given file
     void update();

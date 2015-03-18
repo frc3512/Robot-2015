@@ -34,7 +34,7 @@ public:
     };
 
     Elevator();
-    virtual ~Elevator();
+    ~Elevator();
 
     // Actuates elevator tines in/out
     void elevatorGrab(bool state);

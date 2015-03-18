@@ -17,7 +17,6 @@ public:
                 const std::pair<double, double>& pt2,
                 const std::pair<double, double>& pt3,
                 const std::pair<double, double>& pt4);
-    virtual ~BezierCurve();
 
     // 'start' and 'end' represent start and end t values [0..1]
     double getArcLength(double start, double end) const;
