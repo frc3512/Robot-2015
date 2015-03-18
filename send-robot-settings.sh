@@ -1,7 +1,6 @@
 #!/bin/bash
 HOST='10.35.12.2'
 USER='lvuser'
-PASSWD=''
 
 # Add file names here to send them
 FILESRC=('RobotSettings.txt' 'GUISettings.txt')
