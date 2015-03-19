@@ -196,10 +196,11 @@ void Robot::OperatorControl() {
 }
 
 void Robot::Autonomous() {
-    while (IsAutonomous() && IsEnabled()) {
-        robotDrive->drive(0.0, 0.0, false);
-        Wait(0.1);
-    }
+    autoTimer->Reset();
+    autoTimer->Start();
+
+    robotDrive->resetEncoders();
+    dsDisplay.execAutonomous();
 }
 
 void Robot::Disabled() {
