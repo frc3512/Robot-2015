@@ -73,8 +73,11 @@ public:
     void reloadPID();
     void resetEncoders();
 
+    // Returns true if both of front limit switches are contacted
+    bool pollFrontLimitSwitches() const;
+
     // Periodic
-    void pollLimitSwitches();
+    void pollLiftLimitSwitches();
 
     // Takes a string representing the name of the height
     void raiseElevator(std::string level);

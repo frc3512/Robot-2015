@@ -180,7 +180,7 @@ void Robot::OperatorControl() {
         }
 
         // Poll the limit reset limit switch
-        ev->pollLimitSwitches();
+        ev->pollLiftLimitSwitches();
 
         // Update the elevator automatic stacking state
         ev->updateState();
@@ -229,36 +229,14 @@ void Robot::DS_PrintOut() {
         // Send things to DS display
         dsDisplay.clear();
 
-        dsDisplay.addData("EV_LEVEL_INCHES", ev->getHeight());
-        dsDisplay.addData("INTAKE_ARMS_CLOSED", ev->isIntakeGrabbed());
-        dsDisplay.addData("ARMS_CLOSED", ev->isElevatorGrabbed());
         dsDisplay.addData("ENCODER_LEFT", robotDrive->getLeftDist());
         dsDisplay.addData("ENCODER_RIGHT", robotDrive->getRightDist());
+        dsDisplay.addData("EV_POS_DISP", ev->getHeight());
+        dsDisplay.addData("EV_POS", 100 * ev->getHeight() / 60);
 
-        auto func = [this] (const std::string& lastName,
-                            const std::string& name,
-                            const std::string& nextName) {
-                        if (ev->getHeight() == ev->getLevelHeight(name) &&
-                            ev->atGoal()) {
-                            dsDisplay.addData(name, DSDisplay::active);
-                        }
-                        else if (ev->getHeight() <
-                                 ev->getLevelHeight(nextName)) {
-                            dsDisplay.addData(name, DSDisplay::standby);
-                            dsDisplay.addData(nextName, DSDisplay::standby);
-                        }
-                        else {
-                            dsDisplay.addData(name, DSDisplay::inactive);
-                        }
-                    };
-
-        func("", "EV_GROUND", "EV_TOTE_1");
-        func("EV_GROUND", "EV_TOTE_1", "EV_TOTE_2");
-        for (int i = 1; i < 6; i++) {
-            func("EV_TOTE_" + std::to_string(i - 1),
-                 "EV_TOTE_" + std::to_string(i),
-                 "EV_TOTE_" + std::to_string(i + 1));
-        }
+        dsDisplay.addData("EV_TOTE_INSIDE", ev->pollFrontLimitSwitches());
+        dsDisplay.addData("INTAKE_ARMS_CLOSED", ev->isIntakeGrabbed());
+        dsDisplay.addData("ARMS_CLOSED", ev->isElevatorGrabbed());
 
         dsDisplay.sendToDS();
     }

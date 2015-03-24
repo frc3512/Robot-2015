@@ -368,16 +368,14 @@ void Elevator::resetEncoders() {
     m_liftGrbx->resetEncoder();
 }
 
-void Elevator::pollLimitSwitches() {
+bool Elevator::pollFrontLimitSwitches() const {
+    return !m_frontLeftLimit->Get() && !m_frontRightLimit->Get();
+}
+
+void Elevator::pollLiftLimitSwitches() {
     // Check encoder reset limit switch
     if (m_liftGrbx->isRevLimitSwitchClosed()) {
         m_liftGrbx->resetEncoder();
-    }
-
-    // Check front limit switches
-    if (!m_frontLeftLimit->Get() && !m_frontRightLimit->Get() &&
-        !isManualMode()) {
-        stackTotes();
     }
 }
 
