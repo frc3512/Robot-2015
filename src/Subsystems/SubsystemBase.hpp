@@ -14,7 +14,7 @@
 class SubsystemBase {
 public:
     SubsystemBase();
-    virtual ~SubsystemBase();
+    virtual ~SubsystemBase() = default;
 
     virtual void reloadPID() = 0;
     virtual void resetEncoders() = 0;

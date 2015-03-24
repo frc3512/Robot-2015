@@ -10,6 +10,3 @@ SubsystemBase::SubsystemBase() {
     m_settings = std::make_unique<Settings>("/home/lvuser/RobotSettings.txt");
 }
 
-SubsystemBase::~SubsystemBase() {
-}
-

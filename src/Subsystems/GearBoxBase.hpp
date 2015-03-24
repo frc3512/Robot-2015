@@ -35,7 +35,7 @@ class GearBoxBase {
 public:
     GearBoxBase(int shifterChan, int encA, int encB,
                 int motor1, int motor2 = -1, int motor3 = -1);
-    virtual ~GearBoxBase();
+    virtual ~GearBoxBase() = default;
 
     // Enables PID controller automatically and sets its setpoint
     virtual void setSetpoint(float setpoint) = 0;
