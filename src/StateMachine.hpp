@@ -17,8 +17,6 @@
 
 class StateMachine {
 public:
-    ~StateMachine();
-
     /* Ownership of 'state' will be transferred to this class, which will handle
      * destroying it.
      */

@@ -7,12 +7,6 @@
 #include "StateMachine.hpp"
 #include <iostream>
 
-StateMachine::~StateMachine() {
-    if (m_currentState != nullptr) {
-        m_currentState->endFunc();
-    }
-}
-
 void StateMachine::addState(State* state) {
     m_states.push_back(std::unique_ptr<State>(state));
 }
