@@ -49,7 +49,7 @@
 
 class DSDisplay {
 public:
-    enum StatusLight {
+    enum StatusLight : int8_t {
         active,
         standby,
         inactive
@@ -60,11 +60,8 @@ public:
     // Empties internal packet of data
     void clear();
 
-    /* Sends data currently in packet to Driver Station. 'userData' holds the
-     * packet to be sent to the Driver Station. If the pointer is nullptr, this
-     * class's internal packet is sent instead.
-     */
-    void sendToDS(sf::Packet* userData = nullptr);
+    // Sends data currently in class's internal packet to Driver Station
+    void sendToDS();
 
     // Receives control commands from Driver Station and processes them
     const std::string receiveFromDS();

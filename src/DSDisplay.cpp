@@ -19,24 +19,13 @@ void DSDisplay::clear() {
     m_packet.clear();
 }
 
-void DSDisplay::sendToDS(sf::Packet* userData) {
+void DSDisplay::sendToDS() {
     if (m_dsIP != sf::IpAddress::None) {
-        if (userData == nullptr) {
-            m_socket.send(m_packet, m_dsIP, m_dsPort);
-        }
-        else {
-            m_socket.send(*userData, m_dsIP, m_dsPort);
-        }
+        m_socket.send(m_packet, m_dsIP, m_dsPort);
     }
 
     // Used for testing purposes
-    sf::IpAddress testIP(10, 35, 12, 42);
-    if (userData == nullptr) {
-        m_socket.send(m_packet, testIP, m_dsPort);
-    }
-    else {
-        m_socket.send(*userData, testIP, m_dsPort);
-    }
+    m_socket.send(m_packet, sf::IpAddress(10, 35, 12, 42), m_dsPort);
 }
 
 const std::string DSDisplay::receiveFromDS() {
@@ -120,7 +109,7 @@ const std::string DSDisplay::receiveFromDS() {
             }
             else {
                 std::cout <<
-                "DSDisplay: autonSelect: failed to open autonMode.txt\n";
+                    "DSDisplay: autonSelect: failed to open autonMode.txt\n";
             }
 
             sendToDS();
@@ -224,7 +213,7 @@ void DSDisplay::addData(std::string ID, int8_t data) {
 
     m_packet << static_cast<int8_t>('c');
     m_packet << ID;
-    m_packet << static_cast<int8_t>(data);
+    m_packet << data;
 }
 
 void DSDisplay::addData(std::string ID, int32_t data) {
@@ -235,7 +224,7 @@ void DSDisplay::addData(std::string ID, int32_t data) {
 
     m_packet << static_cast<int8_t>('i');
     m_packet << ID;
-    m_packet << static_cast<int32_t>(data);
+    m_packet << data;
 }
 
 void DSDisplay::addData(std::string ID, uint32_t data) {
@@ -246,7 +235,7 @@ void DSDisplay::addData(std::string ID, uint32_t data) {
 
     m_packet << static_cast<int8_t>('u');
     m_packet << ID;
-    m_packet << static_cast<uint32_t>(data);
+    m_packet << data;
 }
 
 void DSDisplay::addData(std::string ID, std::string data) {
