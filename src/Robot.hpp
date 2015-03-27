@@ -30,9 +30,9 @@ public:
     void Autonomous();
     void Disabled();
 
+    void AutoNoop();
     void AutoDriveForward();
     void AutoOneTote();
-    void AutoNoop();
     void AutoMotionProfile();
 
     void DS_PrintOut();
