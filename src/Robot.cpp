@@ -184,8 +184,7 @@ void Robot::Autonomous() {
     autoTimer->Start();
 
     robotDrive->resetEncoders();
-    AutoNoop();
-    // dsDisplay.execAutonomous();
+    dsDisplay.execAutonomous();
 }
 
 void Robot::Disabled() {
