@@ -124,21 +124,39 @@ void Robot::OperatorControl() {
             ev->setIntakeDirectionRight(Elevator::S_ROTATE_CW);
         }
         else {
-            ev->setIntakeDirectionLeft(Elevator::S_STOPPED);
-            ev->setIntakeDirectionRight(Elevator::S_STOPPED);
-        }
+            if (driveStick1->GetPOV() == 0) {
+                ev->setIntakeDirectionLeft(Elevator::S_FORWARD);
+            }
+            else if (driveStick1->GetPOV() == 90) {
+                ev->setIntakeDirectionLeft(Elevator::S_ROTATE_CCW);
+            }
+            else if (driveStick1->GetPOV() == 180 ||
+                    driveStick1->GetRawButton(1)) {
+                ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
+            }
+            else if (driveStick1->GetPOV() == 270) {
+                ev->setIntakeDirectionLeft(Elevator::S_ROTATE_CW);
+            }
+            else {
+                ev->setIntakeDirectionLeft(Elevator::S_STOPPED);
+            }
 
-        if (driveStick1->GetRawButton(1)) {
-            ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
-        }
-        if (driveStick2->GetRawButton(1)) {
-            ev->setIntakeDirectionRight(Elevator::S_REVERSE);
-        }
-        if (driveStick1->GetPOV() == 0) {
-            ev->setIntakeDirectionLeft(Elevator::S_FORWARD);
-        }
-        if (driveStick2->GetPOV() == 0) {
-            ev->setIntakeDirectionRight(Elevator::S_FORWARD);
+            if (driveStick2->GetPOV() == 0) {
+                ev->setIntakeDirectionRight(Elevator::S_FORWARD);
+            }
+            else if (driveStick2->GetPOV() == 90) {
+                ev->setIntakeDirectionRight(Elevator::S_ROTATE_CCW);
+            }
+            else if (driveStick2->GetPOV() == 180 ||
+                    driveStick2->GetRawButton(1)) {
+                ev->setIntakeDirectionRight(Elevator::S_REVERSE);
+            }
+            else if (driveStick2->GetPOV() == 270) {
+                ev->setIntakeDirectionRight(Elevator::S_ROTATE_CW);
+            }
+            else {
+                ev->setIntakeDirectionRight(Elevator::S_STOPPED);
+            }
         }
 
         if (drive2Buttons.releasedButton(12)) {
@@ -200,7 +218,8 @@ void Robot::Autonomous() {
     autoTimer->Start();
 
     robotDrive->resetEncoders();
-    dsDisplay.execAutonomous();
+    AutoNoop();
+    //dsDisplay.execAutonomous();
 }
 
 void Robot::Disabled() {
