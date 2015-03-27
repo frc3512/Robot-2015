@@ -67,41 +67,25 @@ void Robot::OperatorControl() {
             ev->stowIntake(!ev->isIntakeStowed());
         }
 
-        std::string offsetString;
-        if (evStick->GetThrottle() > 0) {
-            offsetString = "+EV_HALF_TOTE_OFFSET";
-
-            if (!ev->isFeeding()) {
-                ev->setFeeding(true);
-            }
-        }
-        else {
-            offsetString = "";
-
-            if (ev->isFeeding()) {
-                ev->setFeeding(false);
-            }
-        }
-
         // Automatic preset buttons (7-12)
         // TODO: Special case for level 0
         if (evButtons.releasedButton(8)) {
-            ev->raiseElevator("EV_GROUND" + offsetString);
+            ev->raiseElevator("EV_GROUND");
         }
         if (evButtons.releasedButton(7)) {
-            ev->raiseElevator("EV_TOTE_1" + offsetString);
+            ev->raiseElevator("EV_TOTE_1");
         }
         if (evButtons.releasedButton(10)) {
-            ev->raiseElevator("EV_TOTE_2" + offsetString);
+            ev->raiseElevator("EV_TOTE_2");
         }
         if (evButtons.releasedButton(9)) {
-            ev->raiseElevator("EV_TOTE_3" + offsetString);
+            ev->raiseElevator("EV_TOTE_3");
         }
         if (evButtons.releasedButton(12)) {
-            ev->raiseElevator("EV_TOTE_4" + offsetString);
+            ev->raiseElevator("EV_TOTE_4");
         }
         if (evButtons.releasedButton(11)) {
-            ev->raiseElevator("EV_TOTE_5" + offsetString);
+            ev->raiseElevator("EV_TOTE_5");
         }
 
         // Set manual value
