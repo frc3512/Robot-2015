@@ -12,7 +12,7 @@ void Robot::AutoDriveForward() {
 
     while (!timer.HasPeriodPassed(2.5) && IsAutonomous() && IsEnabled()) {
         DS_PrintOut();
-        robotDrive->drive(-0.3, 0.0, false);
+        robotDrive->drive(-0.4, 0.0, false);
     }
     robotDrive->drive(0.0, 0.0, false);
 }
