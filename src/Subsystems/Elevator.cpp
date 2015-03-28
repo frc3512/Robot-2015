@@ -161,7 +161,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
         elevatorGrab(true);
     };
     state->advanceFunc = [this] {
-        if (m_grabTimer->HasPeriodPassed(0.2)) {
+        if (m_grabTimer->HasPeriodPassed(0.4)) {
             return "SEEK_HALF_TOTE";
         }
         else {
