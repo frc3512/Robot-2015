@@ -95,6 +95,9 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_autoStackSM.setState("IDLE");
 
     state = new State("WAIT_INITIAL_HEIGHT");
+    state->initFunc = [this] {
+        setProfileHeight(m_toteHeights["EV_TOTE_1"]);
+    };
     state->advanceFunc = [this] {
         if (atGoal()) {
             return "SEEK_DROP_TOTES";
