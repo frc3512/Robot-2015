@@ -139,7 +139,7 @@ int GraphHost::graphData(float value, std::string dataset) {
         for (std::string& dataset_str : conn.datasets) {
             if (dataset_str == dataset) {
                 // Send the value off
-                conn.queuewrite(payload);
+                conn.queueWrite(payload);
             }
         }
     }
@@ -219,14 +219,14 @@ void GraphHost::socket_threadmain() {
         while (conn != m_connList.end()) {
             if (FD_ISSET(conn->fd, &readfds)) {
                 // Handle reading
-                if (conn->readh() == -1) {
+                if (conn->readPackets() == -1) {
                     conn = m_connList.erase(conn);
                     continue;
                 }
             }
             if (FD_ISSET(conn->fd, &writefds)) {
                 // Handle writing
-                conn->writeh();
+                conn->writePackets();
             }
             if (FD_ISSET(conn->fd, &errorfds)) {
                 // Handle errors

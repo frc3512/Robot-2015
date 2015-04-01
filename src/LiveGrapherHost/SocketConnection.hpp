@@ -26,12 +26,12 @@ public:
     SocketConnection(SocketConnection&&) = default;
     SocketConnection& operator=(SocketConnection&&) = default;
 
-    int readh();
-    int readdoneh(std::string& buf);
-    int sendlist();
-    int writeh();
+    int readPackets();
+    void processPacket(std::string& buf);
+    void sendList();
+    void writePackets();
     template <class T>
-    int queuewrite(T& buf);
+    void queueWrite(T& buf);
 
     // Contains all graphs
     static std::vector<std::string> graphNames;

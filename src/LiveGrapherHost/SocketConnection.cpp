@@ -31,7 +31,8 @@ SocketConnection::~SocketConnection() {
     close(fd);
 }
 
-int SocketConnection::readh() {
+// Receives 16 byte buffers
+int SocketConnection::readPackets() {
     int error;
 
     if (m_readdone) {
@@ -51,7 +52,7 @@ int SocketConnection::readh() {
     if (m_readbufoffset == m_readbuf.length()) {
         // Add null terminator
         m_readbuf[15] = 0;
-        readdoneh(m_readbuf);
+        processPacket(m_readbuf);
         m_readbufoffset = 0;
         m_readdone = true;
     }
@@ -59,39 +60,29 @@ int SocketConnection::readh() {
     return 0;
 }
 
-// Recieves 16 byte buffers
-int SocketConnection::readdoneh(std::string& buf) {
-    const char* graphstr = buf.c_str() + 1;
+void SocketConnection::processPacket(std::string& buf) {
+    const char* graphName = buf.c_str() + 1;
 
     switch (buf[0]) {
     case 'c':
-        // Start sending data for the graph specified by graphstr
+        // Start sending data for the graph specified by graphName
         if (std::find(datasets.begin(), datasets.end(),
-                      graphstr) == datasets.end()) {
-            datasets.push_back(graphstr);
+                      graphName) == datasets.end()) {
+            datasets.push_back(graphName);
         }
         break;
     case 'd':
-        // Stop sending data for the graph specified by graphstr
-        for (auto i = datasets.begin(); i != datasets.end(); i++) {
-            if (*i == graphstr) {
-                datasets.erase(i);
-                break;
-            }
-        }
+        // Stop sending data for the graph specified by graphName
+        std::remove_if(datasets.begin(), datasets.end(),
+                       [&] (const auto& set) { return set == graphName; });
         break;
     case 'l':
-        /* If this fails, we just ignore it. There's really nothing we can do
-         * about it right now.
-         */
-        sendlist();
+        sendList();
     }
-
-    return 0;
 }
 
 // Send to the client a list of available graphs
-int SocketConnection::sendlist() {
+void SocketConnection::sendList() {
     struct graph_list_t replydg;
 
     // Set up the response body, and queue it for sending
@@ -113,27 +104,18 @@ int SocketConnection::sendlist() {
         std::strcpy(replydg.dataset, graphNames[i].c_str());
 
         // Queue the datagram for writing
-        if (queuewrite(replydg) == -1) {
-            return -1;
-        }
+        queueWrite(replydg);
     }
-
-    return 0;
 }
 
 // Write queued data to a socket when the socket becomes ready
-int SocketConnection::writeh() {
-    while (1) {
+void SocketConnection::writePackets() {
+    /* While the current buffer isn't done sending or there are more buffers to
+     * send
+     */
+    while (!m_writedone || !m_writequeue.empty()) {
         // Get another buffer to send
         if (m_writedone) {
-            // If there are no more buffers in the queue
-            if (m_writequeue.empty()) {
-                // Stop selecting on write
-                selectflags &= ~SocketConnection::Write;
-
-                return 0;
-            }
-
             m_writebuf = std::move(m_writequeue.front());
             m_writebufoffset = 0;
             m_writedone = false;
@@ -152,11 +134,11 @@ int SocketConnection::writeh() {
         }
         else {
             // We haven't finished writing, keep selecting
-            return 0;
+            return;
         }
     }
 
-    // We always return from within the loop, this is unreachable
-    return -1;
+    // Stop selecting on write
+    selectflags &= ~SocketConnection::Write;
 }
 
