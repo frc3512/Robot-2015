@@ -28,7 +28,7 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
     dsDisplay.addAutoMethod("DriveForward", &Robot::AutoDriveForward, this);
     dsDisplay.addAutoMethod("OneTote", &Robot::AutoOneTote, this);
 
-    pidGraph.setSendInterval(5);
+    pidGraph.setSendInterval(5ms);
 
     displayTimer->Start();
 }
@@ -91,6 +91,7 @@ void Robot::OperatorControl() {
         // Set manual value
         ev->setManualLiftSpeed(evStick->GetY());
 
+        // Controls intake left side
         if (driveStick1->GetPOV() == 0 || evStick->GetPOV() == 0) {
             ev->setIntakeDirectionLeft(Elevator::S_FORWARD);
         }
@@ -108,6 +109,7 @@ void Robot::OperatorControl() {
             ev->setIntakeDirectionLeft(Elevator::S_STOPPED);
         }
 
+        // Controls intake right side
         if (driveStick2->GetPOV() == 0 || evStick->GetPOV() == 0) {
             ev->setIntakeDirectionRight(Elevator::S_FORWARD);
         }
@@ -175,7 +177,7 @@ void Robot::OperatorControl() {
 
         DS_PrintOut();
 
-        Wait(0.01);
+        std::this_thread::sleep_for(10ms);
     }
 }
 
@@ -190,7 +192,7 @@ void Robot::Autonomous() {
 void Robot::Disabled() {
     while (IsDisabled()) {
         DS_PrintOut();
-        Wait(0.1);
+        std::this_thread::sleep_for(100ms);
     }
 
     robotDrive->reloadPID();

@@ -30,7 +30,7 @@ public:
      * endFunc() for the current state and initFunc() for the next state. 'true'
      * is returned if the next state was found and 'false' otherwise.
      */
-    bool setState(std::string nextState);
+    bool setState(const std::string& nextState);
 
     // Returns name of current state
     std::string getState() const;

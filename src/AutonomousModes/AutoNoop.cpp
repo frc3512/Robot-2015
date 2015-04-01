@@ -4,7 +4,7 @@ void Robot::AutoNoop() {
     while (IsAutonomous() && IsEnabled()) {
         DS_PrintOut();
 
-        Wait(0.01);
+        std::this_thread::sleep_for(10ms);
     }
 }
 

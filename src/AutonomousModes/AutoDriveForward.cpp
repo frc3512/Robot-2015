@@ -13,6 +13,7 @@ void Robot::AutoDriveForward() {
     while (!timer.HasPeriodPassed(2.5) && IsAutonomous() && IsEnabled()) {
         DS_PrintOut();
         robotDrive->drive(-0.4, 0.0, false);
+        std::this_thread::sleep_for(10ms);
     }
     robotDrive->drive(0.0, 0.0, false);
 }

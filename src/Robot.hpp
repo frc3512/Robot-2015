@@ -8,6 +8,8 @@
 #define ROBOT_HPP
 
 #include <memory>
+#include <chrono>
+using namespace std::chrono_literals;
 
 #include <SampleRobot.h>
 #include <Joystick.h>

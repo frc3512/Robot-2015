@@ -126,7 +126,7 @@ int SocketConnection::writeh() {
     while (1) {
         // Get another buffer to send
         if (m_writedone) {
-            // There are no more buffers in the queue
+            // If there are no more buffers in the queue
             if (m_writequeue.empty()) {
                 // Stop selecting on write
                 selectflags &= ~SocketConnection::Write;

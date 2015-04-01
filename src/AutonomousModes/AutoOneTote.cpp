@@ -37,7 +37,6 @@ void Robot::AutoOneTote() {
     state = new State("MOVE_TO_TOTE");
     state->initFunc = [this] {
         autoTimer->Reset();
-        autoTimer->Start();
     };
     state->advanceFunc = [this] {
         if (autoTimer->HasPeriodPassed(1.0)) {
@@ -53,7 +52,6 @@ void Robot::AutoOneTote() {
     state = new State("AUTOSTACK");
     state->initFunc = [this] {
         autoTimer->Reset();
-        autoTimer->Start();
         ev->intakeGrab(true);
         ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
         ev->setIntakeDirectionRight(Elevator::S_REVERSE);
@@ -73,7 +71,6 @@ void Robot::AutoOneTote() {
     state = new State("TURN");
     state->initFunc = [this] {
         autoTimer->Reset();
-        autoTimer->Start();
         ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
         ev->setIntakeDirectionRight(Elevator::S_REVERSE);
     };
@@ -92,7 +89,6 @@ void Robot::AutoOneTote() {
     state = new State("RUN_AWAY");
     state->initFunc = [this] {
         autoTimer->Reset();
-        autoTimer->Start();
         ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
         ev->setIntakeDirectionRight(Elevator::S_REVERSE);
     };
@@ -115,9 +111,8 @@ void Robot::AutoOneTote() {
 
         oneToteSM.run();
         ev->updateState();
-        // ev->intakeGrab(false);
 
-        Wait(0.01);
+        std::this_thread::sleep_for(10ms);
     }
 }
 

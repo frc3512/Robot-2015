@@ -5,7 +5,6 @@
 // =============================================================================
 
 #include "GraphHost.hpp"
-#include <chrono>
 
 #include <cstdio>
 #include <cstring>
@@ -50,8 +49,8 @@
 GraphHost::GraphHost(int port) :
     m_sendInterval(5) {
     m_lastTime = 0;
-    m_currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()).count();
+    m_currentTime = duration_cast<milliseconds>(
+        system_clock::now().time_since_epoch()).count();
 
     int pipefd[2];
 
@@ -100,8 +99,8 @@ int GraphHost::graphData(float value, std::string dataset) {
     static_assert(sizeof(float) == sizeof(uint32_t),
                   "float isn't 32 bits long");
 
-    m_currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()).count();
+    m_currentTime = duration_cast<milliseconds>(
+        system_clock::now().time_since_epoch()).count();
 
     struct graph_payload_t payload;
     decltype(m_currentTime)xtmp;
@@ -150,13 +149,9 @@ int GraphHost::graphData(float value, std::string dataset) {
     return 0;
 }
 
-void GraphHost::setSendInterval(uint32_t milliseconds) {
-    m_sendInterval = milliseconds;
-}
-
 bool GraphHost::hasIntervalPassed() {
-    m_currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()).count();
+    m_currentTime = duration_cast<milliseconds>(
+        system_clock::now().time_since_epoch()).count();
 
     return m_currentTime - m_lastTime > m_sendInterval;
 }

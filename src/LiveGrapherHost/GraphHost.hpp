@@ -33,11 +33,15 @@
 #include <string>
 #include <thread>
 #include <mutex>
+#include <chrono>
 #include <atomic>
 #include <memory>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <cstdint>
+
+using namespace std::chrono;
+using namespace std::chrono_literals;
 
 #include "SocketConnection.hpp"
 
@@ -71,7 +75,8 @@ public:
     /* Sets time interval after which data is sent to graph (milliseconds per
      * sample)
      */
-    void setSendInterval(uint32_t milliseconds);
+    template <typename Rep, typename Period>
+    void setSendInterval(const std::chrono::duration<Rep, Period>& time);
 
     /* Returns true if the time between the last data transmission is greater
      * than the sending interval time
@@ -108,6 +113,8 @@ private:
     static int socket_accept(int listenfd);
     int addGraph(std::string& dataset);
 };
+
+#include "GraphHost.inl"
 
 #endif // GRAPHHOST_HPP
 
