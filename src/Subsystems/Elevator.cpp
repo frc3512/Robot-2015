@@ -18,7 +18,6 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_intakeWheelLeft = std::make_unique<CANTalon>(3);
     m_intakeWheelRight = std::make_unique<CANTalon>(6);
     m_intakeState = S_STOPPED;
-    m_manual = false;
 
     // For CANTalon PID loop
     m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 7, 2);
@@ -35,9 +34,6 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
     m_profileTimer = std::make_unique<Timer>();
     m_grabTimer = std::make_unique<Timer>();
-    m_updateProfile = true;
-
-    m_setpoint = 0.0;
 
     m_profileUpdater = new std::thread([this] {
         double height;

@@ -19,8 +19,7 @@ BezierTrapezoidProfile::BezierTrapezoidProfile(double maxV, double timeToMaxV) :
     m_rightSetpoint = 0.0;
 }
 
-double BezierTrapezoidProfile::updateSetpoint(double curTime,
-                                              double curSource) {
+double BezierTrapezoidProfile::updateSetpoint(double curTime) {
     double period = curTime - m_lastTime;
 
     m_varMutex.lock();

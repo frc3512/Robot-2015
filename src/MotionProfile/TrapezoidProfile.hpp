@@ -34,7 +34,7 @@ public:
      *
      * curTime is current time
      */
-    virtual double updateSetpoint(double curTime, double curSource = 0.0);
+    virtual double updateSetpoint(double curTime);
 
     /* goal is a distance to which to travel
      * curSource is the current position

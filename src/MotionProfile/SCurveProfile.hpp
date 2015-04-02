@@ -23,17 +23,8 @@ class SCurveProfile : public ProfileBase {
 public:
     SCurveProfile(double maxV, double maxA, double timeToMaxA);
 
-    /* If distance:
-     *     curSetpoint is current distance set to which to travel
-     *     curSource is current position (not used)
-     *
-     * If velocity:
-     *     curSetpoint is current velocity at which to travel
-     *     curSource is current velocity (not used)
-     *
-     * curTime is current time
-     */
-    virtual double updateSetpoint(double curTime, double curSource = 0.0);
+    // curTime is current time
+    virtual double updateSetpoint(double curTime);
 
     /* goal is a distance to which to travel
      * curSource is the current position

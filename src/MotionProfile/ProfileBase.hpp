@@ -19,7 +19,7 @@ public:
     ProfileBase();
     virtual ~ProfileBase() = default;
 
-    virtual double updateSetpoint(double curTime, double curSource = 0.0) = 0;
+    virtual double updateSetpoint(double curTime) = 0;
 
     // Should return initial setpoint for start of profile
     virtual double setGoal(double t, double goal, double curSource) = 0;

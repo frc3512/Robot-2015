@@ -27,15 +27,9 @@ public:
 
     /* curTime is current time
      *
-     * If distance:
-     *     curSource is current position (not used)
-     *
-     * If velocity:
-     *     curSource is current velocity (not used)
-     *
      * returns updated uncompensated setpoint (see double getMidSetpoint())
      */
-    double updateSetpoint(double curTime, double curSource = 0.0);
+    double updateSetpoint(double curTime);
 
     /* Returns uncompensated setpoint for use in control of systems other than
      * the drive train

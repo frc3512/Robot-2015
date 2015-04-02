@@ -93,7 +93,7 @@ private:
     std::unique_ptr<Solenoid> m_containerGrabber;
     std::unique_ptr<DigitalInput> m_bottomLimit;
     std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
-    bool m_manual;
+    bool m_manual{false};
 
     // Intake
     IntakeMotorState m_intakeState;
@@ -104,12 +104,12 @@ private:
 
     std::map<std::string, double> m_toteHeights;
     std::unique_ptr<Timer> m_profileTimer;
-    std::atomic<bool> m_updateProfile;
+    std::atomic<bool> m_updateProfile{true};
     std::thread* m_profileUpdater;
 
     StateMachine m_autoStackSM;
     std::unique_ptr<Timer> m_grabTimer;
-    bool m_startAutoStacking;
+    bool m_startAutoStacking{false};
 
     double m_maxHeight;
 

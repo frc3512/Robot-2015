@@ -12,7 +12,7 @@ TrapezoidProfile::TrapezoidProfile(double maxV, double timeToMaxV) {
     setTimeToMaxV(timeToMaxV);
 }
 
-double TrapezoidProfile::updateSetpoint(double curTime, double curSource) {
+double TrapezoidProfile::updateSetpoint(double curTime) {
     std::lock_guard<decltype(m_varMutex)> lock(m_varMutex);
 
     double tmpSP = 0.0;

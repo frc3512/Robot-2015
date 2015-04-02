@@ -13,6 +13,9 @@ GearBoxBase<T>::GearBoxBase(int shifterChan,
                             int motor1,
                             int motor2,
                             int motor3) {
+    (void) encA;
+    (void) encB;
+
     if (shifterChan != -1) {
         m_shifter = std::make_unique<Solenoid>(shifterChan);
     }
