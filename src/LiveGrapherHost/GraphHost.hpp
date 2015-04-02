@@ -36,8 +36,6 @@
 #include <chrono>
 #include <atomic>
 #include <memory>
-#include <sys/socket.h>
-#include <unistd.h>
 #include <cstdint>
 
 using namespace std::chrono;
@@ -90,17 +88,18 @@ public:
 
 private:
     // Last time data was graphed
-    uint64_t m_lastTime;
+    uint64_t m_lastTime{0};
 
     // Time interval after which data is sent to graph (in milliseconds per sample)
-    uint32_t m_sendInterval;
+    uint32_t m_sendInterval{5};
 
     // Used as a temp variables in graphData(2)
     uint64_t m_currentTime;
 
+    // Mark the thread as not running, this will be set to 1 by the thread
+    std::atomic<bool> m_running{false};
     std::unique_ptr<std::thread> m_thread;
     std::mutex m_mutex;
-    std::atomic<bool> m_running;
     int m_ipcfd_r;
     int m_ipcfd_w;
     int m_port;
@@ -111,7 +110,7 @@ private:
 
     static int socket_listen(int port, uint32_t s_addr);
     static int socket_accept(int listenfd);
-    int addGraph(std::string& dataset);
+    int addGraph(const std::string& dataset);
 };
 
 #include "GraphHost.inl"

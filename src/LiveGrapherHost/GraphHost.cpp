@@ -6,22 +6,12 @@
 
 #include "GraphHost.hpp"
 
-#include <cstdio>
 #include <cstring>
-#include <strings.h>
 
 #ifdef __VXWORKS__
 
-#include <ioLib.h>
+#include <cstdio>
 #include <pipeDrv.h>
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <unistd.h>
 
 #include <sockLib.h>
 #include <hostLib.h>
@@ -31,36 +21,22 @@
 
 #else
 
-#include <sys/types.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <signal.h>
-#include <sys/select.h>
-#include <stropts.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <endian.h>
 
 #endif
 
-#include <iterator>
-
-GraphHost::GraphHost(int port) :
-    m_sendInterval(5) {
-    m_lastTime = 0;
+GraphHost::GraphHost(int port) {
     m_currentTime = duration_cast<milliseconds>(
         system_clock::now().time_since_epoch()).count();
-
-    int pipefd[2];
-
-    // Mark the thread as not running, this will be set to 1 by the thread
-    m_running = false;
 
     // Store the port to listen on
     m_port = port;
 
     // Create a pipe for IPC with the thread
+    int pipefd[2];
 #ifdef __VXWORKS__
     pipeDevCreate("/pipe/graphhost", 10, 100);
     pipefd[0] = open("/pipe/graphhost", O_RDONLY, 0644);
@@ -95,6 +71,10 @@ GraphHost::~GraphHost() {
 }
 
 int GraphHost::graphData(float value, std::string dataset) {
+    if (!m_running) {
+        return -1;
+    }
+
     // This will only work if ints are the same size as floats
     static_assert(sizeof(float) == sizeof(uint32_t),
                   "float isn't 32 bits long");
@@ -105,10 +85,6 @@ int GraphHost::graphData(float value, std::string dataset) {
     struct graph_payload_t payload;
     decltype(m_currentTime)xtmp;
     uint32_t ytmp;
-
-    if (!m_running) {
-        return -1;
-    }
 
     // Zero the payload structure
     std::memset(&payload, 0, sizeof(struct graph_payload_t));
@@ -128,7 +104,6 @@ int GraphHost::graphData(float value, std::string dataset) {
 
     std::strncpy(payload.dataset, dataset.c_str(), 15);
 
-    // Giant lock approach
     m_mutex.lock();
 
     // If the dataset name isn't in the list already, add it
@@ -136,7 +111,7 @@ int GraphHost::graphData(float value, std::string dataset) {
 
     // Send the point to connected clients
     for (auto& conn : m_connList) {
-        for (std::string& dataset_str : conn.datasets) {
+        for (const auto& dataset_str : conn.datasets) {
             if (dataset_str == dataset) {
                 // Send the value off
                 conn.queueWrite(payload);
@@ -163,7 +138,7 @@ void GraphHost::resetInterval() {
 void GraphHost::socket_threadmain() {
     int listenfd;
     int maxfd;
-    uint8_t ipccmd;
+    uint8_t ipccmd = 0;
 
     fd_set readfds;
     fd_set writefds;
@@ -178,7 +153,7 @@ void GraphHost::socket_threadmain() {
     // Set the running flag after we've finished initializing everything
     m_running = true;
 
-    while (1) {
+    while (ipccmd != 'x') {
         // Clear the fdsets
         FD_ZERO(&readfds);
         FD_ZERO(&writefds);
@@ -254,9 +229,6 @@ void GraphHost::socket_threadmain() {
         // Handle IPC commands
         if (FD_ISSET(m_ipcfd_r, &readfds)) {
             read(m_ipcfd_r, (char*) &ipccmd, 1);
-            if (ipccmd == 'x') {
-                break;
-            }
         }
     }
 
@@ -272,7 +244,7 @@ void GraphHost::socket_threadmain() {
  */
 int GraphHost::socket_listen(int port, uint32_t s_addr) {
     struct sockaddr_in serv_addr;
-    int sd;
+    int sd = -1;
 
     try {
         // Create a TCP socket
@@ -282,8 +254,10 @@ int GraphHost::socket_listen(int port, uint32_t s_addr) {
         }
 
         // Allow rebinding to the socket later if the connection is interrupted
+#ifndef __VXWORKS__
         int optval = 1;
         setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+#endif
 
         // Zero out the serv_addr struct
         std::memset(&serv_addr, 0, sizeof(struct sockaddr_in));
@@ -370,9 +344,9 @@ int GraphHost::socket_accept(int listenfd) {
 }
 
 // If the dataset name isn't in the list already, add it
-int GraphHost::addGraph(std::string& dataset) {
+int GraphHost::addGraph(const std::string& dataset) {
     // Add the graph name to the list of available graphs
-    for (std::string& elem : SocketConnection::graphNames) {
+    for (const auto& elem : SocketConnection::graphNames) {
         // Graph is already in list
         if (elem == dataset) {
             return 1;

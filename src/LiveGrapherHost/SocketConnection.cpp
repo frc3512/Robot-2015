@@ -13,18 +13,15 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#ifdef __VXWORKS__
+#include <sockLib.h>
+#endif
+
 std::vector<std::string> SocketConnection::graphNames;
 
 SocketConnection::SocketConnection(int nfd, int ipcWriteSock) {
     fd = nfd;
-    selectflags = Read | Error;
     m_ipcfd_w = ipcWriteSock;
-
-    m_writebufoffset = 0;
-    m_writedone = true;
-
-    m_readbufoffset = 0;
-    m_readdone = true;
 }
 
 SocketConnection::~SocketConnection() {
@@ -33,16 +30,14 @@ SocketConnection::~SocketConnection() {
 
 // Receives 16 byte buffers
 int SocketConnection::readPackets() {
-    int error;
-
     if (m_readdone) {
         m_readbufoffset = 0;
         m_readbuf = std::string(16, 0);
         m_readdone = false;
     }
 
-    error = recv(fd, &m_readbuf[0], m_readbuf.length() -
-                 m_readbufoffset, 0);
+    int error = recv(fd, &m_readbuf[0], m_readbuf.length() -
+                     m_readbufoffset, 0);
     if (error == 0 || (error == -1 && errno != EAGAIN)) {
         // recv(3) failed, so return failure so socket is closed
         return -1;
