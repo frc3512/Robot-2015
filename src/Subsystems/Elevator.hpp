@@ -48,6 +48,10 @@ public:
     void stowIntake(bool state);
     bool isIntakeStowed() const;
 
+    // Actuates container graba in/out
+    void containerGrab(bool state);
+    bool isContainerGrabbed() const;
+
     // Sets direction of intake wheels
     void setIntakeDirectionLeft(IntakeMotorState state);
     void setIntakeDirectionRight(IntakeMotorState state);
@@ -101,6 +105,7 @@ private:
     IntakeMotorState m_intakeState;
     std::unique_ptr<Solenoid> m_intakeVertical;
     std::unique_ptr<Solenoid> m_intakeGrabber;
+    std::unique_ptr<Solenoid> m_containerGrabber;
     std::unique_ptr<CANTalon> m_intakeWheelLeft;
     std::unique_ptr<CANTalon> m_intakeWheelRight;
     std::unique_ptr<DigitalInput> m_frontLeftLimit;

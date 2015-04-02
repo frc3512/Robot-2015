@@ -67,6 +67,11 @@ void Robot::OperatorControl() {
             ev->stowIntake(!ev->isIntakeStowed());
         }
 
+        // Open/close container grabber
+        if (evButtons.releasedButton(6)) {
+            ev->containerGrab(!ev->isContainerGrabbed());
+        }
+
         // Automatic preset buttons (7-12)
         // TODO: Special case for level 0
         if (evButtons.releasedButton(8)) {
@@ -223,6 +228,7 @@ void Robot::DS_PrintOut() {
         dsDisplay.addData("EV_TOTE_INSIDE", ev->pollFrontLimitSwitches());
         dsDisplay.addData("INTAKE_ARMS_CLOSED", ev->isIntakeGrabbed());
         dsDisplay.addData("ARMS_CLOSED", ev->isElevatorGrabbed());
+        dsDisplay.addData("CONTAINER_GRABBER_CLOSED", ev->isContainerGrabbed());
 
         dsDisplay.sendToDS();
     }

@@ -14,6 +14,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
     m_intakeVertical = std::make_unique<Solenoid>(1);
     m_intakeGrabber = std::make_unique<Solenoid>(2);
+    m_containerGrabber = std::make_unique<Solenoid>(3);
     m_intakeWheelLeft = std::make_unique<CANTalon>(3);
     m_intakeWheelRight = std::make_unique<CANTalon>(6);
     m_frontLeftLimit = std::make_unique<DigitalInput>(0);
@@ -242,6 +243,14 @@ void Elevator::stowIntake(bool state) {
 
 bool Elevator::isIntakeStowed() const {
     return !m_intakeVertical->Get();
+}
+
+void Elevator::containerGrab(bool state) {
+    m_containerGrabber->Set(!state);
+}
+
+bool Elevator::isContainerGrabbed() const {
+    return !m_containerGrabber->Get();
 }
 
 void Elevator::setIntakeDirectionLeft(IntakeMotorState state) {
