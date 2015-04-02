@@ -132,10 +132,6 @@ void Robot::OperatorControl() {
             ev->setIntakeDirectionRight(Elevator::S_STOPPED);
         }
 
-        if (drive2Buttons.releasedButton(12)) {
-            ev->resetEncoders();
-        }
-
         // Accumulate assisted automatic mode
         double deltaT = accumTimer->Get();
         accumTimer->Reset();
