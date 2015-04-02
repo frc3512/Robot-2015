@@ -2,7 +2,6 @@ PBAR EV_POS_DISP,EV_POS left "Elevator Height: 0" "Elevator Height: %s"
 TEXT ENCODER_LEFT left "Encoder Left: 0" "Encoder Left: %s"
 TEXT ENCODER_RIGHT left "Encoder Right: 0" "Encoder Right: %s"
 
-STATUSLIGHT EV_TOTE_INSIDE right "Tote Inside" "Tote Inside"
-STATUSLIGHT INTAKE_ARMS_CLOSED right "Intake Closed" "Intake Closed"
 STATUSLIGHT ARMS_CLOSED right "Arms Closed" "Arms Closed"
+STATUSLIGHT INTAKE_ARMS_CLOSED right "Intake Closed" "Intake Closed"
 STATUSLIGHT CONTAINER_GRABBER_CLOSED right "Container Grabber Closed" "Container Grabber Closed"

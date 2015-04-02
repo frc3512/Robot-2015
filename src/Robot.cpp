@@ -225,9 +225,8 @@ void Robot::DS_PrintOut() {
         dsDisplay.addData("EV_POS_DISP", ev->getHeight());
         dsDisplay.addData("EV_POS", 100 * ev->getHeight() / 60);
 
-        dsDisplay.addData("EV_TOTE_INSIDE", ev->pollFrontLimitSwitches());
-        dsDisplay.addData("INTAKE_ARMS_CLOSED", ev->isIntakeGrabbed());
         dsDisplay.addData("ARMS_CLOSED", ev->isElevatorGrabbed());
+        dsDisplay.addData("INTAKE_ARMS_CLOSED", ev->isIntakeGrabbed());
         dsDisplay.addData("CONTAINER_GRABBER_CLOSED", ev->isContainerGrabbed());
 
         dsDisplay.sendToDS();

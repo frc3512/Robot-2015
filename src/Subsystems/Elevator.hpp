@@ -64,21 +64,12 @@ public:
     void setManualMode(bool on);
     bool isManualMode() const;
 
-    /* If feeding is enabled, auto stacking levels will be shifted up by one
-     * tote to accommodate the feeder station.
-     */
-    void setFeeding(bool feed);
-    bool isFeeding() const;
-
     // Sets setpoint for elevator PID controller
     void setHeight(double height);
     double getHeight() const;
 
     void reloadPID();
     void resetEncoders();
-
-    // Returns true if both of front limit switches are contacted
-    bool pollFrontLimitSwitches() const;
 
     // Periodic
     void pollLiftLimitSwitches();
@@ -98,21 +89,18 @@ public:
     void updateState();
 
 private:
-    std::unique_ptr<Solenoid> m_grabSolenoid;
+    std::unique_ptr<Solenoid> m_elevatorGrabber;
+    std::unique_ptr<Solenoid> m_containerGrabber;
     std::unique_ptr<DigitalInput> m_bottomLimit;
+    std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
+    bool m_manual;
 
     // Intake
     IntakeMotorState m_intakeState;
-    std::unique_ptr<Solenoid> m_intakeVertical;
+    std::unique_ptr<Solenoid> m_intakeStower;
     std::unique_ptr<Solenoid> m_intakeGrabber;
-    std::unique_ptr<Solenoid> m_containerGrabber;
     std::unique_ptr<CANTalon> m_intakeWheelLeft;
     std::unique_ptr<CANTalon> m_intakeWheelRight;
-    std::unique_ptr<DigitalInput> m_frontLeftLimit;
-    std::unique_ptr<DigitalInput> m_frontRightLimit;
-    std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
-    bool m_manual;
-    bool m_feeding;
 
     std::map<std::string, double> m_toteHeights;
     std::unique_ptr<Timer> m_profileTimer;

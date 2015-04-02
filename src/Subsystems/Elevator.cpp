@@ -10,18 +10,15 @@
 #include <CANTalon.h>
 
 Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
-    m_grabSolenoid = std::make_unique<Solenoid>(3);
+    m_elevatorGrabber = std::make_unique<Solenoid>(3);
+    m_containerGrabber = std::make_unique<Solenoid>(4);
 
-    m_intakeVertical = std::make_unique<Solenoid>(1);
+    m_intakeStower = std::make_unique<Solenoid>(1);
     m_intakeGrabber = std::make_unique<Solenoid>(2);
-    m_containerGrabber = std::make_unique<Solenoid>(3);
     m_intakeWheelLeft = std::make_unique<CANTalon>(3);
     m_intakeWheelRight = std::make_unique<CANTalon>(6);
-    m_frontLeftLimit = std::make_unique<DigitalInput>(0);
-    m_frontRightLimit = std::make_unique<DigitalInput>(1);
     m_intakeState = S_STOPPED;
     m_manual = false;
-    m_feeding = false;
 
     // For CANTalon PID loop
     m_liftGrbx = std::make_unique<GearBox<CANTalon>>(-1, 7, 2);
@@ -39,7 +36,6 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_profileTimer = std::make_unique<Timer>();
     m_grabTimer = std::make_unique<Timer>();
     m_updateProfile = true;
-    m_profileUpdater = nullptr;
 
     m_setpoint = 0.0;
 
@@ -141,12 +137,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
     state = new State("SEEK_GROUND");
     state->initFunc = [this] {
-        if (isFeeding()) {
-            setProfileHeight(m_toteHeights["EV_TOTE_1"] - 4);
-        }
-        else {
-            setProfileHeight(m_toteHeights["EV_GROUND"]);
-        }
+        setProfileHeight(m_toteHeights["EV_GROUND"]);
     };
     state->advanceFunc = [this] {
         if (atGoal()) {
@@ -176,12 +167,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
     state = new State("SEEK_HALF_TOTE");
     state->initFunc = [this] {
-        if (isFeeding()) {
-            setProfileHeight(m_toteHeights["EV_TOTE_2"]);
-        }
-        else {
-            setProfileHeight(m_toteHeights["EV_TOTE_1"]);
-        }
+        setProfileHeight(m_toteHeights["EV_TOTE_1"]);
     };
     state->advanceFunc = [this] {
         if (atGoal()) {
@@ -222,11 +208,11 @@ Elevator::~Elevator() {
 }
 
 void Elevator::elevatorGrab(bool state) {
-    m_grabSolenoid->Set(!state);
+    m_elevatorGrabber->Set(!state);
 }
 
 bool Elevator::isElevatorGrabbed() const {
-    return !m_grabSolenoid->Get();
+    return !m_elevatorGrabber->Get();
 }
 
 void Elevator::intakeGrab(bool state) {
@@ -238,11 +224,11 @@ bool Elevator::isIntakeGrabbed() const {
 }
 
 void Elevator::stowIntake(bool state) {
-    m_intakeVertical->Set(!state);
+    m_intakeStower->Set(!state);
 }
 
 bool Elevator::isIntakeStowed() const {
-    return !m_intakeVertical->Get();
+    return !m_intakeStower->Get();
 }
 
 void Elevator::containerGrab(bool state) {
@@ -328,14 +314,6 @@ bool Elevator::isManualMode() const {
     return m_manual;
 }
 
-void Elevator::setFeeding(bool feed) {
-    m_feeding = feed;
-}
-
-bool Elevator::isFeeding() const {
-    return m_feeding;
-}
-
 void Elevator::setHeight(double height) {
     if (m_manual == false) {
         m_liftGrbx->setSetpoint(height);
@@ -378,10 +356,6 @@ void Elevator::reloadPID() {
 
 void Elevator::resetEncoders() {
     m_liftGrbx->resetEncoder();
-}
-
-bool Elevator::pollFrontLimitSwitches() const {
-    return !m_frontLeftLimit->Get() && !m_frontRightLimit->Get();
 }
 
 void Elevator::pollLiftLimitSwitches() {
