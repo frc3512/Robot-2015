@@ -6,14 +6,7 @@
 
 #include "State.hpp"
 
-State::State(std::string name, std::function<void()> initFunc,
-             std::function<std::string()> advanceFunc,
-             std::function<void()> periodicFunc,
-             std::function<void()> endFunc) {
+State::State(std::string name) {
     this->name = name;
-    this->initFunc = initFunc;
-    this->advanceFunc = advanceFunc;
-    this->periodicFunc = periodicFunc;
-    this->endFunc = endFunc;
 }
 

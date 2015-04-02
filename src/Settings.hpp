@@ -44,7 +44,7 @@ private:
     std::string m_rawStr;
 
     // Used when stepping through m_rawStr
-    size_t m_index;
+    size_t m_index{0};
 
     std::string extractKey();
     std::string extractValue();
