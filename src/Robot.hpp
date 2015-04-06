@@ -21,7 +21,6 @@ using namespace std::chrono_literals;
 #include "ButtonTracker.hpp"
 #include "Settings.hpp"
 
-#include "RollingAverage.hpp"
 #include "DSDisplay.hpp"
 #include "LiveGrapherHost/GraphHost.hpp"
 
@@ -57,9 +56,6 @@ private:
 
     std::unique_ptr<Timer> autoTimer;
     std::unique_ptr<Timer> displayTimer;
-    std::unique_ptr<Timer> accumTimer;
-
-    RollingAverage<double, 5> manualAverage;
 
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay;

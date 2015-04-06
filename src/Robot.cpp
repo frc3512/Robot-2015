@@ -22,7 +22,6 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
     evStick = std::make_unique<Joystick>(2);
     autoTimer = std::make_unique<Timer>();
     displayTimer = std::make_unique<Timer>();
-    accumTimer = std::make_unique<Timer>();
 
     dsDisplay.addAutoMethod("Noop Auton", &Robot::AutoNoop, this);
     dsDisplay.addAutoMethod("DriveForward", &Robot::AutoDriveForward, this);
@@ -130,29 +129,6 @@ void Robot::OperatorControl() {
         }
         else {
             ev->setIntakeDirectionRight(Elevator::S_STOPPED);
-        }
-
-        // Accumulate assisted automatic mode
-        double deltaT = accumTimer->Get();
-        accumTimer->Reset();
-        accumTimer->Start();
-
-        double evStickY = evStick->GetY();
-        evStickY = 0;
-        manualAverage.addValue(evStickY * ev->getMaxVelocity() * deltaT);
-
-        // Deadband
-        if (applyDeadband(manualAverage.get(), 0.05) &&
-            applyDeadband(evStickY, 0.05)) {
-            if (ev->getSetpoint() + manualAverage.get() > 0
-                && ev->getSetpoint() + manualAverage.get() <
-                settings.getDouble("EV_MAX_HEIGHT")) {
-                std::cout << "manualChangeSetpoint("
-                          << manualAverage.get()
-                          << ")"
-                          << std::endl;
-                ev->manualChangeSetpoint(manualAverage.get());
-            }
         }
 
         /* Opens intake if the elevator is at the same level as it or if the
