@@ -46,6 +46,12 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             }
             setHeight(height);
 
+            if (m_liftGrbx->isRevLimitSwitchClosed()) {
+                m_liftGrbx->resetEncoder();
+                height = 0.0;
+                setGoal(m_profileTimer->Get(), height, getHeight());
+            }
+
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     });
@@ -433,11 +439,12 @@ void Elevator::setProfileHeight(double height) {
     }
     else {
         // Going down.
-        if (height != 0.0) {
+        if (height > 0.0) {
             setMaxVelocity(91.26);
         }
         else {
             setMaxVelocity(45.63);
+            height = -100.0;
         }
         setTimeToMaxV(0.4);
         m_liftGrbx->setProfile(false);
