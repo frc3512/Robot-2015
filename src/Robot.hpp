@@ -33,6 +33,8 @@ public:
 
     void AutoNoop();
     void AutoDriveForward();
+    void AutoResetElevator();
+    void AutoOneCan();
     void AutoOneTote();
     void AutoMotionProfile();
 

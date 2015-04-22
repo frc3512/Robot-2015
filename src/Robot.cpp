@@ -25,6 +25,8 @@ Robot::Robot() : settings("/home/lvuser/RobotSettings.txt"),
 
     dsDisplay.addAutoMethod("Noop Auton", &Robot::AutoNoop, this);
     dsDisplay.addAutoMethod("DriveForward", &Robot::AutoDriveForward, this);
+    dsDisplay.addAutoMethod("ResetElevator", &Robot::AutoResetElevator, this);
+    dsDisplay.addAutoMethod("OneCan", &Robot::AutoOneCan, this);
     dsDisplay.addAutoMethod("OneTote", &Robot::AutoOneTote, this);
 
     pidGraph.setSendInterval(5ms);

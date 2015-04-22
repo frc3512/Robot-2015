@@ -1,13 +1,13 @@
 // =============================================================================
-// File Name: AutoOneTote.cpp
-// Description: Drives forward and picks up one tote
+// File Name: AutoOneCan.cpp
+// Description: Drives forward and picks up one can
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
 
 #include "../Robot.hpp"
 #include "../StateMachine.hpp"
 
-void Robot::AutoOneTote() {
+void Robot::AutoOneCan() {
     StateMachine autoSM;
 
     State* state = new State("IDLE");
