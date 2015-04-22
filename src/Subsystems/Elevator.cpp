@@ -294,15 +294,16 @@ double Elevator::getManualLiftSpeed() const {
 }
 
 void Elevator::setManualMode(bool on) {
-    if (!on && m_manual) {
-        m_manual = false;
-        setProfileHeight(getHeight());
-    }
-    else if (on && !m_manual) {
-        m_manual = true;
+    if (on != m_manual) {
+        m_manual = on;
 
-        // Stop any auto-stacking when we switch to manual mode
-        m_autoStackSM.setState("IDLE");
+        if (m_manual) {
+            // Stop any auto-stacking when we switch to manual mode
+            m_autoStackSM.setState("IDLE");
+        }
+        else {
+            setProfileHeight(getHeight());
+        }
     }
 }
 
