@@ -72,7 +72,6 @@ void Robot::OperatorControl() {
         }
 
         // Automatic preset buttons (7-12)
-        // TODO: Special case for level 0
         if (evButtons.releasedButton(8)) {
             ev->raiseElevator("EV_GROUND");
         }

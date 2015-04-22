@@ -36,7 +36,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_grabTimer = std::make_unique<Timer>();
 
     m_profileUpdater = new std::thread([this] {
-        double height;
+        double height = 0.0;
         while (m_updateProfile) {
             if (!atGoal()) {
                 height = updateSetpoint(m_profileTimer->Get());
@@ -45,8 +45,8 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
                 height = m_setpoint;
             }
             setHeight(height);
-            std::this_thread::sleep_for(std::chrono::milliseconds(
-                                            10));
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     });
 
@@ -432,13 +432,19 @@ void Elevator::setProfileHeight(double height) {
     }
     else {
         // Going down.
-        setMaxVelocity(91.26);
+        if (height != 0.0) {
+            setMaxVelocity(91.26);
+        }
+        else {
+            setMaxVelocity(45.63);
+        }
         setTimeToMaxV(0.4);
         m_liftGrbx->setProfile(false);
     }
 
     m_profileTimer->Reset();
     m_profileTimer->Start();
+
     setGoal(m_profileTimer->Get(), height, getHeight());
 }
 
