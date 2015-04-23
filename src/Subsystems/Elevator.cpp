@@ -371,13 +371,6 @@ void Elevator::resetEncoders() {
     m_liftGrbx->resetEncoder();
 }
 
-void Elevator::pollLiftLimitSwitches() {
-    // Check encoder reset limit switch
-    if (m_liftGrbx->isRevLimitSwitchClosed()) {
-        m_liftGrbx->resetEncoder();
-    }
-}
-
 void Elevator::raiseElevator(std::string level) {
     size_t op = 0;
     size_t pos = 0;
@@ -493,8 +486,8 @@ void Elevator::cancelStack() {
 void Elevator::updateState() {
     m_autoStackSM.run();
 
-    /* Opens intake if the elevator is at the same level as it or if the
-     * tines are open
+    /* Opens intake if the elevator is at the same level as it or if the tines
+     * are open
      */
     if (isIntakeGrabbed()) {
         if ((getSetpoint() < 11 && !isManualMode()) ||
@@ -503,9 +496,6 @@ void Elevator::updateState() {
             intakeGrab(false);
         }
     }
-
-    // Poll the limit reset limit switch
-    pollLiftLimitSwitches();
 }
 
 void Elevator::manualChangeSetpoint(double delta) {

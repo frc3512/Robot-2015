@@ -11,7 +11,7 @@ void Robot::AutoOneCan() {
     StateMachine autoSM;
 
     State* state = new State("IDLE");
-    state->advanceFunc = [this] { return "SEEK_GARBAGECAN_UP"; };
+    state->advanceFunc = [this] { return "SEEK_GROUND"; };
     state->endFunc = [this] {
         ev->setIntakeDirectionLeft(Elevator::S_STOPPED);
         ev->setIntakeDirectionRight(Elevator::S_STOPPED);
@@ -19,14 +19,13 @@ void Robot::AutoOneCan() {
     autoSM.addState(state);
     autoSM.setState("IDLE");
 
-    state = new State("SEEK_GARBAGECAN_UP");
+    state = new State("SEEK_GROUND");
     state->initFunc = [this] {
-        ev->raiseElevator("EV_GARBAGECAN_LEVEL");
-        ev->stowIntake(false);
+        ev->raiseElevator("EV_GROUND");
     };
     state->advanceFunc = [this] {
         if (ev->atGoal()) {
-            return "MOVE_TO_TOTE";
+            return "OPEN_TINES_AND_DRIVE";
         }
         else {
             return "";
@@ -34,67 +33,14 @@ void Robot::AutoOneCan() {
     };
     autoSM.addState(state);
 
-    state = new State("MOVE_TO_TOTE");
+    state = new State("OPEN_TINES_AND_DRIVE");
     state->initFunc = [this] {
         autoTimer->Reset();
+        ev->elevatorGrab(false);
     };
     state->advanceFunc = [this] {
         if (autoTimer->HasPeriodPassed(1.0)) {
-            return "AUTOSTACK";
-        }
-        else {
-            return "";
-        }
-    };
-    state->periodicFunc = [this] { robotDrive->drive(-0.3, 0, false); };
-    autoSM.addState(state);
-
-    state = new State("AUTOSTACK");
-    state->initFunc = [this] {
-        autoTimer->Reset();
-        ev->intakeGrab(true);
-        ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
-        ev->setIntakeDirectionRight(Elevator::S_REVERSE);
-
-        // ev->stackTotes();
-    };
-    state->advanceFunc = [this] {
-        if (autoTimer->HasPeriodPassed(1.0)) {
-            return "TURN";
-        }
-        else {
-            return "";
-        }
-    };
-    autoSM.addState(state);
-
-    state = new State("TURN");
-    state->initFunc = [this] {
-        autoTimer->Reset();
-        ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
-        ev->setIntakeDirectionRight(Elevator::S_REVERSE);
-    };
-    state->advanceFunc = [this] {
-        if (autoTimer->HasPeriodPassed(1.0)) {
-            return "RUN_AWAY";
-        }
-        else {
-            return "";
-        }
-    };
-    state->periodicFunc = [this] { robotDrive->drive(-0.3, -0.3, true); };
-    state->endFunc = [this] { robotDrive->drive(0.0, 0.0, false); };
-    autoSM.addState(state);
-
-    state = new State("RUN_AWAY");
-    state->initFunc = [this] {
-        autoTimer->Reset();
-        ev->setIntakeDirectionLeft(Elevator::S_REVERSE);
-        ev->setIntakeDirectionRight(Elevator::S_REVERSE);
-    };
-    state->advanceFunc = [this] {
-        if (autoTimer->HasPeriodPassed(3.0)) {
-            return "IDLE";
+            return "GRAB_CAN";
         }
         else {
             return "";
@@ -102,6 +48,35 @@ void Robot::AutoOneCan() {
     };
     state->periodicFunc = [this] { robotDrive->drive(-0.3, 0, false); };
     state->endFunc = [this] { robotDrive->drive(0, 0, false); };
+    autoSM.addState(state);
+
+    state = new State("GRAB_CAN");
+    state->initFunc = [this] {
+        autoTimer->Reset();
+        ev->elevatorGrab(true);
+    };
+    state->advanceFunc = [this] {
+        if (autoTimer->HasPeriodPassed(0.3)) {
+            return "SEEK_GARBAGECAN_UP";
+        }
+        else {
+            return "";
+        }
+    };
+    autoSM.addState(state);
+
+    state = new State("SEEK_GARBAGECAN_UP");
+    state->initFunc = [this] {
+        ev->raiseElevator("EV_TOTE_4");
+    };
+    state->advanceFunc = [this] {
+        if (ev->atGoal()) {
+            return "IDLE";
+        }
+        else {
+            return "";
+        }
+    };
     autoSM.addState(state);
 
     ev->setManualMode(false);

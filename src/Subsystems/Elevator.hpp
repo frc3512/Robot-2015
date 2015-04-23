@@ -71,9 +71,6 @@ public:
     void reloadPID();
     void resetEncoders();
 
-    // Periodic
-    void pollLiftLimitSwitches();
-
     // Takes a string representing the name of the height
     void raiseElevator(std::string level);
     void setProfileHeight(double height);
