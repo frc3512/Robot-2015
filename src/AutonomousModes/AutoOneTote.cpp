@@ -106,7 +106,8 @@ void Robot::AutoOneTote() {
 
     ev->setManualMode(false);
 
-    while (IsAutonomous() && IsEnabled()) {
+    autoSM.run();
+    while (IsAutonomous() && IsEnabled() && autoSM.getState() != "IDLE") {
         DS_PrintOut();
 
         autoSM.run();
