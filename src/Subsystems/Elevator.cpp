@@ -169,7 +169,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
     state = new State("SEEK_HALF_TOTE");
     state->initFunc = [this] {
-        setProfileHeight(m_toteHeights["EV_TOTE_1"]);
+        setProfileHeight(m_toteHeights["EV_TOTE_2"]);
     };
     state->advanceFunc = [this] {
         if (atGoal()) {
