@@ -46,10 +46,20 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             }
             setHeight(height);
 
+            // If elevator is at ground
             if (m_liftGrbx->isRevLimitSwitchClosed()) {
-                m_liftGrbx->resetEncoder();
-                height = 0.0;
-                setGoal(m_profileTimer->Get(), height, getHeight());
+                // If elevator wasn't before
+                if (!m_wasAtGround) {
+                    m_liftGrbx->resetEncoder();
+                    height = 0.0;
+                    setGoal(m_profileTimer->Get(), height, getHeight());
+
+                    m_wasAtGround = true;
+                }
+            }
+            // Elevator isn't at ground anymore. If it was previously on ground
+            else if (m_wasAtGround) {
+                m_wasAtGround = false;
             }
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10));

@@ -110,6 +110,7 @@ private:
     StateMachine m_autoStackSM;
     std::unique_ptr<Timer> m_grabTimer;
     bool m_startAutoStacking{false};
+    bool m_wasAtGround{false};
 
     double m_maxHeight;
 
