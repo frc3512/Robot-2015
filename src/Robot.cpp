@@ -132,20 +132,6 @@ void Robot::OperatorControl() {
             ev->setIntakeDirectionRight(Elevator::S_STOPPED);
         }
 
-        /* Opens intake if the elevator is at the same level as it or if the
-         * tines are open
-         */
-        if (ev->isIntakeGrabbed()) {
-            if ((ev->getSetpoint() < 11 && !ev->isManualMode()) ||
-                !ev->isElevatorGrabbed() ||
-                ev->isIntakeStowed()) {
-                ev->intakeGrab(false);
-            }
-        }
-
-        // Poll the limit reset limit switch
-        ev->pollLiftLimitSwitches();
-
         // Update the elevator automatic stacking state
         ev->updateState();
 

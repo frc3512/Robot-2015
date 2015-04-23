@@ -34,6 +34,7 @@ void Robot::AutoResetElevator() {
     autoSM.addState(state);
 
     ev->setManualMode(false);
+    ev->stowIntake(true);
 
     while (IsAutonomous() && IsEnabled()) {
         DS_PrintOut();

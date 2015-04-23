@@ -492,6 +492,20 @@ void Elevator::cancelStack() {
 
 void Elevator::updateState() {
     m_autoStackSM.run();
+
+    /* Opens intake if the elevator is at the same level as it or if the
+     * tines are open
+     */
+    if (isIntakeGrabbed()) {
+        if ((getSetpoint() < 11 && !isManualMode()) ||
+            !isElevatorGrabbed() ||
+            isIntakeStowed()) {
+            intakeGrab(false);
+        }
+    }
+
+    // Poll the limit reset limit switch
+    pollLiftLimitSwitches();
 }
 
 void Elevator::manualChangeSetpoint(double delta) {
