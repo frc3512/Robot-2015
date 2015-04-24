@@ -34,7 +34,9 @@ public:
     void AutoNoop();
     void AutoDriveForward();
     void AutoResetElevator();
-    void AutoOneCan();
+    void AutoOneCanLeft();
+    void AutoOneCanCenter();
+    void AutoOneCanRight();
     void AutoOneTote();
     void AutoMotionProfile();
 

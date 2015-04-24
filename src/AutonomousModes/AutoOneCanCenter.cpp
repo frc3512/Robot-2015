@@ -1,5 +1,5 @@
 // =============================================================================
-// File Name: AutoOneCan.cpp
+// File Name: AutoOneCanCenter.cpp
 // Description: Drives forward and picks up one can
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
@@ -7,7 +7,7 @@
 #include "../Robot.hpp"
 #include "../StateMachine.hpp"
 
-void Robot::AutoOneCan() {
+void Robot::AutoOneCanCenter() {
     StateMachine autoSM;
 
     State* state = new State("IDLE");
@@ -25,29 +25,12 @@ void Robot::AutoOneCan() {
     };
     state->advanceFunc = [this] {
         if (ev->atGoal()) {
-            return "OPEN_TINES_AND_DRIVE";
-        }
-        else {
-            return "";
-        }
-    };
-    autoSM.addState(state);
-
-    state = new State("OPEN_TINES_AND_DRIVE");
-    state->initFunc = [this] {
-        autoTimer->Reset();
-        ev->elevatorGrab(false);
-    };
-    state->advanceFunc = [this] {
-        if (autoTimer->HasPeriodPassed(1.0)) {
             return "GRAB_CAN";
         }
         else {
             return "";
         }
     };
-    state->periodicFunc = [this] { robotDrive->drive(-0.3, 0, false); };
-    state->endFunc = [this] { robotDrive->drive(0, 0, false); };
     autoSM.addState(state);
 
     state = new State("GRAB_CAN");
@@ -56,7 +39,7 @@ void Robot::AutoOneCan() {
         ev->elevatorGrab(true);
     };
     state->advanceFunc = [this] {
-        if (autoTimer->HasPeriodPassed(0.3)) {
+        if (autoTimer->HasPeriodPassed(0.2)) {
             return "SEEK_GARBAGECAN_UP";
         }
         else {
@@ -71,12 +54,28 @@ void Robot::AutoOneCan() {
     };
     state->advanceFunc = [this] {
         if (ev->atGoal()) {
+            return "DRIVE_FORWARD";
+        }
+        else {
+            return "";
+        }
+    };
+    autoSM.addState(state);
+
+    state = new State("DRIVE_FORWARD");
+    state->initFunc = [this] {
+        autoTimer->Reset();
+    };
+    state->advanceFunc = [this] {
+        if (autoTimer->HasPeriodPassed(1.2)) {
             return "IDLE";
         }
         else {
             return "";
         }
     };
+    state->periodicFunc = [this] { robotDrive->drive(-0.3, 0, false); };
+    state->endFunc = [this] { robotDrive->drive(0, 0, false); };
     autoSM.addState(state);
 
     ev->setManualMode(false);
