@@ -59,7 +59,6 @@ void Robot::AutoOneCanRight() {
         else {
             return "";
         }
-
     };
     autoSM.addState(state);
 
