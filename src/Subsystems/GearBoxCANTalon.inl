@@ -59,7 +59,7 @@ inline void GearBox<CANTalon>::setManual(float value) {
     }
 }
 
-inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) const {
+inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) {
     if (mode == Grbx::Position) {
         return m_motors[0]->GetPosition() * m_distancePerPulse;
     }
@@ -99,7 +99,7 @@ inline void GearBox<CANTalon>::setEncoderReversed(bool reverse) {
     m_motors[0]->SetSensorDirection(m_isEncoderReversed);
 }
 
-inline bool GearBox<CANTalon>::onTarget() const {
+inline bool GearBox<CANTalon>::onTarget() {
     return fabs(m_motors[0]->GetClosedLoopError()) < 15;
 }
 

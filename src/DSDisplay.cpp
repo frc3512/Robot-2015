@@ -121,15 +121,9 @@ const std::string DSDisplay::receiveFromDS() {
     return "NONE";
 }
 
-DSDisplay::DSDisplay(unsigned short portNumber) :
-    m_dsIP(sf::IpAddress::None),
-    m_dsPort(portNumber) {
+DSDisplay::DSDisplay(unsigned short portNumber) : m_dsPort(portNumber) {
     m_socket.bind(portNumber);
     m_socket.setBlocking(false);
-
-    m_recvIP = sf::IpAddress(0, 0, 0, 0);
-    m_recvPort = 0;
-    m_recvAmount = 0;
 
     // Retrieve stored autonomous index
 #if 0

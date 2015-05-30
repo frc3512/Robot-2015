@@ -13,18 +13,18 @@ void Robot::AutoResetElevator() {
     State* state = new State("IDLE");
     state->advanceFunc = [this] { return "SEEK_GROUND"; };
     state->endFunc = [this] {
-        ev->setIntakeDirectionLeft(Elevator::S_STOPPED);
-        ev->setIntakeDirectionRight(Elevator::S_STOPPED);
+        ev.setIntakeDirectionLeft(Elevator::S_STOPPED);
+        ev.setIntakeDirectionRight(Elevator::S_STOPPED);
     };
     autoSM.addState(state);
     autoSM.setState("IDLE");
 
     state = new State("SEEK_GROUND");
     state->initFunc = [this] {
-        ev->raiseElevator("EV_GROUND");
+        ev.raiseElevator("EV_GROUND");
     };
     state->advanceFunc = [this] {
-        if (ev->atGoal()) {
+        if (ev.atGoal()) {
             return "IDLE";
         }
         else {
@@ -33,15 +33,15 @@ void Robot::AutoResetElevator() {
     };
     autoSM.addState(state);
 
-    ev->setManualMode(false);
-    ev->stowIntake(true);
+    ev.setManualMode(false);
+    ev.stowIntake(true);
 
     autoSM.run();
     while (IsAutonomous() && IsEnabled() && autoSM.getState() != "IDLE") {
         DS_PrintOut();
 
         autoSM.run();
-        ev->updateState();
+        ev.updateState();
 
         std::this_thread::sleep_for(10ms);
     }

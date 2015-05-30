@@ -129,8 +129,8 @@ private:
     friend class SocketSelector;
 
     Type m_socketType;
-    int m_socket;      // Socket descriptor
-    bool m_isBlocking; // Current blocking mode of the socket
+    int m_socket{-1};      // Socket descriptor
+    bool m_isBlocking{true}; // Current blocking mode of the socket
 };
 } // namespace sf
 

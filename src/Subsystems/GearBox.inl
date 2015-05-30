@@ -44,7 +44,7 @@ void GearBox<T>::setSetpoint(float setpoint) {
 }
 
 template <class T>
-float GearBox<T>::getSetpoint() {
+float GearBox<T>::getSetpoint() const {
     if (m_pid != nullptr) {
         return m_pid->GetSetpoint();
     }
@@ -68,10 +68,10 @@ template <class T>
 float GearBox<T>::get(Grbx::PIDMode mode) const {
     if (mode == Grbx::Raw) {
         if (!GearBoxBase<T>::m_isMotorReversed) {
-            return GearBoxBase<T>::m_motors[0]->Get();
+            return GearBoxBase<T>::m_motors[0].Get();
         }
         else {
-            return -GearBoxBase<T>::m_motors[0]->Get();
+            return -GearBoxBase<T>::m_motors[0].Get();
         }
     }
     else if (m_pid != nullptr) {

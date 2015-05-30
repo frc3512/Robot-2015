@@ -59,7 +59,7 @@ struct[[gnu::packed]] graph_list_t{
 
 class GraphHost {
 public:
-    GraphHost(int port);
+    explicit GraphHost(int port);
     ~GraphHost();
 
     /* * Send data (y value) for a given dataset to remote client

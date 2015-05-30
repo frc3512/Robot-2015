@@ -13,18 +13,18 @@ void Robot::AutoOneCanCenter() {
     State* state = new State("IDLE");
     state->advanceFunc = [this] { return "SEEK_GROUND"; };
     state->endFunc = [this] {
-        ev->setIntakeDirectionLeft(Elevator::S_STOPPED);
-        ev->setIntakeDirectionRight(Elevator::S_STOPPED);
+        ev.setIntakeDirectionLeft(Elevator::S_STOPPED);
+        ev.setIntakeDirectionRight(Elevator::S_STOPPED);
     };
     autoSM.addState(state);
     autoSM.setState("IDLE");
 
     state = new State("SEEK_GROUND");
     state->initFunc = [this] {
-        ev->raiseElevator("EV_GROUND");
+        ev.raiseElevator("EV_GROUND");
     };
     state->advanceFunc = [this] {
-        if (ev->atGoal()) {
+        if (ev.atGoal()) {
             return "GRAB_CAN";
         }
         else {
@@ -35,11 +35,11 @@ void Robot::AutoOneCanCenter() {
 
     state = new State("GRAB_CAN");
     state->initFunc = [this] {
-        autoTimer->Reset();
-        ev->elevatorGrab(true);
+        autoTimer.Reset();
+        ev.elevatorGrab(true);
     };
     state->advanceFunc = [this] {
-        if (autoTimer->HasPeriodPassed(0.2)) {
+        if (autoTimer.HasPeriodPassed(0.2)) {
             return "SEEK_GARBAGECAN_UP";
         }
         else {
@@ -50,10 +50,10 @@ void Robot::AutoOneCanCenter() {
 
     state = new State("SEEK_GARBAGECAN_UP");
     state->initFunc = [this] {
-        ev->raiseElevator("EV_TOTE_4");
+        ev.raiseElevator("EV_TOTE_4");
     };
     state->advanceFunc = [this] {
-        if (ev->atGoal()) {
+        if (ev.atGoal()) {
             return "DRIVE_FORWARD";
         }
         else {
@@ -64,28 +64,28 @@ void Robot::AutoOneCanCenter() {
 
     state = new State("DRIVE_FORWARD");
     state->initFunc = [this] {
-        autoTimer->Reset();
+        autoTimer.Reset();
     };
     state->advanceFunc = [this] {
-        if (autoTimer->HasPeriodPassed(1.2)) {
+        if (autoTimer.HasPeriodPassed(1.2)) {
             return "IDLE";
         }
         else {
             return "";
         }
     };
-    state->periodicFunc = [this] { robotDrive->drive(-0.3, 0, false); };
-    state->endFunc = [this] { robotDrive->drive(0, 0, false); };
+    state->periodicFunc = [this] { robotDrive.drive(-0.3, 0, false); };
+    state->endFunc = [this] { robotDrive.drive(0, 0, false); };
     autoSM.addState(state);
 
-    ev->setManualMode(false);
+    ev.setManualMode(false);
 
     autoSM.run();
     while (IsAutonomous() && IsEnabled() && autoSM.getState() != "IDLE") {
         DS_PrintOut();
 
         autoSM.run();
-        ev->updateState();
+        ev.updateState();
 
         std::this_thread::sleep_for(10ms);
     }

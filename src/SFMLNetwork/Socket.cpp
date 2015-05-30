@@ -29,9 +29,7 @@
 
 namespace sf {
 Socket::Socket(Type sockType) :
-    m_socketType(sockType),
-    m_socket(-1),
-    m_isBlocking(true) {
+    m_socketType(sockType) {
 }
 
 Socket::~Socket() {

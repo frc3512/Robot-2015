@@ -8,13 +8,11 @@
 #define ELEVATOR_HPP
 
 class Solenoid;
-class DigitalInput;
 class CANTalon;
 
 #include "SubsystemBase.hpp"
 #include "../MotionProfile/TrapezoidProfile.hpp"
 #include <vector>
-#include <memory>
 #include <thread>
 #include <atomic>
 #include <Timer.h>
@@ -86,26 +84,25 @@ public:
     void updateState();
 
 private:
-    std::unique_ptr<Solenoid> m_elevatorGrabber;
-    std::unique_ptr<Solenoid> m_containerGrabber;
-    std::unique_ptr<DigitalInput> m_bottomLimit;
-    std::unique_ptr<GearBox<CANTalon>> m_liftGrbx;
+    Solenoid m_elevatorGrabber{3};
+    Solenoid m_containerGrabber{4};
+    GearBox<CANTalon> m_liftGrbx{-1, 7, 2};
     bool m_manual{false};
 
     // Intake
     IntakeMotorState m_intakeState;
-    std::unique_ptr<Solenoid> m_intakeStower;
-    std::unique_ptr<Solenoid> m_intakeGrabber;
-    std::unique_ptr<CANTalon> m_intakeWheelLeft;
-    std::unique_ptr<CANTalon> m_intakeWheelRight;
+    Solenoid m_intakeStower{1};
+    Solenoid m_intakeGrabber{2};
+    CANTalon m_intakeWheelLeft{3};
+    CANTalon m_intakeWheelRight{4};
 
     std::map<std::string, double> m_toteHeights;
-    std::unique_ptr<Timer> m_profileTimer;
+    Timer m_profileTimer;
     std::atomic<bool> m_updateProfile{true};
     std::thread* m_profileUpdater;
 
     StateMachine m_autoStackSM;
-    std::unique_ptr<Timer> m_grabTimer;
+    Timer m_grabTimer;
     bool m_startAutoStacking{false};
     bool m_wasAtGround{false};
 

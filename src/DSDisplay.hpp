@@ -108,13 +108,13 @@ private:
     sf::Packet m_packet;
 
     sf::UdpSocket m_socket; // socket for sending data to Driver Station
-    sf::IpAddress m_dsIP; // IP address of Driver Station
+    sf::IpAddress m_dsIP{sf::IpAddress::None}; // IP address of Driver Station
     unsigned short m_dsPort; // port to which to send data
 
-    sf::IpAddress m_recvIP; // stores IP address temporarily during receive
-    unsigned short m_recvPort; // stores port temporarily during receive
+    sf::IpAddress m_recvIP{0, 0, 0, 0}; // stores IP address temporarily during receive
+    unsigned short m_recvPort{0}; // stores port temporarily during receive
     char m_recvBuffer[256]; // buffer for Driver Station requests
-    size_t m_recvAmount; // holds number of bytes received from Driver Station
+    size_t m_recvAmount{0}; // holds number of bytes received from Driver Station
 
     AutonContainer m_autonModes;
     char m_curAutonMode;

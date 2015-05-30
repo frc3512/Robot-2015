@@ -40,7 +40,7 @@
 namespace sf {
 class IpAddress {
 public:
-    IpAddress();
+    IpAddress() = default;
 
     /* The address can be either a decimal address (192.168.1.56) or a network
      * name ("localhost")
@@ -122,7 +122,12 @@ public:
     static const IpAddress Broadcast; ///< The "broadcast" address (for sending UDP messages to everyone on a local network)
 
 private:
-    uint32_t m_address;
+    /* We're using 0 (INADDR_ANY) instead of INADDR_NONE to represent the
+     * invalid address because the latter is also the broadcast address
+     * (255.255.255.255); it's ok because SFML doesn't publicly use INADDR_ANY
+     * (it is always used implicitly)
+     */
+    uint32_t m_address{0};
 };
 
 bool operator==(const IpAddress& left, const IpAddress& right);

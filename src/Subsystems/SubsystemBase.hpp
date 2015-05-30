@@ -7,20 +7,17 @@
 #ifndef SUBSYSTEM_BASE_HPP
 #define SUBSYSTEM_BASE_HPP
 
-#include <memory>
-
 #include "../Settings.hpp"
 
 class SubsystemBase {
 public:
-    SubsystemBase();
     virtual ~SubsystemBase() = default;
 
     virtual void reloadPID() = 0;
     virtual void resetEncoders() = 0;
 
 protected:
-    std::unique_ptr<Settings> m_settings;
+    Settings m_settings{"/home/lvuser/RobotSettings.txt"};
 };
 
 #endif // SUBSYSTEM_BASE_HPP

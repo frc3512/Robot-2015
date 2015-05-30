@@ -16,8 +16,6 @@ ButtonTracker::ButtonTracker(uint32_t port) {
     }
 
     m_port = port;
-    m_oldStates = 0;
-    m_newStates = 0;
 }
 
 void ButtonTracker::updateButtons() {

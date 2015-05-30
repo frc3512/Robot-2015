@@ -58,9 +58,9 @@ class Packet {
     typedef bool (Packet::* BoolType)(std::size_t);
 
 public:
-    Packet();
+    Packet() = default;
 
-    virtual ~Packet();
+    virtual ~Packet() = default;
 
     // Append data to the end of the packet
     void append(const void* data, std::size_t sizeInBytes);
@@ -217,8 +217,8 @@ private:
     bool checkSize(std::size_t size);
 
     std::vector<char> m_packetData;    ///< Data stored in the packet
-    std::size_t m_readPos; ///< Current reading position in the packet
-    bool m_isValid; ///< Reading state of the packet
+    std::size_t m_readPos{0}; ///< Current reading position in the packet
+    bool m_isValid{true}; ///< Reading state of the packet
 };
 } // namespace sf
 

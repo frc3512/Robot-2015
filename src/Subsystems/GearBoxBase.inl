@@ -23,10 +23,6 @@ GearBoxBase<T>::GearBoxBase(int shifterChan,
         m_shifter = nullptr;
     }
 
-    m_isMotorReversed = false;
-    m_isEncoderReversed = false;
-    m_distancePerPulse = 1.f;
-
     // Create motor controllers of specified template type
     m_motors.emplace_back(std::make_unique<T>(motor1));
     if (motor2 != -1) {
@@ -35,9 +31,6 @@ GearBoxBase<T>::GearBoxBase(int shifterChan,
     if (motor3 != -1) {
         m_motors.emplace_back(std::make_unique<T>(motor3));
     }
-
-    m_setpoint = 0;
-    m_feedforward = 0;
 }
 
 template <class T>

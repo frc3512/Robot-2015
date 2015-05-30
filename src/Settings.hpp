@@ -13,7 +13,7 @@
 
 class Settings {
 public:
-    Settings(std::string fileName);
+    explicit Settings(std::string fileName);
 
     // Updates list of values from given file
     void update();

@@ -57,13 +57,6 @@ const IpAddress IpAddress::None;
 const IpAddress IpAddress::LocalHost(127, 0, 0, 1);
 const IpAddress IpAddress::Broadcast(255, 255, 255, 255);
 
-IpAddress::IpAddress() :
-    m_address(0) {
-    // We're using 0 (INADDR_ANY) instead of INADDR_NONE to represent the invalid address,
-    // because the latter is also the broadcast address (255.255.255.255); it's ok because
-    // SFML doesn't publicly use INADDR_ANY (it is always used implicitely)
-}
-
 IpAddress::IpAddress(const std::string& address) :
     m_address(resolve(address)) {
 }

@@ -12,7 +12,7 @@
 
 class BezierCurve : public std::vector<std::pair<double, double>> {
 public:
-    BezierCurve();
+    BezierCurve() = default;
     BezierCurve(const std::pair<double, double>& pt1,
                 const std::pair<double, double>& pt2,
                 const std::pair<double, double>& pt3,

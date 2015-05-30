@@ -7,9 +7,6 @@
 #include "BezierCurve.hpp"
 #include <cmath>
 
-BezierCurve::BezierCurve() {
-}
-
 BezierCurve::BezierCurve(const std::pair<double, double>& pt1,
                          const std::pair<double, double>& pt2,
                          const std::pair<double, double>& pt3,

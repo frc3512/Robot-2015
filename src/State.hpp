@@ -12,7 +12,7 @@
 
 class State {
 public:
-    State(std::string name);
+    explicit State(std::string name);
 
     /* 'name' contains the name of the state.
      * initFunc() is run when the state is first transitioned to.

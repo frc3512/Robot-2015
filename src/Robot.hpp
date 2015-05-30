@@ -7,7 +7,6 @@
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
-#include <memory>
 #include <chrono>
 using namespace std::chrono_literals;
 
@@ -45,27 +44,27 @@ public:
     static float applyDeadband(float value, float deadband);
 
 private:
-    Settings settings;
+    Settings settings{"/home/lvuser/RobotSettings.txt"};
 
-    std::unique_ptr<DriveTrain> robotDrive;
-    std::unique_ptr<Elevator> ev;
+    DriveTrain robotDrive;
+    Elevator ev;
 
-    std::unique_ptr<Joystick> driveStick1;
-    std::unique_ptr<Joystick> driveStick2;
-    std::unique_ptr<Joystick> evStick;
+    Joystick driveStick1{0};
+    Joystick driveStick2{1};
+    Joystick evStick{2};
 
-    ButtonTracker drive1Buttons;
-    ButtonTracker drive2Buttons;
-    ButtonTracker evButtons;
+    ButtonTracker drive1Buttons{0};
+    ButtonTracker drive2Buttons{1};
+    ButtonTracker evButtons{2};
 
-    std::unique_ptr<Timer> autoTimer;
-    std::unique_ptr<Timer> displayTimer;
+    Timer autoTimer;
+    Timer displayTimer;
 
     // Used for sending data to the Driver Station
-    DSDisplay& dsDisplay;
+    DSDisplay& dsDisplay{DSDisplay::getInstance(settings.getInt("DS_Port"))};
 
     // The LiveGrapher host
-    GraphHost pidGraph;
+    GraphHost pidGraph{3513};
 };
 
 #endif // ROBOT_HPP

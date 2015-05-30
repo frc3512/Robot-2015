@@ -28,7 +28,7 @@ class DriverStation;
 
 class ButtonTracker {
 public:
-    ButtonTracker(uint32_t port);
+    explicit ButtonTracker(uint32_t port);
 
     void updateButtons(); // gets new button statuses for joystick from Driver Station
 
@@ -43,8 +43,8 @@ private:
 
     static DriverStation* m_driverStation;
 
-    short m_oldStates;
-    short m_newStates;
+    short m_oldStates{0};
+    short m_newStates{0};
 };
 
 #endif // BUTTON_TRACKER_HPP
