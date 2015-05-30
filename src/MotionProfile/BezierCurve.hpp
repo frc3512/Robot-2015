@@ -8,24 +8,39 @@
 #define BEZIER_CURVE_HPP
 
 #include <vector>
-#include <utility>
 
-class BezierCurve : public std::vector<std::pair<double, double>> {
+struct Point {
+    Point(double x, double y);
+
+    double x;
+    double y;
+};
+
+class BezierCurve {
 public:
     BezierCurve() = default;
-    BezierCurve(const std::pair<double, double>& pt1,
-                const std::pair<double, double>& pt2,
-                const std::pair<double, double>& pt3,
-                const std::pair<double, double>& pt4);
+    BezierCurve(const Point& pt1,
+                const Point& pt2,
+                const Point& pt3,
+                const Point& pt4);
+
+    void addPoint(double x, double y);
+    void clear();
 
     // 'start' and 'end' represent start and end t values [0..1]
     double getArcLength(double start, double end) const;
     double getCurvature(double t) const;
 
     // Return value and first and second derivatives at parameter t
-    double getValue(double t, bool xComponent) const;
-    double getDerivative(double t, bool xComponent) const;
-    double getDerivative2(double t, bool xComponent) const;
+    double getValueX(double t) const;
+    double getValueY(double t) const;
+    double getDerivativeX(double t) const;
+    double getDerivativeY(double t) const;
+    double getDerivative2X(double t) const;
+    double getDerivative2Y(double t) const;
+
+private:
+    std::vector<Point> m_pts;
 };
 
 #endif // BEZIER_CURVE_HPP

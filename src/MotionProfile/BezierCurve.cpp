@@ -7,89 +7,77 @@
 #include "BezierCurve.hpp"
 #include <cmath>
 
-BezierCurve::BezierCurve(const std::pair<double, double>& pt1,
-                         const std::pair<double, double>& pt2,
-                         const std::pair<double, double>& pt3,
-                         const std::pair<double,
-                                         double>& pt4)
-{
-    push_back(pt1);
-    push_back(pt2);
-    push_back(pt3);
-    push_back(pt4);
+Point::Point(double x, double y) {
+    this->x = x;
+    this->y = y;
+}
+
+BezierCurve::BezierCurve(const Point& pt1,
+                         const Point& pt2,
+                         const Point& pt3,
+                         const Point& pt4) {
+    m_pts.push_back(pt1);
+    m_pts.push_back(pt2);
+    m_pts.push_back(pt3);
+    m_pts.push_back(pt4);
+}
+
+void BezierCurve::addPoint(double x, double y) {
+    m_pts.emplace_back(x, y);
+}
+
+void BezierCurve::clear() {
+    m_pts.clear();
 }
 
 double BezierCurve::getArcLength(double start, double end) const {
     double length = 0.0;
 
     for (double t = start; t < end; t += 0.0001) {
-        length += std::hypot(getDerivative(t, true), getDerivative(t, false)) *
-                  0.0001;
+        length += std::hypot(getDerivativeX(t), getDerivativeY(t)) * 0.0001;
     }
 
     return length;
 }
 
 double BezierCurve::getCurvature(double t) const {
-    return (getDerivative(t, true) * getDerivative2(t, false) -
-            getDerivative(t, false) * getDerivative2(t, true)) /
-           std::pow(std::pow(getDerivative(t, true), 2.0) +
-                    std::pow(getDerivative(t, false), 2.0), 1.5);
+    return (getDerivativeX(t) * getDerivative2Y(t) - getDerivativeY(t) *
+            getDerivative2X(t)) / std::pow(std::pow(getDerivativeX(t), 2.0) +
+                                           std::pow(getDerivativeY(t), 2.0),
+                                           1.5);
 }
 
-double BezierCurve::getValue(double t, bool xComponent) const {
-    if (xComponent) {
-        return std::pow(1 - t,
-                        3) * (*this)[0].first + 3.0 *
-               std::pow(1 - t,
-                        2) * t * (*this)[1].first + 3.0 * (1 - t) * std::pow(t,
-                                                                             2)
-               * (*this)[2].first + std::pow(t, 3) * (*this)[3].first;
-    }
-    else {
-        return std::pow(1 - t,
-                        3) * (*this)[0].second + 3.0 *
-               std::pow(1 - t,
-                        2) * t * (*this)[1].second + 3.0 * (1 - t) * std::pow(t,
-                                                                              2)
-               * (*this)[2].second + std::pow(t, 3) * (*this)[3].second;
-    }
+double BezierCurve::getValueX(double t) const {
+    return std::pow(1 - t, 3) * m_pts[0].x + 3.0 * std::pow(1 - t, 2) * t *
+           m_pts[1].x + 3.0 * (1 - t) * std::pow(t, 2) * m_pts[2].x +
+           std::pow(t, 3) * m_pts[3].x;
 }
 
-double BezierCurve::getDerivative(double t, bool xComponent) const {
-    if (xComponent) {
-        return 3.0 *
-               std::pow(1 - t,
-                        2) * ((*this)[1].first - (*this)[0].first) + 6.0 *
-               (1 - t) * t *
-               ((*this)[2].first - (*this)[1].first) + 3.0 *
-               std::pow(t, 2) * ((*this)[3].first - (*this)[2].first);
-    }
-    else {
-        return 3.0 *
-               std::pow(1 - t,
-                        2) * ((*this)[1].second - (*this)[0].second) + 6.0 *
-               (1 - t) * t *
-               ((*this)[2].second - (*this)[1].second) + 3.0 *
-               std::pow(t, 2) * ((*this)[3].second - (*this)[2].second);
-    }
+double BezierCurve::getValueY(double t) const {
+    return std::pow(1 - t, 3) * m_pts[0].y + 3.0 * std::pow(1 - t, 2) * t *
+           m_pts[1].y + 3.0 * (1 - t) * std::pow(t, 2) * m_pts[2].y +
+           std::pow(t, 3) * m_pts[3].y;
 }
 
-double BezierCurve::getDerivative2(double t, bool xComponent) const {
-    if (xComponent) {
-        return 6.0 * (1 - t) *
-               ((*this)[2].first - 2.0 * (*this)[1].first + (*this)[0].first) +
-               6.0 *
-               t *
-               ((*this)[3].first - 2.0 * (*this)[2].first + (*this)[1].first);
-    }
-    else {
-        return 6.0 * (1 - t) *
-               ((*this)[2].second - 2.0 * (*this)[1].second +
-                (*this)[0].second) +
-               6.0 * t *
-               ((*this)[3].second - 2.0 * (*this)[2].second +
-                (*this)[1].second);
-    }
+double BezierCurve::getDerivativeX(double t) const {
+    return 3.0 * std::pow(1 - t, 2) * (m_pts[1].x - m_pts[0].x) + 6.0 *
+           (1 - t) * t * (m_pts[2].x - m_pts[1].x) + 3.0 * std::pow(t, 2) *
+           (m_pts[3].x - m_pts[2].x);
+}
+
+double BezierCurve::getDerivativeY(double t) const {
+    return 3.0 * std::pow(1 - t, 2) * (m_pts[1].y - m_pts[0].y) + 6.0 *
+           (1 - t) * t * (m_pts[2].y - m_pts[1].y) + 3.0 * std::pow(t, 2) *
+           (m_pts[3].y - m_pts[2].y);
+}
+
+double BezierCurve::getDerivative2X(double t) const {
+    return 6.0 * (1 - t) * (m_pts[2].x - 2.0 * m_pts[1].x + m_pts[0].x) +
+           6.0 * t * (m_pts[3].x - 2.0 * m_pts[2].x + m_pts[1].x);
+}
+
+double BezierCurve::getDerivative2Y(double t) const {
+    return 6.0 * (1 - t) * (m_pts[2].y - 2.0 * m_pts[1].y + m_pts[0].y) +
+           6.0 * t * (m_pts[3].y - 2.0 * m_pts[2].y + m_pts[1].y);
 }
 
