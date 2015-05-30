@@ -23,8 +23,15 @@ public:
     void addState(State* state);
     void addState(std::unique_ptr<State> state);
 
-    template <class... Args>
-    void emplaceState(Args&& ... args);
+    template <class T,
+              class =
+                  std::enable_if_t<!std::is_same<std::decay_t<T>,
+                                                 State>::value>>
+    void emplaceState(T&& state) noexcept(std::is_nothrow_assignable<State&,
+                                                                     T>::value)
+    {
+        m_states.push_back(std::make_unique<State>(std::forward<T>(state)));
+    }
 
     /* Moves the state machine to the given state. If the next state is found,
      * endFunc() for the current state and initFunc() for the next state. 'true'
@@ -42,8 +49,6 @@ private:
     std::vector<std::unique_ptr<State>> m_states;
     State* m_currentState{nullptr};
 };
-
-#include "StateMachine.inl"
 
 #endif // STATE_MACHINE_HPP
 
