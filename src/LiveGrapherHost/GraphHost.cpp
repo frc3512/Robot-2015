@@ -111,10 +111,10 @@ int GraphHost::graphData(float value, std::string dataset) {
 
     // Send the point to connected clients
     for (auto& conn : m_connList) {
-        for (const auto& dataset_str : conn.datasets) {
+        for (const auto& dataset_str : conn->datasets) {
             if (dataset_str == dataset) {
                 // Send the value off
-                conn.queueWrite(payload);
+                conn->queueWrite(payload);
             }
         }
     }
@@ -165,17 +165,17 @@ void GraphHost::socket_threadmain() {
         // Add the file descriptors to the list
         m_mutex.lock();
         for (auto& conn : m_connList) {
-            if (maxfd < conn.fd) {
-                maxfd = conn.fd;
+            if (maxfd < conn->fd) {
+                maxfd = conn->fd;
             }
-            if (conn.selectflags & SocketConnection::Read) {
-                FD_SET(conn.fd, &readfds);
+            if (conn->selectflags & SocketConnection::Read) {
+                FD_SET(conn->fd, &readfds);
             }
-            if (conn.selectflags & SocketConnection::Write) {
-                FD_SET(conn.fd, &writefds);
+            if (conn->selectflags & SocketConnection::Write) {
+                FD_SET(conn->fd, &writefds);
             }
-            if (conn.selectflags & SocketConnection::Error) {
-                FD_SET(conn.fd, &errorfds);
+            if (conn->selectflags & SocketConnection::Error) {
+                FD_SET(conn->fd, &errorfds);
             }
         }
         m_mutex.unlock();
@@ -192,18 +192,18 @@ void GraphHost::socket_threadmain() {
         m_mutex.lock();
         auto conn = m_connList.begin();
         while (conn != m_connList.end()) {
-            if (FD_ISSET(conn->fd, &readfds)) {
+            if (FD_ISSET((*conn)->fd, &readfds)) {
                 // Handle reading
-                if (conn->readPackets() == -1) {
+                if ((*conn)->readPackets() == -1) {
                     conn = m_connList.erase(conn);
                     continue;
                 }
             }
-            if (FD_ISSET(conn->fd, &writefds)) {
+            if (FD_ISSET((*conn)->fd, &writefds)) {
                 // Handle writing
-                conn->writePackets();
+                (*conn)->writePackets();
             }
-            if (FD_ISSET(conn->fd, &errorfds)) {
+            if (FD_ISSET((*conn)->fd, &errorfds)) {
                 // Handle errors
                 conn = m_connList.erase(conn);
                 continue;
@@ -221,7 +221,8 @@ void GraphHost::socket_threadmain() {
             if (fd != -1) {
                 m_mutex.lock();
                 // Add it to the list, this makes it a bit non-thread-safe
-                m_connList.emplace_back(fd, m_ipcfd_w);
+                m_connList.emplace_back(std::make_unique<SocketConnection>(fd,
+                                                                           m_ipcfd_w));
                 m_mutex.unlock();
             }
         }

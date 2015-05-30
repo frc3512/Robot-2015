@@ -23,8 +23,8 @@ public:
 
     SocketConnection(int nfd, int ipcWriteSock);
     ~SocketConnection();
-    SocketConnection(SocketConnection&&) = default;
-    SocketConnection& operator=(SocketConnection&&) = default;
+    SocketConnection(const SocketConnection&) = delete;
+    SocketConnection& operator=(const SocketConnection&) = delete;
 
     int readPackets();
     void processPacket(std::string& buf);

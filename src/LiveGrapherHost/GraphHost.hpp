@@ -104,7 +104,7 @@ private:
     int m_ipcfd_w;
     int m_port;
     std::vector<std::string> m_graphList;
-    std::vector<SocketConnection> m_connList;
+    std::vector<std::unique_ptr<SocketConnection>> m_connList;
 
     void socket_threadmain();
 
