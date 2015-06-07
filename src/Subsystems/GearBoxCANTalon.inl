@@ -100,7 +100,7 @@ inline void GearBox<CANTalon>::setEncoderReversed(bool reverse) {
 }
 
 inline bool GearBox<CANTalon>::onTarget() {
-    return fabs(m_motors[0]->GetClosedLoopError()) < 15;
+    return abs(m_motors[0]->GetClosedLoopError()) < 15;
 }
 
 inline void GearBox<CANTalon>::resetPID() {

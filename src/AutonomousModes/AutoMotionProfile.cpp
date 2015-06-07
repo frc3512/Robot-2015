@@ -26,7 +26,7 @@ void Robot::AutoMotionProfile() {
     autoTimer.Reset();
 
     // Move robot forward
-    robotDrive.setGoal(curve, autoTimer.Get());
+    robotDrive.setCurveGoal(curve, autoTimer.Get());
     while (IsAutonomous() && IsEnabled() && !robotDrive.atGoal()) {
         DS_PrintOut();
 

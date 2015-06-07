@@ -428,10 +428,8 @@ Packet& Packet::operator<<(const std::wstring& data) {
 
     // Then insert characters
     if (length > 0) {
-        for (std::wstring::const_iterator c = data.begin();
-             c != data.end();
-             ++c) {
-            *this << static_cast<uint32_t>(*c);
+        for (const auto& elem : data) {
+            *this << static_cast<uint32_t>(elem);
         }
     }
 

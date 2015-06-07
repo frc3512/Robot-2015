@@ -53,7 +53,7 @@ uint32_t resolve(const std::string& address) {
 
 
 namespace sf {
-const IpAddress IpAddress::None;
+const IpAddress IpAddress::None(0, 0, 0, 0);
 const IpAddress IpAddress::LocalHost(127, 0, 0, 1);
 const IpAddress IpAddress::Broadcast(255, 255, 255, 255);
 

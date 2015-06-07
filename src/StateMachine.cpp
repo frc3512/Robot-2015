@@ -31,7 +31,7 @@ bool StateMachine::setState(const std::string& newState) {
     return false;
 }
 
-const std::string& StateMachine::getState() const {
+const std::string StateMachine::getState() const {
     if (m_currentState != nullptr) {
         return m_currentState->name();
     }

@@ -55,7 +55,7 @@ const std::string DSDisplay::receiveFromDS() {
                 m_packet << static_cast<uint32_t>(fileSize);
 
                 // Allocate a buffer for the file
-                char* tempBuf = new char[fileSize];
+                auto tempBuf = new char[fileSize];
 
                 // Send the data
                 guiFile.read(tempBuf, fileSize);

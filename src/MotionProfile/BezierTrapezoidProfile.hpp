@@ -45,7 +45,7 @@ public:
      *
      * returns starting setpoint
      */
-    double setGoal(const BezierCurve& curve, double t);
+    double setCurveGoal(const BezierCurve& curve, double t);
 
     void resetProfile();
 
