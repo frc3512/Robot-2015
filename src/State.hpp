@@ -14,19 +14,26 @@ class State {
 public:
     explicit State(std::string name);
 
-    /* 'name' contains the name of the state.
-     * initFunc() is run when the state is first transitioned to.
-     * advanceFunc() advancees the state of the state machine to the state
-     *     which has the name returned. If "" is returned, the current state
-     *     will be maintained.
-     * periodicFunc() is run while the state machine is in that state.
-     * endFunc() is run when the state is being transitioned away from.
-     */
-    std::string name;
+    const std::string& name() const;
+
+    // initFunc() is run when the state is first transitioned to.
     std::function<void()> initFunc{[] {}};
+
+    /* advanceFunc() advances the state of the state machine to the state which
+     * has the name returned. If "" is returned, the current state will be
+     * maintained.
+     */
     std::function<std::string()> advanceFunc{[] { return ""; }};
+
+    // periodicFunc() is run while the state machine is in that state.
     std::function<void()> periodicFunc{[] {}};
+
+    // endFunc() is run when the state is being transitioned away from.
     std::function<void()> endFunc{[] {}};
+
+private:
+    // Contains the name of the state
+    std::string m_name;
 };
 
 #endif // STATE_HPP

@@ -40,7 +40,7 @@ public:
     bool setState(const std::string& nextState);
 
     // Returns name of current state
-    std::string getState() const;
+    const std::string& getState() const;
 
     // Call this periodically to operate the state machine
     void run();

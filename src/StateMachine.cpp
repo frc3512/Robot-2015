@@ -17,7 +17,7 @@ void StateMachine::addState(std::unique_ptr<State> state) {
 
 bool StateMachine::setState(const std::string& newState) {
     for (auto& i : m_states) {
-        if (i->name == newState) {
+        if (i->name() == newState) {
             if (m_currentState != nullptr) {
                 m_currentState->endFunc();
             }
@@ -31,9 +31,9 @@ bool StateMachine::setState(const std::string& newState) {
     return false;
 }
 
-std::string StateMachine::getState() const {
+const std::string& StateMachine::getState() const {
     if (m_currentState != nullptr) {
-        return m_currentState->name;
+        return m_currentState->name();
     }
     else {
         return "";
