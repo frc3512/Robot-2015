@@ -19,11 +19,12 @@
  * in looping situations.
  *
  * Example:
- *     GraphHost pidGraph( 3513 );
+ *     GraphHost pidGraph(3513);
+ *     pidGraph.setSendInterval(5ms);
  *
- *     if ( pidGraph.hasIntervalPassed() ) {
- *         pidGraph.graphData( frisbeeShooter.getRPM() , "PID0" );
- *         pidGraph.graphData( frisbeeShooter.getTargetRPM() , "PID1" );
+ *     if (pidGraph.hasIntervalPassed()) {
+ *         pidGraph.graphData(frisbeeShooter.getRPM(), "PID0");
+ *         pidGraph.graphData(frisbeeShooter.getTargetRPM(), "PID1");
  *
  *         pidGraph.resetInterval();
  *     }
@@ -96,7 +97,7 @@ private:
     // Used as a temp variables in graphData(2)
     uint64_t m_currentTime;
 
-    // Mark the thread as not running, this will be set to 1 by the thread
+    // Mark the thread as not running, this will be set to true by the thread
     std::atomic<bool> m_running{false};
     std::unique_ptr<std::thread> m_thread;
     std::mutex m_mutex;
