@@ -89,10 +89,10 @@ public:
 
 private:
     // Last time data was graphed
-    uint64_t m_lastTime{0};
+    uint64_t m_lastTime = 0;
 
     // Time interval after which data is sent to graph (in milliseconds per sample)
-    uint32_t m_sendInterval{5};
+    uint32_t m_sendInterval = 5;
 
     // Used as a temp variables in graphData(2)
     uint64_t m_currentTime;

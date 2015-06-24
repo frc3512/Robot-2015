@@ -127,7 +127,7 @@ private:
      * (255.255.255.255); it's ok because SFML doesn't publicly use INADDR_ANY
      * (it is always used implicitly)
      */
-    uint32_t m_address{0};
+    uint32_t m_address = 0;
 };
 
 bool operator==(const IpAddress& left, const IpAddress& right);

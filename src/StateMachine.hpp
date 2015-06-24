@@ -47,7 +47,7 @@ public:
 
 private:
     std::vector<std::unique_ptr<State>> m_states;
-    State* m_currentState{nullptr};
+    State* m_currentState = nullptr;
 };
 
 #endif // STATE_MACHINE_HPP

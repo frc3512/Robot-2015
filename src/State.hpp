@@ -17,19 +17,19 @@ public:
     const std::string& name() const;
 
     // initFunc() is run when the state is first transitioned to.
-    std::function<void()> initFunc{[] {}};
+    std::function<void()> initFunc = [] {};
 
     /* advanceFunc() advances the state of the state machine to the state which
      * has the name returned. If "" is returned, the current state will be
      * maintained.
      */
-    std::function<std::string()> advanceFunc{[] { return ""; }};
+    std::function<std::string()> advanceFunc = [] { return ""; };
 
     // periodicFunc() is run while the state machine is in that state.
-    std::function<void()> periodicFunc{[] {}};
+    std::function<void()> periodicFunc = [] {};
 
     // endFunc() is run when the state is being transitioned away from.
-    std::function<void()> endFunc{[] {}};
+    std::function<void()> endFunc = [] {};
 
 private:
     // Contains the name of the state

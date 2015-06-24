@@ -83,16 +83,16 @@ public:
     virtual void resetPID() = 0;
 
 protected:
-    bool m_isMotorReversed{false};
-    bool m_isEncoderReversed{false};
+    bool m_isMotorReversed = false;
+    bool m_isEncoderReversed = false;
 
     // Conversion factor for setpoints with respect to encoder readings
-    double m_distancePerPulse{1.0};
+    double m_distancePerPulse = 1.0;
 
     // Store the setpoint, because CANTalon won't give it to us
-    float m_setpoint{0.f};
+    float m_setpoint = 0.f;
 
-    float m_feedforward{0.f};
+    float m_feedforward = 0.f;
 
     std::unique_ptr<Solenoid> m_shifter;
 

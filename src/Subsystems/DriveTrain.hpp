@@ -56,13 +56,13 @@ public:
     const static float maxWheelSpeed;
 
 private:
-    float m_deadband{0.02f};
+    float m_deadband = 0.02f;
     float m_sensitivity;
 
     // Cheesy Drive variables
-    float m_oldTurn{0.f};
-    float m_quickStopAccumulator{0.f};
-    float m_negInertiaAccumulator{0.f};
+    float m_oldTurn = 0.f;
+    float m_quickStopAccumulator = 0.f;
+    float m_negInertiaAccumulator = 0.f;
 
     GearBox<CANTalon> m_leftGrbx{-1, 4, 1};
     GearBox<CANTalon> m_rightGrbx{-1, 5, 8};

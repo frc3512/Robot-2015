@@ -37,7 +37,7 @@ public:
     static std::vector<std::string> graphNames;
 
     int fd;
-    uint8_t selectflags{Read | Error};
+    uint8_t selectflags = Read | Error;
     std::vector<std::string> datasets;
 
 private:
@@ -45,14 +45,14 @@ private:
 
     // Write buffer currently being written
     std::string m_writebuf; // The buffer that needs to be written into the socket
-    size_t m_writebufoffset{0}; // How much has been written so far
-    bool m_writedone{true};
+    size_t m_writebufoffset = 0; // How much has been written so far
+    bool m_writedone = true;
     std::queue<std::string> m_writequeue;
 
     // Read buffer currently being read
     std::string m_readbuf;
-    size_t m_readbufoffset{0};
-    bool m_readdone{true};
+    size_t m_readbufoffset = 0;
+    bool m_readdone = true;
 };
 
 #include "SocketConnection.inl"

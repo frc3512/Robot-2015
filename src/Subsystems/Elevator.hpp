@@ -87,7 +87,7 @@ private:
     Solenoid m_elevatorGrabber{3};
     Solenoid m_containerGrabber{4};
     GearBox<CANTalon> m_liftGrbx{-1, 7, 2};
-    bool m_manual{false};
+    bool m_manual = false;
 
     // Intake
     IntakeMotorState m_intakeState;
@@ -103,8 +103,8 @@ private:
 
     StateMachine m_autoStackSM;
     Timer m_grabTimer;
-    bool m_startAutoStacking{false};
-    bool m_wasAtGround{false};
+    bool m_startAutoStacking = false;
+    bool m_wasAtGround = false;
 
     double m_maxHeight;
 

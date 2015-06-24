@@ -84,8 +84,8 @@ void Socket::create(int handle) {
             if (setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY,
                            reinterpret_cast<char*>(&yes),
                            sizeof(yes)) == -1) {
-                std::cerr << "Failed to set socket option \"TCP_NODELAY\" ; "
-                          << "all your TCP packets will be buffered\n";
+                std::cerr << "Failed to set socket option \"TCP_NODELAY\" ; " <<
+                    "all your TCP packets will be buffered\n";
             }
         }
         else {

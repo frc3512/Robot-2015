@@ -217,8 +217,8 @@ private:
     bool checkSize(std::size_t size);
 
     std::vector<char> m_packetData;    ///< Data stored in the packet
-    std::size_t m_readPos{0}; ///< Current reading position in the packet
-    bool m_isValid{true}; ///< Reading state of the packet
+    std::size_t m_readPos = 0; ///< Current reading position in the packet
+    bool m_isValid = true; ///< Reading state of the packet
 };
 } // namespace sf
 

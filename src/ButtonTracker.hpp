@@ -43,8 +43,8 @@ private:
 
     static DriverStation* m_driverStation;
 
-    short m_oldStates{0};
-    short m_newStates{0};
+    short m_oldStates = 0;
+    short m_newStates = 0;
 };
 
 #endif // BUTTON_TRACKER_HPP
