@@ -99,7 +99,7 @@ private:
     std::map<std::string, double> m_toteHeights;
     Timer m_profileTimer;
     std::atomic<bool> m_updateProfile{true};
-    std::thread* m_profileUpdater;
+    std::thread m_profileUpdater;
 
     StateMachine m_autoStackSM;
     Timer m_grabTimer;

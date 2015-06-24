@@ -23,7 +23,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_liftGrbx.setIZone(80);
     m_liftGrbx.setCloseLoopRampRate(1.0);
 
-    m_profileUpdater = new std::thread([this] {
+    m_profileUpdater = std::thread([this] {
         double height = 0.0;
         while (m_updateProfile) {
             if (!atGoal()) {
@@ -201,10 +201,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
 Elevator::~Elevator() {
     m_updateProfile = false;
-    if (m_profileUpdater != nullptr) {
-        m_profileUpdater->join();
-        delete m_profileUpdater;
-    }
+    m_profileUpdater.join();
 }
 
 void Elevator::elevatorGrab(bool state) {

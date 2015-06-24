@@ -36,7 +36,6 @@
 #include <mutex>
 #include <chrono>
 #include <atomic>
-#include <memory>
 #include <cstdint>
 
 using namespace std::chrono;
@@ -99,7 +98,7 @@ private:
 
     // Mark the thread as not running, this will be set to true by the thread
     std::atomic<bool> m_running{false};
-    std::unique_ptr<std::thread> m_thread;
+    std::thread m_thread;
     std::mutex m_mutex;
     int m_ipcfd_r;
     int m_ipcfd_w;

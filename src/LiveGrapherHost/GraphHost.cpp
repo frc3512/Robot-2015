@@ -55,7 +55,7 @@ GraphHost::GraphHost(int port) {
     m_ipcfd_w = pipefd[1];
 
     // Launch the thread
-    m_thread = std::make_unique<std::thread>([this] { socket_threadmain(); });
+    m_thread = std::thread([this] { socket_threadmain(); });
 }
 
 GraphHost::~GraphHost() {
@@ -63,7 +63,7 @@ GraphHost::~GraphHost() {
     write(m_ipcfd_w, "x", 1);
 
     // Join to the other thread
-    m_thread->join();
+    m_thread.join();
 
     // Close file descriptors and clean up
     close(m_ipcfd_r);
