@@ -44,7 +44,7 @@ inline void GearBox<CANTalon>::setSetpoint(float setpoint) {
     m_motors[0]->Set(m_setpoint);
 }
 
-inline float GearBox<CANTalon>::getSetpoint() {
+inline float GearBox<CANTalon>::getSetpoint() const {
     return m_setpoint * m_distancePerPulse;
 }
 
@@ -59,7 +59,7 @@ inline void GearBox<CANTalon>::setManual(float value) {
     }
 }
 
-inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) {
+inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) const {
     if (mode == Grbx::Position) {
         return m_motors[0]->GetPosition() * m_distancePerPulse;
     }
@@ -99,7 +99,7 @@ inline void GearBox<CANTalon>::setEncoderReversed(bool reverse) {
     m_motors[0]->SetSensorDirection(m_isEncoderReversed);
 }
 
-inline bool GearBox<CANTalon>::onTarget() {
+inline bool GearBox<CANTalon>::onTarget() const {
     return abs(m_motors[0]->GetClosedLoopError()) < 15;
 }
 
@@ -116,11 +116,11 @@ inline void GearBox<CANTalon>::setSoftPositionLimits(double forwardLimit,
     m_motors[0]->ConfigSoftPositionLimits(forwardLimit, backwardLimit);
 }
 
-inline bool GearBox<CANTalon>::isFwdLimitSwitchClosed() {
+inline bool GearBox<CANTalon>::isFwdLimitSwitchClosed() const {
     return m_motors[0]->IsFwdLimitSwitchClosed();
 }
 
-inline bool GearBox<CANTalon>::isRevLimitSwitchClosed() {
+inline bool GearBox<CANTalon>::isRevLimitSwitchClosed() const {
     return m_motors[0]->IsRevLimitSwitchClosed();
 }
 

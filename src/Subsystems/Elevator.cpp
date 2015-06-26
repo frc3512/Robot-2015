@@ -208,7 +208,7 @@ void Elevator::elevatorGrab(bool state) {
     m_elevatorGrabber.Set(!state);
 }
 
-bool Elevator::isElevatorGrabbed() {
+bool Elevator::isElevatorGrabbed() const {
     return !m_elevatorGrabber.Get();
 }
 
@@ -216,7 +216,7 @@ void Elevator::intakeGrab(bool state) {
     m_intakeGrabber.Set(state);
 }
 
-bool Elevator::isIntakeGrabbed() {
+bool Elevator::isIntakeGrabbed() const {
     return m_intakeGrabber.Get();
 }
 
@@ -224,7 +224,7 @@ void Elevator::stowIntake(bool state) {
     m_intakeStower.Set(!state);
 }
 
-bool Elevator::isIntakeStowed() {
+bool Elevator::isIntakeStowed() const {
     return !m_intakeStower.Get();
 }
 
@@ -232,7 +232,7 @@ void Elevator::containerGrab(bool state) {
     m_containerGrabber.Set(!state);
 }
 
-bool Elevator::isContainerGrabbed() {
+bool Elevator::isContainerGrabbed() const {
     return !m_containerGrabber.Get();
 }
 

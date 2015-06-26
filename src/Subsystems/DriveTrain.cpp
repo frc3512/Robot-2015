@@ -203,27 +203,27 @@ void DriveTrain::setRightManual(float value) {
     m_rightGrbx.setManual(value);
 }
 
-double DriveTrain::getLeftDist() {
+double DriveTrain::getLeftDist() const {
     return m_leftGrbx.get(Grbx::Position);
 }
 
-double DriveTrain::getRightDist() {
+double DriveTrain::getRightDist() const {
     return m_rightGrbx.get(Grbx::Position);
 }
 
-double DriveTrain::getLeftRate() {
+double DriveTrain::getLeftRate() const {
     return m_leftGrbx.get(Grbx::Speed);
 }
 
-double DriveTrain::getRightRate() {
+double DriveTrain::getRightRate() const {
     return m_rightGrbx.get(Grbx::Speed);
 }
 
-double DriveTrain::getLeftSetpoint() {
+double DriveTrain::getLeftSetpoint() const {
     return m_leftGrbx.getSetpoint();
 }
 
-double DriveTrain::getRightSetpoint() {
+double DriveTrain::getRightSetpoint() const {
     return m_rightGrbx.getSetpoint();
 }
 

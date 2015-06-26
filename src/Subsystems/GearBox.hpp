@@ -87,13 +87,13 @@ public:
     // Enables PID controller automatically and sets its setpoint
     void setSetpoint(float setpoint);
 
-    float getSetpoint();
+    float getSetpoint() const;
 
     // Disables PID controller and sets the motor speeds manually
     void setManual(float value);
 
     // Returns current speed/position/voltage setting of motor controller(s)
-    float get(Grbx::PIDMode mode = Grbx::Raw);
+    float get(Grbx::PIDMode mode = Grbx::Raw) const;
 
     // Set P, I, and D terms for PID controller
     void setPID(float p, float i, float d);
@@ -109,7 +109,7 @@ public:
     // Reverses gearbox drive direction
     void setEncoderReversed(bool reverse);
 
-    bool onTarget();
+    bool onTarget() const;
 
     void resetPID();
 
@@ -120,8 +120,8 @@ public:
     // Set soft limits of PID controller
     void setSoftPositionLimits(double forwardLimit, double backwardLimit);
 
-    bool isFwdLimitSwitchClosed();
-    bool isRevLimitSwitchClosed();
+    bool isFwdLimitSwitchClosed() const;
+    bool isRevLimitSwitchClosed() const;
 
     void setIZone(unsigned int value);
 

@@ -40,16 +40,16 @@ public:
     void setRightManual(float value);
 
     // Returns encoder distances
-    double getLeftDist();
-    double getRightDist();
+    double getLeftDist() const;
+    double getRightDist() const;
 
     // Returns encoder rates
-    double getLeftRate();
-    double getRightRate();
+    double getLeftRate() const;
+    double getRightRate() const;
 
     // Returns encoder PID loop setpoints
-    double getLeftSetpoint();
-    double getRightSetpoint();
+    double getLeftSetpoint() const;
+    double getRightSetpoint() const;
 
     void setControlMode(CANTalon::ControlMode ctrlMode);
 
