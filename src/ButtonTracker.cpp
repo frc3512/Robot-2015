@@ -8,19 +8,16 @@
 #include <DriverStation.h>
 #include "ButtonTracker.hpp"
 
-DriverStation* ButtonTracker::m_driverStation = nullptr;
-
 ButtonTracker::ButtonTracker(uint32_t port) {
-    if (!m_driverStation) {
-        m_driverStation = DriverStation::GetInstance();
-    }
-
     m_port = port;
 }
 
 void ButtonTracker::updateButtons() {
-    m_oldStates = m_newStates; // "new" values are now "old"
-    m_newStates = m_driverStation->GetStickButtons(m_port); // get even newer values
+    // "new" values are now "old"
+    m_oldStates = m_newStates;
+
+    // get newer values
+    m_newStates = DriverStation::GetInstance().GetStickButtons(m_port);
 }
 
 bool ButtonTracker::pressedButton(uint32_t button) {

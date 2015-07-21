@@ -24,8 +24,6 @@
  * None of these functions block.
  */
 
-class DriverStation;
-
 class ButtonTracker {
 public:
     explicit ButtonTracker(uint32_t port);
@@ -40,8 +38,6 @@ protected:
 
 private:
     static bool getButtonState(short& buttonStates, uint32_t& button);
-
-    static DriverStation* m_driverStation;
 
     short m_oldStates = 0;
     short m_newStates = 0;
