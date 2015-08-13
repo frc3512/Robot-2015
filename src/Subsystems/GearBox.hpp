@@ -64,7 +64,7 @@ public:
     void resetPID();
 
     // Determines whether encoder returns distance or rate from PIDGet()
-    void setPIDSourceParameter(PIDSource::PIDSourceParameter pidSource);
+    void setPIDSourceType(PIDSourceType pidSource);
 
 private:
     // Sets motor speed to 'output'

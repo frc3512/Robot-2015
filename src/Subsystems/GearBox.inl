@@ -20,7 +20,7 @@ GearBox<T>::GearBox(int shifterChan,
         m_pid =
             std::make_unique<PIDController>(0, 0, 0, 0, m_encoder.get(), this);
 
-        m_encoder->SetPIDSourceParameter(Encoder::kDistance);
+        m_encoder->SetPIDSourceType(PIDSourceType::kDisplacement);
 
         m_pid->SetAbsoluteTolerance(1);
 
@@ -138,10 +138,10 @@ void GearBox<T>::resetPID() {
 }
 
 template <class T>
-void GearBox<T>::setPIDSourceParameter(PIDSource::PIDSourceParameter pidSource)
+void GearBox<T>::setPIDSourceType(PIDSourceType pidSource)
 {
     if (m_pid != nullptr) {
-        m_encoder->SetPIDSourceParameter(pidSource);
+        m_encoder->SetPIDSourceType(pidSource);
     }
 }
 
