@@ -67,12 +67,7 @@ void GearBox<T>::setManual(float value) {
 template <class T>
 float GearBox<T>::get(Grbx::PIDMode mode) const {
     if (mode == Grbx::Raw) {
-        if (!GearBoxBase<T>::m_isMotorReversed) {
-            return GearBoxBase<T>::m_motors[0].Get();
-        }
-        else {
-            return -GearBoxBase<T>::m_motors[0].Get();
-        }
+        return GearBoxBase<T>::m_motors[0].Get();
     }
     else if (m_pid != nullptr) {
         if (mode == Grbx::Position) {
@@ -148,12 +143,7 @@ void GearBox<T>::setPIDSourceType(PIDSourceType pidSource)
 template <class T>
 void GearBox<T>::PIDWrite(float output) {
     for (auto& motor : GearBoxBase<T>::m_motors) {
-        if (!GearBoxBase<T>::m_isMotorReversed) {
-            motor->Set(output + GearBoxBase<T>::m_feedforward);
-        }
-        else {
-            motor->Set(-(output + GearBoxBase<T>::m_feedforward));
-        }
+        motor->Set(output + GearBoxBase<T>::m_feedforward);
     }
 }
 

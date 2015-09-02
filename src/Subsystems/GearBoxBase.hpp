@@ -83,7 +83,6 @@ public:
     virtual void resetPID() = 0;
 
 protected:
-    bool m_isMotorReversed = false;
     bool m_isEncoderReversed = false;
 
     // Conversion factor for setpoints with respect to encoder readings

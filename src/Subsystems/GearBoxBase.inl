@@ -35,12 +35,14 @@ GearBoxBase<T>::GearBoxBase(int shifterChan,
 
 template <class T>
 void GearBoxBase<T>::setMotorReversed(bool reverse) {
-    m_isMotorReversed = reverse;
+    for (auto& motor : m_motors) {
+        motor->SetInverted(reverse);
+    }
 }
 
 template <class T>
 bool GearBoxBase<T>::isMotorReversed() const {
-    return m_isMotorReversed;
+    return m_motors[0]->IsInverted();
 }
 
 template <class T>

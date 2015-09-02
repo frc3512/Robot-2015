@@ -34,13 +34,7 @@ inline GearBox<CANTalon>::GearBox(int shifterChan,
 inline void GearBox<CANTalon>::setSetpoint(float setpoint) {
     m_motors[0]->SetControlMode(CANTalon::kPosition);
 
-    if (!m_isMotorReversed) {
-        m_setpoint = setpoint / m_distancePerPulse;
-    }
-    else {
-        m_setpoint = -setpoint / m_distancePerPulse;
-    }
-
+    m_setpoint = setpoint / m_distancePerPulse;
     m_motors[0]->Set(m_setpoint);
 }
 
@@ -50,13 +44,7 @@ inline float GearBox<CANTalon>::getSetpoint() const {
 
 inline void GearBox<CANTalon>::setManual(float value) {
     m_motors[0]->SetControlMode(CANTalon::kPercentVbus);
-
-    if (!m_isMotorReversed) {
-        m_motors[0]->Set(value);
-    }
-    else {
-        m_motors[0]->Set(-value);
-    }
+    m_motors[0]->Set(value);
 }
 
 inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) const {
@@ -67,12 +55,7 @@ inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) const {
         return m_motors[0]->GetEncVel() * m_distancePerPulse;
     }
     else if (mode == Grbx::Raw) {
-        if (!m_isMotorReversed) {
-            return m_motors[0]->Get();
-        }
-        else {
-            return -m_motors[0]->Get();
-        }
+        return m_motors[0]->Get();
     }
 
     return 0.f;
