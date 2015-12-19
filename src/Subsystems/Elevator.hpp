@@ -101,7 +101,7 @@ private:
     std::atomic<bool> m_updateProfile{true};
     std::thread m_profileUpdater;
 
-    StateMachine m_autoStackSM;
+    StateMachine m_autoStackSM{"AUTO_STACK"};
     Timer m_grabTimer;
     bool m_startAutoStacking = false;
     bool m_wasAtGround = false;

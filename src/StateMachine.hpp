@@ -12,15 +12,17 @@
 #include "State.hpp"
 
 /* The default state is "IDLE". States that end the state machine should return
- * "IDLE" from advanceFunc()
+ * "IDLE" from transition(). Call run() periodically to operate the state
+ * machine
  */
 
-class StateMachine {
+class StateMachine : public State {
 public:
+    StateMachine(std::string name);
+
     /* Ownership of 'state' will be transferred to this class, which will handle
      * destroying it.
      */
-    void addState(State* state);
     void addState(std::unique_ptr<State> state);
 
     template <class T,
@@ -34,16 +36,13 @@ public:
     }
 
     /* Moves the state machine to the given state. If the next state is found,
-     * endFunc() for the current state and initFunc() for the next state. 'true'
-     * is returned if the next state was found and 'false' otherwise.
+     * exit() for the current state and entry() for the next state are called.
+     * 'true' is returned if the next state was found and 'false' otherwise.
      */
     bool setState(const std::string& nextState);
 
     // Returns name of current state
     const std::string getState() const;
-
-    // Call this periodically to operate the state machine
-    void run();
 
 private:
     std::vector<std::unique_ptr<State>> m_states;

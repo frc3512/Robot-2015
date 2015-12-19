@@ -8,23 +8,23 @@
 #include "../StateMachine.hpp"
 
 void Robot::AutoOneTote() {
-    StateMachine autoSM;
+    StateMachine autoSM("AUTO_ONE_TOTE");
 
-    State* state = new State("IDLE");
-    state->advanceFunc = [this] { return "SEEK_GARBAGECAN_UP"; };
-    state->endFunc = [this] {
+    auto state = std::make_unique<State>("IDLE");
+    state->transition = [this] { return "SEEK_GARBAGECAN_UP"; };
+    state->exit = [this] {
         ev.setIntakeDirectionLeft(Elevator::S_STOPPED);
         ev.setIntakeDirectionRight(Elevator::S_STOPPED);
     };
-    autoSM.addState(state);
+    autoSM.addState(std::move(state));
     autoSM.setState("IDLE");
 
-    state = new State("SEEK_GARBAGECAN_UP");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("SEEK_GARBAGECAN_UP");
+    state->entry = [this] {
         ev.raiseElevator("EV_GARBAGECAN_LEVEL");
         ev.stowIntake(false);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (ev.atGoal()) {
             return "MOVE_TO_TOTE";
         }
@@ -32,13 +32,13 @@ void Robot::AutoOneTote() {
             return "";
         }
     };
-    autoSM.addState(state);
+    autoSM.addState(std::move(state));
 
-    state = new State("MOVE_TO_TOTE");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("MOVE_TO_TOTE");
+    state->entry = [this] {
         autoTimer.Reset();
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (autoTimer.HasPeriodPassed(1.0)) {
             return "AUTOSTACK";
         }
@@ -46,11 +46,11 @@ void Robot::AutoOneTote() {
             return "";
         }
     };
-    state->periodicFunc = [this] { robotDrive.drive(-0.3, 0, false); };
-    autoSM.addState(state);
+    state->run = [this] { robotDrive.drive(-0.3, 0, false); };
+    autoSM.addState(std::move(state));
 
-    state = new State("AUTOSTACK");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("AUTOSTACK");
+    state->entry = [this] {
         autoTimer.Reset();
         ev.intakeGrab(true);
         ev.setIntakeDirectionLeft(Elevator::S_REVERSE);
@@ -58,7 +58,7 @@ void Robot::AutoOneTote() {
 
         // ev.stackTotes();
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (autoTimer.HasPeriodPassed(1.0)) {
             return "TURN";
         }
@@ -66,15 +66,15 @@ void Robot::AutoOneTote() {
             return "";
         }
     };
-    autoSM.addState(state);
+    autoSM.addState(std::move(state));
 
-    state = new State("TURN");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("TURN");
+    state->entry = [this] {
         autoTimer.Reset();
         ev.setIntakeDirectionLeft(Elevator::S_REVERSE);
         ev.setIntakeDirectionRight(Elevator::S_REVERSE);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (autoTimer.HasPeriodPassed(1.0)) {
             return "RUN_AWAY";
         }
@@ -82,17 +82,17 @@ void Robot::AutoOneTote() {
             return "";
         }
     };
-    state->periodicFunc = [this] { robotDrive.drive(-0.3, -0.3, true); };
-    state->endFunc = [this] { robotDrive.drive(0.0, 0.0, false); };
-    autoSM.addState(state);
+    state->run = [this] { robotDrive.drive(-0.3, -0.3, true); };
+    state->exit = [this] { robotDrive.drive(0.0, 0.0, false); };
+    autoSM.addState(std::move(state));
 
-    state = new State("RUN_AWAY");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("RUN_AWAY");
+    state->entry = [this] {
         autoTimer.Reset();
         ev.setIntakeDirectionLeft(Elevator::S_REVERSE);
         ev.setIntakeDirectionRight(Elevator::S_REVERSE);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (autoTimer.HasPeriodPassed(3.0)) {
             return "IDLE";
         }
@@ -100,9 +100,9 @@ void Robot::AutoOneTote() {
             return "";
         }
     };
-    state->periodicFunc = [this] { robotDrive.drive(-0.3, 0, false); };
-    state->endFunc = [this] { robotDrive.drive(0, 0, false); };
-    autoSM.addState(state);
+    state->run = [this] { robotDrive.drive(-0.3, 0, false); };
+    state->exit = [this] { robotDrive.drive(0, 0, false); };
+    autoSM.addState(std::move(state));
 
     ev.setManualMode(false);
 

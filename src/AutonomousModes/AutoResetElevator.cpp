@@ -8,22 +8,22 @@
 #include "../StateMachine.hpp"
 
 void Robot::AutoResetElevator() {
-    StateMachine autoSM;
+    StateMachine autoSM("AUTO_RESET_ELEVATOR");
 
-    State* state = new State("IDLE");
-    state->advanceFunc = [this] { return "SEEK_GROUND"; };
-    state->endFunc = [this] {
+    auto state = std::make_unique<State>("IDLE");
+    state->transition = [this] { return "SEEK_GROUND"; };
+    state->exit = [this] {
         ev.setIntakeDirectionLeft(Elevator::S_STOPPED);
         ev.setIntakeDirectionRight(Elevator::S_STOPPED);
     };
-    autoSM.addState(state);
+    autoSM.addState(std::move(state));
     autoSM.setState("IDLE");
 
-    state = new State("SEEK_GROUND");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("SEEK_GROUND");
+    state->entry = [this] {
         ev.raiseElevator("EV_GROUND");
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (ev.atGoal()) {
             return "IDLE";
         }
@@ -31,7 +31,7 @@ void Robot::AutoResetElevator() {
             return "";
         }
     };
-    autoSM.addState(state);
+    autoSM.addState(std::move(state));
 
     ev.setManualMode(false);
     ev.stowIntake(true);

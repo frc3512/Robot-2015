@@ -78,9 +78,9 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_toteHeights["EV_AUTO_DROP_LENGTH"] = m_settings.getDouble(
         "EV_AUTO_DROP_LENGTH");
 
-    State* state = new State("IDLE");
-    state->initFunc = [this] { m_startAutoStacking = false; };
-    state->advanceFunc = [this] {
+    auto state = std::make_unique<State>("IDLE");
+    state->entry = [this] { m_startAutoStacking = false; };
+    state->transition = [this] {
         if (m_startAutoStacking) {
             return "WAIT_INITIAL_HEIGHT";
         }
@@ -88,14 +88,14 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(state);
+    m_autoStackSM.addState(std::move(state));
     m_autoStackSM.setState("IDLE");
 
-    state = new State("WAIT_INITIAL_HEIGHT");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("WAIT_INITIAL_HEIGHT");
+    state->entry = [this] {
         setProfileHeight(m_toteHeights["EV_TOTE_1"]);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (atGoal()) {
             return "SEEK_DROP_TOTES";
         }
@@ -103,13 +103,13 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(state);
+    m_autoStackSM.addState(std::move(state));
 
-    state = new State("SEEK_DROP_TOTES");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("SEEK_DROP_TOTES");
+    state->entry = [this] {
         setProfileHeight(getGoal() - m_toteHeights["EV_AUTO_DROP_LENGTH"]);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (atGoal()) {
             return "RELEASE";
         }
@@ -117,15 +117,15 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(state);
+    m_autoStackSM.addState(std::move(state));
 
-    state = new State("RELEASE");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("RELEASE");
+    state->entry = [this] {
         m_grabTimer.Reset();
         m_grabTimer.Start();
         elevatorGrab(false);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (m_grabTimer.HasPeriodPassed(0.2)) {
             return "SEEK_GROUND";
         }
@@ -133,13 +133,13 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(state);
+    m_autoStackSM.addState(std::move(state));
 
-    state = new State("SEEK_GROUND");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("SEEK_GROUND");
+    state->entry = [this] {
         setProfileHeight(m_toteHeights["EV_GROUND"]);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (atGoal()) {
             return "GRAB";
         }
@@ -147,15 +147,15 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(state);
+    m_autoStackSM.addState(std::move(state));
 
-    state = new State("GRAB");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("GRAB");
+    state->entry = [this] {
         m_grabTimer.Reset();
         m_grabTimer.Start();
         elevatorGrab(true);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (m_grabTimer.HasPeriodPassed(0.4)) {
             return "SEEK_HALF_TOTE";
         }
@@ -163,13 +163,13 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(state);
+    m_autoStackSM.addState(std::move(state));
 
-    state = new State("SEEK_HALF_TOTE");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("SEEK_HALF_TOTE");
+    state->entry = [this] {
         setProfileHeight(m_toteHeights["EV_TOTE_2"]);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (atGoal()) {
             return "INTAKE_IN";
         }
@@ -177,15 +177,15 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(state);
+    m_autoStackSM.addState(std::move(state));
 
-    state = new State("INTAKE_IN");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("INTAKE_IN");
+    state->entry = [this] {
         m_grabTimer.Reset();
         m_grabTimer.Start();
         intakeGrab(true);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (m_grabTimer.HasPeriodPassed(0.2)) {
             return "IDLE";
         }
@@ -193,7 +193,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(state);
+    m_autoStackSM.addState(std::move(state));
 
     // Reload PID constants from the configuration file
     reloadPID();

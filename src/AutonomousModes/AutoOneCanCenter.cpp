@@ -8,22 +8,22 @@
 #include "../StateMachine.hpp"
 
 void Robot::AutoOneCanCenter() {
-    StateMachine autoSM;
+    StateMachine autoSM("AUTO_ONE_CAN_CENTER");
 
-    State* state = new State("IDLE");
-    state->advanceFunc = [this] { return "SEEK_GROUND"; };
-    state->endFunc = [this] {
+    auto state = std::make_unique<State>("IDLE");
+    state->transition = [this] { return "SEEK_GROUND"; };
+    state->exit = [this] {
         ev.setIntakeDirectionLeft(Elevator::S_STOPPED);
         ev.setIntakeDirectionRight(Elevator::S_STOPPED);
     };
-    autoSM.addState(state);
+    autoSM.addState(std::move(state));
     autoSM.setState("IDLE");
 
-    state = new State("SEEK_GROUND");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("SEEK_GROUND");
+    state->entry = [this] {
         ev.raiseElevator("EV_GROUND");
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (ev.atGoal()) {
             return "GRAB_CAN";
         }
@@ -31,14 +31,14 @@ void Robot::AutoOneCanCenter() {
             return "";
         }
     };
-    autoSM.addState(state);
+    autoSM.addState(std::move(state));
 
-    state = new State("GRAB_CAN");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("GRAB_CAN");
+    state->entry = [this] {
         autoTimer.Reset();
         ev.elevatorGrab(true);
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (autoTimer.HasPeriodPassed(0.2)) {
             return "SEEK_GARBAGECAN_UP";
         }
@@ -46,13 +46,13 @@ void Robot::AutoOneCanCenter() {
             return "";
         }
     };
-    autoSM.addState(state);
+    autoSM.addState(std::move(state));
 
-    state = new State("SEEK_GARBAGECAN_UP");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("SEEK_GARBAGECAN_UP");
+    state->entry = [this] {
         ev.raiseElevator("EV_TOTE_4");
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (ev.atGoal()) {
             return "DRIVE_FORWARD";
         }
@@ -60,13 +60,13 @@ void Robot::AutoOneCanCenter() {
             return "";
         }
     };
-    autoSM.addState(state);
+    autoSM.addState(std::move(state));
 
-    state = new State("DRIVE_FORWARD");
-    state->initFunc = [this] {
+    state = std::make_unique<State>("DRIVE_FORWARD");
+    state->entry = [this] {
         autoTimer.Reset();
     };
-    state->advanceFunc = [this] {
+    state->transition = [this] {
         if (autoTimer.HasPeriodPassed(1.2)) {
             return "IDLE";
         }
@@ -74,9 +74,9 @@ void Robot::AutoOneCanCenter() {
             return "";
         }
     };
-    state->periodicFunc = [this] { robotDrive.drive(-0.3, 0, false); };
-    state->endFunc = [this] { robotDrive.drive(0, 0, false); };
-    autoSM.addState(state);
+    state->run = [this] { robotDrive.drive(-0.3, 0, false); };
+    state->exit = [this] { robotDrive.drive(0, 0, false); };
+    autoSM.addState(std::move(state));
 
     ev.setManualMode(false);
 
