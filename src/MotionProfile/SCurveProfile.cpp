@@ -40,8 +40,7 @@ double SCurveProfile::updateSetpoint(double curTime) {
     }
     else if (curTime < m_t6) {
         // Decrease speed at max acceleration
-        tmpSP = m_acceleration * m_timeToMaxA + m_acceleration *
-                (m_t2 - m_timeToMaxA + m_t5 - curTime);
+        tmpSP = m_acceleration * (m_t2 + m_t5 - curTime);
     }
     else if (curTime < m_t7) {
         // Ramp down acceleration
@@ -74,9 +73,8 @@ double SCurveProfile::setGoal(double t, double goal, double curSource) {
     if (shortProfile) {
         m_profileMaxVelocity = m_acceleration * (sqrt(m_sign * m_setpoint /
                                                       m_acceleration - 0.75 *
-                                                      pow(m_timeToMaxA,
-                                                          2)) - 0.5 *
-                                                 m_timeToMaxA);
+                                                      pow(m_timeToMaxA, 2)) -
+                                                 0.5 * m_timeToMaxA);
     }
     else {
         m_profileMaxVelocity = m_maxVelocity;
