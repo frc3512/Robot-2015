@@ -9,10 +9,10 @@
 
 #include <mutex>
 
-typedef enum {
-    distance,
+enum class SetpointMode {
+    displacement,
     velocity
-} SetpointMode;
+};
 
 class ProfileBase {
 public:

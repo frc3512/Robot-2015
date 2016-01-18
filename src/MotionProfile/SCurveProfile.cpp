@@ -47,7 +47,7 @@ double SCurveProfile::updateSetpoint(double curTime) {
         tmpSP = 0.5 * m_jerk * pow(m_t6 - curTime, 2);
     }
 
-    if (m_mode == SetpointMode::distance) {
+    if (m_mode == SetpointMode::displacement) {
         m_setpoint += tmpSP * m_sign * (curTime - m_lastTime);
     }
     else if (m_mode == SetpointMode::velocity) {
@@ -96,7 +96,7 @@ double SCurveProfile::setGoal(double t, double goal, double curSource) {
 
     m_lastTime = t;
 
-    if (m_mode == SetpointMode::distance) {
+    if (m_mode == SetpointMode::displacement) {
         // Set setpoint to current distance since setpoint hasn't moved yet
         m_setpoint = curSource;
         return curSource;

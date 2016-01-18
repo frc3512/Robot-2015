@@ -7,7 +7,7 @@
 #include "ProfileBase.hpp"
 
 ProfileBase::ProfileBase() {
-    setMode(SetpointMode::distance);
+    setMode(SetpointMode::displacement);
     resetProfile();
 }
 

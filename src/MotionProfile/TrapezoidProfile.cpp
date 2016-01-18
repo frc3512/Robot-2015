@@ -33,7 +33,7 @@ double TrapezoidProfile::updateSetpoint(double curTime) {
         tmpSP = v * m_sign;
     }
 
-    if (m_mode == SetpointMode::distance) {
+    if (m_mode == SetpointMode::displacement) {
         m_setpoint += tmpSP * (curTime - m_lastTime);
     }
     else if (m_mode == SetpointMode::velocity) {
@@ -101,7 +101,7 @@ double TrapezoidProfile::setGoal(double t, double goal, double curSource) {
 
     m_lastTime = t;
 
-    if (m_mode == SetpointMode::distance) {
+    if (m_mode == SetpointMode::displacement) {
         // Set setpoint to current distance since setpoint hasn't moved yet
         m_setpoint = curSource;
         return curSource;
