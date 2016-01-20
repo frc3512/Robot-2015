@@ -12,7 +12,7 @@ BezierTrapezoidProfile::BezierTrapezoidProfile(double maxV, double timeToMaxV) :
     TrapezoidProfile(maxV, timeToMaxV) {
     setMaxVelocity(maxV);
     setTimeToMaxV(timeToMaxV);
-    setMode(SetpointMode::distance);
+    setMode(SetpointMode::displacement);
 
     m_width = 0.0;
     m_leftSetpoint = 0.0;
@@ -24,7 +24,7 @@ double BezierTrapezoidProfile::updateSetpoint(double curTime) {
 
     m_varMutex.lock();
 
-    if (m_mode == SetpointMode::distance) {
+    if (m_mode == SetpointMode::displacement) {
         if (curTime < m_timeToMaxVelocity) {
             // Accelerate up
             m_setpoint += (m_acceleration * curTime) * period * m_sign;
