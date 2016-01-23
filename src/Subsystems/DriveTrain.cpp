@@ -9,11 +9,6 @@
 #include <cmath>
 #include <CANTalon.h>
 
-#define max(x, y) (((x) > (y)) ? (x) : (y))
-
-#ifndef M_PI
-#define M_PI 3.14159265
-#endif
 
 const float DriveTrain::maxWheelSpeed = 80.0;
 
