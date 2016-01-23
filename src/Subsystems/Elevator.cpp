@@ -23,6 +23,8 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_liftGrbx.setIZone(80);
     m_liftGrbx.setCloseLoopRampRate(1.0);
 
+
+
     m_profileUpdater = std::thread([this] {
         double height = 0.0;
         while (m_updateProfile) {

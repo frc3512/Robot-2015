@@ -24,7 +24,8 @@ Robot::Robot() {
 
 void Robot::OperatorControl() {
     while (IsEnabled() && IsOperatorControl()) {
-        if (driveStick2.GetRawButton(2)) {
+
+    	if (driveStick2.GetRawButton(2)) {
             robotDrive.drive(driveStick1.GetY(), driveStick2.GetX(), true);
         }
         else {

@@ -94,7 +94,7 @@ private:
     Solenoid m_intakeStower{1};
     Solenoid m_intakeGrabber{2};
     CANTalon m_intakeWheelLeft{3};
-    CANTalon m_intakeWheelRight{4};
+    CANTalon m_intakeWheelRight{6};
 
     std::map<std::string, double> m_toteHeights;
     Timer m_profileTimer;
