@@ -16,10 +16,10 @@ void Robot::AutoMotionProfile() {
     robotDrive.setControlMode(CANTalon::kPosition);
 
     BezierCurve curve;
-    curve.addPoint(0.0, 0.0);
-    curve.addPoint(0.0, 50.0);
-    curve.addPoint(0.0, 100.0);
-    curve.addPoint(0.0, 150.0);
+    curve.AddPoint(0.0, 0.0);
+    curve.AddPoint(0.0, 50.0);
+    curve.AddPoint(0.0, 100.0);
+    curve.AddPoint(0.0, 150.0);
 
     robotDrive.resetEncoders();
 

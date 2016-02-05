@@ -28,16 +28,16 @@ class ButtonTracker {
 public:
     explicit ButtonTracker(uint32_t port);
 
-    void updateButtons(); // gets new button statuses for joystick from Driver Station
+    void UpdateButtons(); // gets new button statuses for joystick from Driver Station
 
-    bool pressedButton(uint32_t button); // returns true if button wasn't pressed but is now
-    bool releasedButton(uint32_t button); // returns true if button was pressed but isn't now
+    bool PressedButton(uint32_t button); // returns true if button wasn't pressed but is now
+    bool ReleasedButton(uint32_t button); // returns true if button was pressed but isn't now
 
 protected:
     uint32_t m_port;
 
 private:
-    static bool getButtonState(short& buttonStates, uint32_t& button);
+    static bool GetButtonState(short& buttonStates, uint32_t& button);
 
     short m_oldStates = 0;
     short m_newStates = 0;

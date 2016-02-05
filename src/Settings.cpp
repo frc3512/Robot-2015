@@ -10,10 +10,10 @@
 #include <iostream>
 
 Settings::Settings(std::string fileName) : m_fileName(fileName) {
-    update();
+    Update();
 }
 
-void Settings::update() {
+void Settings::Update() {
     std::string name;
     std::string value;
 
@@ -29,8 +29,8 @@ void Settings::update() {
         std::getline(settings, m_rawStr);
 
         m_index = 0;
-        name = extractKey();
-        value = extractValue();
+        name = ExtractKey();
+        value = ExtractValue();
 
         // Add name-value pair to map
         m_values[name] = value;
@@ -41,7 +41,7 @@ void Settings::update() {
     std::cout << "Settings loaded from " << m_fileName << "\n";
 }
 
-std::string Settings::getString(const std::string& key) const {
+std::string Settings::GetString(const std::string& key) const {
     auto index = m_values.find(key);
 
     // If the element wasn't found
@@ -55,7 +55,7 @@ std::string Settings::getString(const std::string& key) const {
     return index->second;
 }
 
-double Settings::getDouble(const std::string& key) const {
+double Settings::GetDouble(const std::string& key) const {
     auto index = m_values.find(key);
 
     // If the element wasn't found
@@ -69,7 +69,7 @@ double Settings::getDouble(const std::string& key) const {
     return atof(index->second.c_str());
 }
 
-int Settings::getInt(const std::string& key) const {
+int Settings::GetInt(const std::string& key) const {
     auto index = m_values.find(key);
 
     // If the element wasn't found
@@ -83,7 +83,7 @@ int Settings::getInt(const std::string& key) const {
     return atoi(index->second.c_str());
 }
 
-void Settings::saveToFile(const std::string& fileName) {
+void Settings::SaveToFile(const std::string& fileName) {
     std::ofstream outFile(fileName, std::ios_base::out | std::ios_base::trunc);
 
     if (outFile.is_open()) {
@@ -95,7 +95,7 @@ void Settings::saveToFile(const std::string& fileName) {
     }
 }
 
-std::string Settings::extractKey() {
+std::string Settings::ExtractKey() {
     // Find start of name
     m_index = m_rawStr.find_first_not_of(" \t", m_index);
     if (m_index == std::string::npos) {
@@ -110,7 +110,7 @@ std::string Settings::extractKey() {
     return m_rawStr.substr(keyStart, m_index - keyStart);
 }
 
-std::string Settings::extractValue() {
+std::string Settings::ExtractValue() {
     // Find start of value
     m_index = m_rawStr.find_first_not_of(" \t=", m_index);
     if (m_index == std::string::npos) {

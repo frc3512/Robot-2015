@@ -12,7 +12,7 @@ ButtonTracker::ButtonTracker(uint32_t port) {
     m_port = port;
 }
 
-void ButtonTracker::updateButtons() {
+void ButtonTracker::UpdateButtons() {
     // "new" values are now "old"
     m_oldStates = m_newStates;
 
@@ -20,17 +20,17 @@ void ButtonTracker::updateButtons() {
     m_newStates = DriverStation::GetInstance().GetStickButtons(m_port);
 }
 
-bool ButtonTracker::pressedButton(uint32_t button) {
-    return getButtonState(m_oldStates, button) == false && // if button wasn't pressed
-           getButtonState(m_newStates, button) == true; // and it is now
+bool ButtonTracker::PressedButton(uint32_t button) {
+    return GetButtonState(m_oldStates, button) == false && // if button wasn't pressed
+           GetButtonState(m_newStates, button) == true; // and it is now
 }
 
-bool ButtonTracker::releasedButton(uint32_t button) {
-    return getButtonState(m_oldStates, button) == true && // if button was pressed
-           getButtonState(m_newStates, button) == false; // and it isn't now
+bool ButtonTracker::ReleasedButton(uint32_t button) {
+    return GetButtonState(m_oldStates, button) == true && // if button was pressed
+           GetButtonState(m_newStates, button) == false; // and it isn't now
 }
 
-bool ButtonTracker::getButtonState(short& buttonStates, uint32_t& button) {
+bool ButtonTracker::GetButtonState(short& buttonStates, uint32_t& button) {
     return ((1 << (button - 1)) & buttonStates) != 0;
 }
 

@@ -9,76 +9,75 @@
 #include <iostream>
 
 Robot::Robot() {
-    dsDisplay.addAutoMethod("Noop Auton", &Robot::AutoNoop, this);
-    dsDisplay.addAutoMethod("DriveForward", &Robot::AutoDriveForward, this);
-    dsDisplay.addAutoMethod("ResetElevator", &Robot::AutoResetElevator, this);
-    dsDisplay.addAutoMethod("OneCanLeft", &Robot::AutoOneCanLeft, this);
-    dsDisplay.addAutoMethod("OneCanCenter", &Robot::AutoOneCanCenter, this);
-    dsDisplay.addAutoMethod("OneCanRight", &Robot::AutoOneCanRight, this);
-    dsDisplay.addAutoMethod("OneTote", &Robot::AutoOneTote, this);
+    dsDisplay.AddAutoMethod("Noop Auton", &Robot::AutoNoop, this);
+    dsDisplay.AddAutoMethod("DriveForward", &Robot::AutoDriveForward, this);
+    dsDisplay.AddAutoMethod("ResetElevator", &Robot::AutoResetElevator, this);
+    dsDisplay.AddAutoMethod("OneCanLeft", &Robot::AutoOneCanLeft, this);
+    dsDisplay.AddAutoMethod("OneCanCenter", &Robot::AutoOneCanCenter, this);
+    dsDisplay.AddAutoMethod("OneCanRight", &Robot::AutoOneCanRight, this);
+    dsDisplay.AddAutoMethod("OneTote", &Robot::AutoOneTote, this);
 
-    pidGraph.setSendInterval(5ms);
+    pidGraph.SetSendInterval(5ms);
 
     displayTimer.Start();
 }
 
 void Robot::OperatorControl() {
     while (IsEnabled() && IsOperatorControl()) {
-
-    	if (driveStick2.GetRawButton(2)) {
-            robotDrive.drive(driveStick1.GetY(), driveStick2.GetX(), true);
+        if (driveStick2.GetRawButton(2)) {
+            robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX(), true);
         }
         else {
-            robotDrive.drive(driveStick1.GetY(), driveStick2.GetX());
+            robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX());
         }
 
         // Open/close tines
-        if (evButtons.releasedButton(1)) {
+        if (evButtons.ReleasedButton(1)) {
             ev.elevatorGrab(!ev.isElevatorGrabbed());
         }
 
         // Open/close intake
-        if (evButtons.releasedButton(2)) {
+        if (evButtons.ReleasedButton(2)) {
             ev.intakeGrab(!ev.isIntakeGrabbed());
         }
 
         // Start auto-stacking mode
-        if (evButtons.releasedButton(3)) {
+        if (evButtons.ReleasedButton(3)) {
             ev.stackTotes();
         }
 
         // Manual height control
-        if (evButtons.releasedButton(4)) {
+        if (evButtons.ReleasedButton(4)) {
             ev.setManualMode(!ev.isManualMode());
         }
 
         // Stow intake
-        if (evButtons.releasedButton(5)) {
+        if (evButtons.ReleasedButton(5)) {
             ev.stowIntake(!ev.isIntakeStowed());
         }
 
         // Open/close container grabber
-        if (evButtons.releasedButton(6)) {
+        if (evButtons.ReleasedButton(6)) {
             ev.containerGrab(!ev.isContainerGrabbed());
         }
 
         // Automatic preset buttons (7-12)
-        if (evButtons.releasedButton(8)) {
+        if (evButtons.ReleasedButton(8)) {
             ev.raiseElevator("EV_GROUND");
         }
-        if (evButtons.releasedButton(7)) {
+        if (evButtons.ReleasedButton(7)) {
             ev.raiseElevator("EV_TOTE_1");
         }
-        if (evButtons.releasedButton(10)) {
+        if (evButtons.ReleasedButton(10)) {
             ev.raiseElevator("EV_TOTE_2");
         }
-        if (evButtons.releasedButton(9)) {
+        if (evButtons.ReleasedButton(9)) {
             ev.raiseElevator("EV_TOTE_3");
         }
-        if (evButtons.releasedButton(12)) {
+        if (evButtons.ReleasedButton(12)) {
             ev.raiseElevator("EV_TOTE_4");
         }
-        if (evButtons.releasedButton(11)) {
+        if (evButtons.ReleasedButton(11)) {
             ev.raiseElevator("EV_TOTE_5");
         }
 
@@ -124,9 +123,9 @@ void Robot::OperatorControl() {
         // Update the elevator automatic stacking state
         ev.updateState();
 
-        drive1Buttons.updateButtons();
-        drive2Buttons.updateButtons();
-        evButtons.updateButtons();
+        drive1Buttons.UpdateButtons();
+        drive2Buttons.UpdateButtons();
+        evButtons.UpdateButtons();
 
         DS_PrintOut();
 
@@ -139,7 +138,7 @@ void Robot::Autonomous() {
     autoTimer.Start();
 
     robotDrive.resetEncoders();
-    dsDisplay.execAutonomous();
+    dsDisplay.ExecAutonomous();
 }
 
 void Robot::Disabled() {
@@ -153,37 +152,37 @@ void Robot::Disabled() {
 }
 
 void Robot::DS_PrintOut() {
-    if (pidGraph.hasIntervalPassed()) {
-        pidGraph.graphData(ev.getHeight(), "Distance (EV)");
-        pidGraph.graphData(ev.getSetpoint(), "Setpoint (EV)");
-        pidGraph.graphData(robotDrive.getLeftDist(), "Left PV (DR)");
-        pidGraph.graphData(robotDrive.getLeftSetpoint(), "Left SP (DR)");
-        pidGraph.graphData(robotDrive.getRightDist(), "Right PV (DR)");
-        pidGraph.graphData(robotDrive.getRightSetpoint(), "Right SP (DR)");
+    if (pidGraph.HasIntervalPassed()) {
+        pidGraph.GraphData(ev.getHeight(), "Distance (EV)");
+        pidGraph.GraphData(ev.getSetpoint(), "Setpoint (EV)");
+        pidGraph.GraphData(robotDrive.getLeftDist(), "Left PV (DR)");
+        pidGraph.GraphData(robotDrive.getLeftSetpoint(), "Left SP (DR)");
+        pidGraph.GraphData(robotDrive.getRightDist(), "Right PV (DR)");
+        pidGraph.GraphData(robotDrive.getRightSetpoint(), "Right SP (DR)");
 
-        pidGraph.resetInterval();
+        pidGraph.ResetInterval();
     }
 
     if (displayTimer.HasPeriodPassed(0.5)) {
         // Send things to DS display
-        dsDisplay.clear();
+        dsDisplay.Clear();
 
-        dsDisplay.addData("ENCODER_LEFT", robotDrive.getLeftDist());
-        dsDisplay.addData("ENCODER_RIGHT", robotDrive.getRightDist());
-        dsDisplay.addData("EV_POS_DISP", ev.getHeight());
-        dsDisplay.addData("EV_POS", 100 * ev.getHeight() / 60);
+        dsDisplay.AddData("ENCODER_LEFT", robotDrive.getLeftDist());
+        dsDisplay.AddData("ENCODER_RIGHT", robotDrive.getRightDist());
+        dsDisplay.AddData("EV_POS_DISP", ev.getHeight());
+        dsDisplay.AddData("EV_POS", 100 * ev.getHeight() / 60);
 
-        dsDisplay.addData("ARMS_CLOSED", ev.isElevatorGrabbed());
-        dsDisplay.addData("INTAKE_ARMS_CLOSED", ev.isIntakeGrabbed());
-        dsDisplay.addData("CONTAINER_GRABBER_CLOSED", ev.isContainerGrabbed());
+        dsDisplay.AddData("ARMS_CLOSED", ev.isElevatorGrabbed());
+        dsDisplay.AddData("INTAKE_ARMS_CLOSED", ev.isIntakeGrabbed());
+        dsDisplay.AddData("CONTAINER_GRABBER_CLOSED", ev.isContainerGrabbed());
 
-        dsDisplay.sendToDS();
+        dsDisplay.SendToDS();
     }
 
-    dsDisplay.receiveFromDS();
+    dsDisplay.ReceiveFromDS();
 }
 
-float Robot::applyDeadband(float value, float deadband) {
+float Robot::ApplyDeadband(float value, float deadband) {
     if (fabs(value) > deadband) {
         if (value > 0) {
             return (value - deadband) / (1 - deadband);

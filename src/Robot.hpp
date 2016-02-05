@@ -41,7 +41,7 @@ public:
 
     void DS_PrintOut();
 
-    static float applyDeadband(float value, float deadband);
+    static float ApplyDeadband(float value, float deadband);
 
 private:
     Settings settings{"/home/lvuser/RobotSettings.txt"};
@@ -61,7 +61,7 @@ private:
     Timer displayTimer;
 
     // Used for sending data to the Driver Station
-    DSDisplay& dsDisplay{DSDisplay::getInstance(settings.getInt("DS_Port"))};
+    DSDisplay& dsDisplay{DSDisplay::GetInstance(settings.GetInt("DS_Port"))};
 
     // The LiveGrapher host
     GraphHost pidGraph{3513};

@@ -1,5 +1,4 @@
 // =============================================================================
-// File Name: GraphHost.hpp
 // Description: The host for the LiveGrapher real-time graphing application
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
@@ -68,23 +67,23 @@ public:
      *       -1 = host not running
      *       0 = data sent successfully
      */
-    int graphData(float value, std::string dataset);
+    int GraphData(float value, std::string dataset);
 
     /* Sets time interval after which data is sent to graph (milliseconds per
      * sample)
      */
     template <typename Rep, typename Period>
-    void setSendInterval(const std::chrono::duration<Rep, Period>& time);
+    void SetSendInterval(const std::chrono::duration<Rep, Period>& time);
 
     /* Returns true if the time between the last data transmission is greater
      * than the sending interval time
      */
-    bool hasIntervalPassed();
+    bool HasIntervalPassed();
 
     /* Resets time interval passed since last data transmission (makes
      * hasIntervalPassed() return false)
      */
-    void resetInterval();
+    void ResetInterval();
 
 private:
     // Last time data was graphed
@@ -110,7 +109,7 @@ private:
 
     static int socket_listen(int port, uint32_t s_addr);
     static int socket_accept(int listenfd);
-    int addGraph(const std::string& dataset);
+    int AddGraph(const std::string& dataset);
 };
 
 #include "GraphHost.inl"

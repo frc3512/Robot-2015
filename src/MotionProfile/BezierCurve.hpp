@@ -24,7 +24,7 @@ public:
                 const Point& pt3,
                 const Point& pt4);
 
-    void addPoint(double x, double y);
+    void AddPoint(double x, double y);
     void clear();
 
     // 'start' and 'end' represent start and end t values [0..1]

@@ -16,8 +16,8 @@ void Robot::AutoOneTote() {
         ev.setIntakeDirectionLeft(Elevator::S_STOPPED);
         ev.setIntakeDirectionRight(Elevator::S_STOPPED);
     };
-    autoSM.addState(std::move(state));
-    autoSM.setState("IDLE");
+    autoSM.AddState(std::move(state));
+    autoSM.SetState("IDLE");
 
     state = std::make_unique<State>("SEEK_GARBAGECAN_UP");
     state->entry = [this] {
@@ -32,7 +32,7 @@ void Robot::AutoOneTote() {
             return "";
         }
     };
-    autoSM.addState(std::move(state));
+    autoSM.AddState(std::move(state));
 
     state = std::make_unique<State>("MOVE_TO_TOTE");
     state->entry = [this] {
@@ -46,8 +46,8 @@ void Robot::AutoOneTote() {
             return "";
         }
     };
-    state->run = [this] { robotDrive.drive(-0.3, 0, false); };
-    autoSM.addState(std::move(state));
+    state->run = [this] { robotDrive.Drive(-0.3, 0, false); };
+    autoSM.AddState(std::move(state));
 
     state = std::make_unique<State>("AUTOSTACK");
     state->entry = [this] {
@@ -66,7 +66,7 @@ void Robot::AutoOneTote() {
             return "";
         }
     };
-    autoSM.addState(std::move(state));
+    autoSM.AddState(std::move(state));
 
     state = std::make_unique<State>("TURN");
     state->entry = [this] {
@@ -82,9 +82,9 @@ void Robot::AutoOneTote() {
             return "";
         }
     };
-    state->run = [this] { robotDrive.drive(-0.3, -0.3, true); };
-    state->exit = [this] { robotDrive.drive(0.0, 0.0, false); };
-    autoSM.addState(std::move(state));
+    state->run = [this] { robotDrive.Drive(-0.3, -0.3, true); };
+    state->exit = [this] { robotDrive.Drive(0.0, 0.0, false); };
+    autoSM.AddState(std::move(state));
 
     state = std::make_unique<State>("RUN_AWAY");
     state->entry = [this] {
@@ -100,14 +100,14 @@ void Robot::AutoOneTote() {
             return "";
         }
     };
-    state->run = [this] { robotDrive.drive(-0.3, 0, false); };
-    state->exit = [this] { robotDrive.drive(0, 0, false); };
-    autoSM.addState(std::move(state));
+    state->run = [this] { robotDrive.Drive(-0.3, 0, false); };
+    state->exit = [this] { robotDrive.Drive(0, 0, false); };
+    autoSM.AddState(std::move(state));
 
     ev.setManualMode(false);
 
     autoSM.run();
-    while (IsAutonomous() && IsEnabled() && autoSM.getState() != "IDLE") {
+    while (IsAutonomous() && IsEnabled() && autoSM.GetState() != "IDLE") {
         DS_PrintOut();
 
         autoSM.run();

@@ -10,16 +10,16 @@
 #include <cstring>
 #include <iostream>
 
-DSDisplay& DSDisplay::getInstance(unsigned short dsPort) {
+DSDisplay& DSDisplay::GetInstance(unsigned short dsPort) {
     static DSDisplay dsDisplay(dsPort);
     return dsDisplay;
 }
 
-void DSDisplay::clear() {
+void DSDisplay::Clear() {
     m_packet.clear();
 }
 
-void DSDisplay::sendToDS() {
+void DSDisplay::SendToDS() {
     if (m_dsIP != sf::IpAddress::None) {
         m_socket.send(m_packet, m_dsIP, m_dsPort);
     }
@@ -28,7 +28,7 @@ void DSDisplay::sendToDS() {
     m_socket.send(m_packet, sf::IpAddress(10, 35, 12, 42), m_dsPort);
 }
 
-const std::string DSDisplay::receiveFromDS() {
+const std::string DSDisplay::ReceiveFromDS() {
     if (m_socket.receive(m_recvBuffer, 256, m_recvAmount,
                          m_recvIP,
                          m_recvPort) == sf::Socket::Done) {
@@ -37,7 +37,7 @@ const std::string DSDisplay::receiveFromDS() {
             m_dsPort = m_recvPort;
 
             // Send GUI element file to DS
-            clear();
+            Clear();
 
             m_packet << static_cast<std::string>("guiCreate\r\n");
 
@@ -65,10 +65,10 @@ const std::string DSDisplay::receiveFromDS() {
                 guiFile.close();
             }
 
-            sendToDS();
+            SendToDS();
 
             // Send a list of available autonomous modes
-            clear();
+            Clear();
 
             m_packet << static_cast<std::string>("autonList\r\n");
 
@@ -76,15 +76,15 @@ const std::string DSDisplay::receiveFromDS() {
                 m_packet << m_autonModes.name(i);
             }
 
-            sendToDS();
+            SendToDS();
 
             // Make sure driver knows which autonomous mode is selected
-            clear();
+            Clear();
 
             m_packet << static_cast<std::string>("autonConfirmed\r\n");
             m_packet << m_autonModes.name(m_curAutonMode);
 
-            sendToDS();
+            SendToDS();
 
             return "connect\r\n";
         }
@@ -92,7 +92,7 @@ const std::string DSDisplay::receiveFromDS() {
             // Next byte after command is selection choice
             m_curAutonMode = m_recvBuffer[13];
 
-            clear();
+            Clear();
 
             m_packet << static_cast<std::string>("autonConfirmed\r\n");
             m_packet << m_autonModes.name(m_curAutonMode);
@@ -112,7 +112,7 @@ const std::string DSDisplay::receiveFromDS() {
                     "DSDisplay: autonSelect: failed to open autonMode.txt\n";
             }
 
-            sendToDS();
+            SendToDS();
 
             return "autonSelect\r\n";
         }
@@ -159,19 +159,19 @@ DSDisplay::DSDisplay(unsigned short portNumber) : m_dsPort(portNumber) {
     }
 }
 
-void DSDisplay::deleteAllMethods() {
+void DSDisplay::DeleteAllMethods() {
     m_autonModes.deleteAllMethods();
 }
 
-void DSDisplay::execAutonomous() {
+void DSDisplay::ExecAutonomous() {
     m_autonModes.execAutonomous(m_curAutonMode);
 }
 
-char DSDisplay::getAutonID() const {
+char DSDisplay::GetAutonID() const {
     return m_curAutonMode;
 }
 
-void DSDisplay::addData(std::string ID, StatusLight data) {
+void DSDisplay::AddData(std::string ID, StatusLight data) {
     // If packet is empty, add "display\r\n" header to packet
     if (m_packet.getData() == nullptr) {
         m_packet << std::string("display\r\n");
@@ -182,7 +182,7 @@ void DSDisplay::addData(std::string ID, StatusLight data) {
     m_packet << static_cast<int8_t>(data);
 }
 
-void DSDisplay::addData(std::string ID, bool data) {
+void DSDisplay::AddData(std::string ID, bool data) {
     // If packet is empty, add "display\r\n" header to packet
     if (m_packet.getData() == nullptr) {
         m_packet << std::string("display\r\n");
@@ -199,7 +199,7 @@ void DSDisplay::addData(std::string ID, bool data) {
     }
 }
 
-void DSDisplay::addData(std::string ID, int8_t data) {
+void DSDisplay::AddData(std::string ID, int8_t data) {
     // If packet is empty, add "display\r\n" header to packet
     if (m_packet.getData() == nullptr) {
         m_packet << std::string("display\r\n");
@@ -210,7 +210,7 @@ void DSDisplay::addData(std::string ID, int8_t data) {
     m_packet << data;
 }
 
-void DSDisplay::addData(std::string ID, int32_t data) {
+void DSDisplay::AddData(std::string ID, int32_t data) {
     // If packet is empty, add "display\r\n" header to packet
     if (m_packet.getData() == nullptr) {
         m_packet << std::string("display\r\n");
@@ -221,7 +221,7 @@ void DSDisplay::addData(std::string ID, int32_t data) {
     m_packet << data;
 }
 
-void DSDisplay::addData(std::string ID, uint32_t data) {
+void DSDisplay::AddData(std::string ID, uint32_t data) {
     // If packet is empty, add "display\r\n" header to packet
     if (m_packet.getData() == nullptr) {
         m_packet << std::string("display\r\n");
@@ -232,7 +232,7 @@ void DSDisplay::addData(std::string ID, uint32_t data) {
     m_packet << data;
 }
 
-void DSDisplay::addData(std::string ID, std::string data) {
+void DSDisplay::AddData(std::string ID, std::string data) {
     // If packet is empty, add "display\r\n" header to packet
     if (m_packet.getData() == nullptr) {
         m_packet << std::string("display\r\n");
@@ -243,7 +243,7 @@ void DSDisplay::addData(std::string ID, std::string data) {
     m_packet << data;
 }
 
-void DSDisplay::addData(std::string ID, float data) {
+void DSDisplay::AddData(std::string ID, float data) {
     // If packet is empty, add "display\r\n" header to packet
     if (m_packet.getData() == nullptr) {
         m_packet << std::string("display\r\n");
@@ -254,7 +254,7 @@ void DSDisplay::addData(std::string ID, float data) {
     m_packet << std::to_string(data);
 }
 
-void DSDisplay::addData(std::string ID, double data) {
+void DSDisplay::AddData(std::string ID, double data) {
     // If packet is empty, add "display\r\n" header to packet
     if (m_packet.getData() == nullptr) {
         m_packet << std::string("display\r\n");

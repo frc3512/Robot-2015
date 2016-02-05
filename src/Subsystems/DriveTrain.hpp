@@ -20,7 +20,7 @@ public:
     /* Drives robot with given speed and turn values [-1..1].
      * This is a convenience function for use in Operator Control.
      */
-    void drive(float throttle, float turn, bool isQuickTurn = false);
+    void Drive(float throttle, float turn, bool isQuickTurn = false);
 
     // Sets joystick deadband
     void setDeadband(float band);

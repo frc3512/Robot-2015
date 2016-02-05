@@ -1,5 +1,4 @@
 // =============================================================================
-// File Name: GraphHost.cpp
 // Description: The host for the LiveGrapher real-time graphing application
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================
@@ -70,7 +69,7 @@ GraphHost::~GraphHost() {
     close(m_ipcfd_w);
 }
 
-int GraphHost::graphData(float value, std::string dataset) {
+int GraphHost::GraphData(float value, std::string dataset) {
     if (!m_running) {
         return -1;
     }
@@ -107,7 +106,7 @@ int GraphHost::graphData(float value, std::string dataset) {
     m_mutex.lock();
 
     // If the dataset name isn't in the list already, add it
-    addGraph(dataset);
+    AddGraph(dataset);
 
     // Send the point to connected clients
     for (auto& conn : m_connList) {
@@ -124,14 +123,14 @@ int GraphHost::graphData(float value, std::string dataset) {
     return 0;
 }
 
-bool GraphHost::hasIntervalPassed() {
+bool GraphHost::HasIntervalPassed() {
     m_currentTime = duration_cast<milliseconds>(
         system_clock::now().time_since_epoch()).count();
 
     return m_currentTime - m_lastTime > m_sendInterval;
 }
 
-void GraphHost::resetInterval() {
+void GraphHost::ResetInterval() {
     m_lastTime = m_currentTime;
 }
 
@@ -345,7 +344,7 @@ int GraphHost::socket_accept(int listenfd) {
 }
 
 // If the dataset name isn't in the list already, add it
-int GraphHost::addGraph(const std::string& dataset) {
+int GraphHost::AddGraph(const std::string& dataset) {
     // Add the graph name to the list of available graphs
     for (const auto& elem : SocketConnection::graphNames) {
         // Graph is already in list

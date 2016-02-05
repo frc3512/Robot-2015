@@ -133,8 +133,7 @@ void GearBox<T>::resetPID() {
 }
 
 template <class T>
-void GearBox<T>::setPIDSourceType(PIDSourceType pidSource)
-{
+void GearBox<T>::setPIDSourceType(PIDSourceType pidSource) {
     if (m_pid != nullptr) {
         m_encoder->SetPIDSourceType(pidSource);
     }

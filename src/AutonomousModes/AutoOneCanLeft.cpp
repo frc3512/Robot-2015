@@ -16,8 +16,8 @@ void Robot::AutoOneCanLeft() {
         ev.setIntakeDirectionLeft(Elevator::S_STOPPED);
         ev.setIntakeDirectionRight(Elevator::S_STOPPED);
     };
-    autoSM.addState(std::move(state));
-    autoSM.setState("IDLE");
+    autoSM.AddState(std::move(state));
+    autoSM.SetState("IDLE");
 
     state = std::make_unique<State>("SEEK_GROUND");
     state->entry = [this] {
@@ -31,7 +31,7 @@ void Robot::AutoOneCanLeft() {
             return "";
         }
     };
-    autoSM.addState(std::move(state));
+    autoSM.AddState(std::move(state));
 
     state = std::make_unique<State>("GRAB_CAN");
     state->entry = [this] {
@@ -46,7 +46,7 @@ void Robot::AutoOneCanLeft() {
             return "";
         }
     };
-    autoSM.addState(std::move(state));
+    autoSM.AddState(std::move(state));
 
     state = std::make_unique<State>("SEEK_GARBAGECAN_UP");
     state->entry = [this] {
@@ -60,7 +60,7 @@ void Robot::AutoOneCanLeft() {
             return "";
         }
     };
-    autoSM.addState(std::move(state));
+    autoSM.AddState(std::move(state));
 
     state = std::make_unique<State>("DRIVE_FORWARD");
     state->entry = [this] {
@@ -74,14 +74,14 @@ void Robot::AutoOneCanLeft() {
             return "";
         }
     };
-    state->run = [this] { robotDrive.drive(-0.3, 0, false); };
-    state->exit = [this] { robotDrive.drive(0, 0, false); };
-    autoSM.addState(std::move(state));
+    state->run = [this] { robotDrive.Drive(-0.3, 0, false); };
+    state->exit = [this] { robotDrive.Drive(0, 0, false); };
+    autoSM.AddState(std::move(state));
 
     ev.setManualMode(false);
 
     autoSM.run();
-    while (IsAutonomous() && IsEnabled() && autoSM.getState() != "IDLE") {
+    while (IsAutonomous() && IsEnabled() && autoSM.GetState() != "IDLE") {
         DS_PrintOut();
 
         autoSM.run();

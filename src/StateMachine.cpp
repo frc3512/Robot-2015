@@ -18,7 +18,7 @@ StateMachine::StateMachine(std::string name) : State(std::move(name)) {
         std::string nextState = m_currentState->transition();
 
         if (nextState.size() != 0) {
-            if (!setState(nextState)) {
+            if (!SetState(nextState)) {
                 // Failed to find state matching the returned name
                 std::cout << "[" << nextState << "] is not a known state\n";
             }
@@ -26,13 +26,13 @@ StateMachine::StateMachine(std::string name) : State(std::move(name)) {
     };
 }
 
-void StateMachine::addState(std::unique_ptr<State> state) {
+void StateMachine::AddState(std::unique_ptr<State> state) {
     m_states.push_back(std::move(state));
 }
 
-bool StateMachine::setState(const std::string& newState) {
+bool StateMachine::SetState(const std::string& newState) {
     for (auto& i : m_states) {
-        if (i->name() == newState) {
+        if (i->Name() == newState) {
             if (m_currentState != nullptr) {
                 m_currentState->exit();
             }
@@ -46,11 +46,12 @@ bool StateMachine::setState(const std::string& newState) {
     return false;
 }
 
-const std::string StateMachine::getState() const {
+const std::string StateMachine::GetState() const {
     if (m_currentState != nullptr) {
-        return m_currentState->name();
+        return m_currentState->Name();
     }
     else {
         return "";
     }
 }
+

@@ -13,7 +13,7 @@
 const float DriveTrain::maxWheelSpeed = 80.0;
 
 DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2) {
-    m_sensitivity = m_settings.getDouble("LOW_GEAR_SENSITIVE");
+    m_sensitivity = m_settings.GetDouble("LOW_GEAR_SENSITIVE");
 
     m_leftGrbx.setMotorReversed(true);
     m_leftGrbx.setEncoderReversed(true);
@@ -31,7 +31,7 @@ DriveTrain::DriveTrain() : BezierTrapezoidProfile(maxWheelSpeed, 2) {
     reloadPID();
 }
 
-void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
+void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
     // Modified Cheesy Drive; base code courtesy of FRC Team 254
 
     throttle *= -1;
@@ -49,7 +49,7 @@ void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
     double negInertia = turn - m_oldTurn;
     m_oldTurn = turn;
 
-    float turnNonLinearity = m_settings.getDouble("TURN_NON_LINEARITY");
+    float turnNonLinearity = m_settings.GetDouble("TURN_NON_LINEARITY");
 
     /* Apply a sine function that's scaled to make turning sensitivity feel better.
      * turnNonLinearity should never be zero, but can be close
@@ -64,14 +64,14 @@ void DriveTrain::drive(float throttle, float turn, bool isQuickTurn) {
     // Negative inertia!
     double negInertiaScalar;
     if (turn * negInertia > 0) {
-        negInertiaScalar = m_settings.getDouble("INERTIA_DAMPEN");
+        negInertiaScalar = m_settings.GetDouble("INERTIA_DAMPEN");
     }
     else {
         if (fabs(turn) > 0.65) {
-            negInertiaScalar = m_settings.getDouble("INERTIA_HIGH_TURN");
+            negInertiaScalar = m_settings.GetDouble("INERTIA_HIGH_TURN");
         }
         else {
-            negInertiaScalar = m_settings.getDouble("INERTIA_LOW_TURN");
+            negInertiaScalar = m_settings.GetDouble("INERTIA_LOW_TURN");
         }
     }
 
@@ -160,20 +160,20 @@ void DriveTrain::setDeadband(float band) {
 }
 
 void DriveTrain::reloadPID() {
-    m_settings.update();
+    m_settings.Update();
 
     float p = 0.f;
     float i = 0.f;
     float d = 0.f;
 
-    p = m_settings.getDouble("PID_DRIVE_LEFT_P");
-    i = m_settings.getDouble("PID_DRIVE_LEFT_I");
-    d = m_settings.getDouble("PID_DRIVE_LEFT_D");
+    p = m_settings.GetDouble("PID_DRIVE_LEFT_P");
+    i = m_settings.GetDouble("PID_DRIVE_LEFT_I");
+    d = m_settings.GetDouble("PID_DRIVE_LEFT_D");
     m_leftGrbx.setPID(p, i, d);
 
-    p = m_settings.getDouble("PID_DRIVE_RIGHT_P");
-    i = m_settings.getDouble("PID_DRIVE_RIGHT_I");
-    d = m_settings.getDouble("PID_DRIVE_RIGHT_D");
+    p = m_settings.GetDouble("PID_DRIVE_RIGHT_P");
+    i = m_settings.GetDouble("PID_DRIVE_RIGHT_I");
+    d = m_settings.GetDouble("PID_DRIVE_RIGHT_D");
     m_rightGrbx.setPID(p, i, d);
 }
 

@@ -1,5 +1,4 @@
 // =============================================================================
-// File Name: SocketConnection.hpp
 // Description: Wrapper around graph client socket descriptors
 // Author: FRC Team 3512, Spartatroniks
 // =============================================================================

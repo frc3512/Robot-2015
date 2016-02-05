@@ -55,29 +55,29 @@ public:
         inactive
     };
 
-    static DSDisplay& getInstance(unsigned short dsPort);
+    static DSDisplay& GetInstance(unsigned short dsPort);
 
     // Empties internal packet of data
-    void clear();
+    void Clear();
 
     // Sends data currently in class's internal packet to Driver Station
-    void sendToDS();
+    void SendToDS();
 
     // Receives control commands from Driver Station and processes them
-    const std::string receiveFromDS();
+    const std::string ReceiveFromDS();
 
     // Add and remove autonomous functions
     template <class T>
-    void addAutoMethod(const std::string & methodName,
+    void AddAutoMethod(const std::string & methodName,
                        void (T::* function)(),
                        T * object);
-    void deleteAllMethods();
+    void DeleteAllMethods();
 
     // Runs autonomous function currently selected
-    void execAutonomous();
+    void ExecAutonomous();
 
     // Returns position of currently selected autonomous in function array
-    char getAutonID() const;
+    char GetAutonID() const;
 
     /* Add UI element data to packet
      *
@@ -90,14 +90,14 @@ public:
      * compile time. floats and doubles are converted to strings because VxWorks
      * messes up floats over the network.
      */
-    void addData(std::string ID, StatusLight data);
-    void addData(std::string ID, bool data);
-    void addData(std::string ID, int8_t data);
-    void addData(std::string ID, int32_t data);
-    void addData(std::string ID, uint32_t data);
-    void addData(std::string ID, std::string data);
-    void addData(std::string ID, float data);
-    void addData(std::string ID, double data);
+    void AddData(std::string ID, StatusLight data);
+    void AddData(std::string ID, bool data);
+    void AddData(std::string ID, int8_t data);
+    void AddData(std::string ID, int32_t data);
+    void AddData(std::string ID, uint32_t data);
+    void AddData(std::string ID, std::string data);
+    void AddData(std::string ID, float data);
+    void AddData(std::string ID, double data);
 
 private:
     DSDisplay(unsigned short portNumber);

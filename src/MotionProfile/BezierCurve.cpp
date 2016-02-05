@@ -22,7 +22,7 @@ BezierCurve::BezierCurve(const Point& pt1,
     m_pts.push_back(pt4);
 }
 
-void BezierCurve::addPoint(double x, double y) {
+void BezierCurve::AddPoint(double x, double y) {
     m_pts.emplace_back(x, y);
 }
 

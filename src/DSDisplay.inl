@@ -5,7 +5,7 @@
 // =============================================================================
 
 template <class T>
-void DSDisplay::addAutoMethod(const std::string& methodName,
+void DSDisplay::AddAutoMethod(const std::string& methodName,
                               void (T::* function)(),
                               T* object) {
     m_autonModes.addMethod(methodName, std::bind(function, object));

@@ -57,27 +57,27 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     });
 
     // Load motion profile constants from the configuration file
-    m_maxv_a = m_settings.getDouble("EV_MAX_VELOCITY_PROFILE_A");
-    m_ttmaxv_a = m_settings.getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_A");
-    m_maxv_b = m_settings.getDouble("EV_MAX_VELOCITY_PROFILE_B");
-    m_ttmaxv_b = m_settings.getDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_B");
+    m_maxv_a = m_settings.GetDouble("EV_MAX_VELOCITY_PROFILE_A");
+    m_ttmaxv_a = m_settings.GetDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_A");
+    m_maxv_b = m_settings.GetDouble("EV_MAX_VELOCITY_PROFILE_B");
+    m_ttmaxv_b = m_settings.GetDouble("EV_TIME_TO_MAX_VELOCITY_PROFILE_B");
 
     // Load elevator levels from the configuration file
-    m_maxHeight = m_settings.getDouble("EV_MAX_HEIGHT");
-    m_toteHeights["EV_GROUND"] = m_settings.getDouble("EV_GROUND");
+    m_maxHeight = m_settings.GetDouble("EV_MAX_HEIGHT");
+    m_toteHeights["EV_GROUND"] = m_settings.GetDouble("EV_GROUND");
 
     double height = 0;
     for (int i = 1; i <= 6; i++) {
-        height = m_settings.getDouble("EV_TOTE_" + std::to_string(i));
+        height = m_settings.GetDouble("EV_TOTE_" + std::to_string(i));
         m_toteHeights["EV_TOTE_" + std::to_string(i)] = height;
     }
 
-    m_toteHeights["EV_STEP"] = m_settings.getDouble("EV_STEP");
-    m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings.getDouble(
+    m_toteHeights["EV_STEP"] = m_settings.GetDouble("EV_STEP");
+    m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings.GetDouble(
         "EV_HALF_TOTE_OFFSET");
-    m_toteHeights["EV_GARBAGECAN_LEVEL"] = m_settings.getDouble(
+    m_toteHeights["EV_GARBAGECAN_LEVEL"] = m_settings.GetDouble(
         "EV_GARBAGECAN_LEVEL");
-    m_toteHeights["EV_AUTO_DROP_LENGTH"] = m_settings.getDouble(
+    m_toteHeights["EV_AUTO_DROP_LENGTH"] = m_settings.GetDouble(
         "EV_AUTO_DROP_LENGTH");
 
     auto state = std::make_unique<State>("IDLE");
@@ -90,8 +90,8 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(std::move(state));
-    m_autoStackSM.setState("IDLE");
+    m_autoStackSM.AddState(std::move(state));
+    m_autoStackSM.SetState("IDLE");
 
     state = std::make_unique<State>("WAIT_INITIAL_HEIGHT");
     state->entry = [this] {
@@ -105,7 +105,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(std::move(state));
+    m_autoStackSM.AddState(std::move(state));
 
     state = std::make_unique<State>("SEEK_DROP_TOTES");
     state->entry = [this] {
@@ -119,7 +119,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(std::move(state));
+    m_autoStackSM.AddState(std::move(state));
 
     state = std::make_unique<State>("RELEASE");
     state->entry = [this] {
@@ -135,7 +135,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(std::move(state));
+    m_autoStackSM.AddState(std::move(state));
 
     state = std::make_unique<State>("SEEK_GROUND");
     state->entry = [this] {
@@ -149,7 +149,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(std::move(state));
+    m_autoStackSM.AddState(std::move(state));
 
     state = std::make_unique<State>("GRAB");
     state->entry = [this] {
@@ -165,7 +165,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(std::move(state));
+    m_autoStackSM.AddState(std::move(state));
 
     state = std::make_unique<State>("SEEK_HALF_TOTE");
     state->entry = [this] {
@@ -179,7 +179,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(std::move(state));
+    m_autoStackSM.AddState(std::move(state));
 
     state = std::make_unique<State>("INTAKE_IN");
     state->entry = [this] {
@@ -195,7 +195,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
             return "";
         }
     };
-    m_autoStackSM.addState(std::move(state));
+    m_autoStackSM.AddState(std::move(state));
 
     // Reload PID constants from the configuration file
     reloadPID();
@@ -302,7 +302,7 @@ void Elevator::setManualMode(bool on) {
 
         if (m_manual) {
             // Stop any auto-stacking when we switch to manual mode
-            m_autoStackSM.setState("IDLE");
+            m_autoStackSM.SetState("IDLE");
         }
         else {
             setProfileHeight(getHeight());
@@ -325,7 +325,7 @@ double Elevator::getHeight() const {
 }
 
 void Elevator::reloadPID() {
-    m_settings.update();
+    m_settings.Update();
 
     // First profile
     double p = 0.f;
@@ -334,20 +334,20 @@ void Elevator::reloadPID() {
     double f = 0.f;
 
     // Set elevator PID
-    p = m_settings.getDouble("PID_ELEVATOR_DOWN_P");
-    i = m_settings.getDouble("PID_ELEVATOR_DOWN_I");
-    d = m_settings.getDouble("PID_ELEVATOR_DOWN_D");
-    f = m_settings.getDouble("PID_ELEVATOR_DOWN_F");
+    p = m_settings.GetDouble("PID_ELEVATOR_DOWN_P");
+    i = m_settings.GetDouble("PID_ELEVATOR_DOWN_I");
+    d = m_settings.GetDouble("PID_ELEVATOR_DOWN_D");
+    f = m_settings.GetDouble("PID_ELEVATOR_DOWN_F");
 
     m_liftGrbx.setProfile(false);
     m_liftGrbx.setPID(p, i, d);
     m_liftGrbx.setF(f);
 
     // Set elevator PID
-    p = m_settings.getDouble("PID_ELEVATOR_UP_P");
-    i = m_settings.getDouble("PID_ELEVATOR_UP_I");
-    d = m_settings.getDouble("PID_ELEVATOR_UP_D");
-    f = m_settings.getDouble("PID_ELEVATOR_UP_F");
+    p = m_settings.GetDouble("PID_ELEVATOR_UP_P");
+    i = m_settings.GetDouble("PID_ELEVATOR_UP_I");
+    d = m_settings.GetDouble("PID_ELEVATOR_UP_D");
+    f = m_settings.GetDouble("PID_ELEVATOR_UP_F");
 
     m_liftGrbx.setProfile(true);
     m_liftGrbx.setPID(p, i, d);
@@ -463,11 +463,11 @@ void Elevator::stackTotes() {
 }
 
 bool Elevator::isStacking() const {
-    return m_autoStackSM.getState() != "IDLE";
+    return m_autoStackSM.GetState() != "IDLE";
 }
 
 void Elevator::cancelStack() {
-    m_autoStackSM.setState("IDLE");
+    m_autoStackSM.SetState("IDLE");
 }
 
 void Elevator::updateState() {
