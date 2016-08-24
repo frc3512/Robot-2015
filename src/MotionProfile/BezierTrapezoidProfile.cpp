@@ -1,15 +1,10 @@
-// =============================================================================
-// File Name: BezierTrapezoidProfile.cpp
-// Description: Provides trapezoidal velocity control and follows a given Bézier
-//             curve
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "BezierTrapezoidProfile.hpp"
 #include <cmath>
 
-BezierTrapezoidProfile::BezierTrapezoidProfile(double maxV, double timeToMaxV) :
-    TrapezoidProfile(maxV, timeToMaxV) {
+BezierTrapezoidProfile::BezierTrapezoidProfile(double maxV, double timeToMaxV)
+    : TrapezoidProfile(maxV, timeToMaxV) {
     setMaxVelocity(maxV);
     setTimeToMaxV(timeToMaxV);
     setMode(SetpointMode::displacement);
@@ -29,23 +24,19 @@ double BezierTrapezoidProfile::updateSetpoint(double curTime) {
             // Accelerate up
             m_setpoint += (m_acceleration * curTime) * period * m_sign;
             m_leftSetpoint +=
-                getLeftVelocity(curTime,
-                                m_acceleration * curTime) * period * m_sign;
-            m_rightSetpoint += getRightVelocity(curTime,
-                                                m_acceleration * curTime) *
-                               period * m_sign;
-        }
-        else if (curTime < m_timeFromMaxVelocity) {
+                getLeftVelocity(curTime, m_acceleration * curTime) * period *
+                m_sign;
+            m_rightSetpoint +=
+                getRightVelocity(curTime, m_acceleration * curTime) * period *
+                m_sign;
+        } else if (curTime < m_timeFromMaxVelocity) {
             // Maintain max velocity
             m_setpoint += (m_profileMaxVelocity * period * m_sign);
-            m_leftSetpoint +=
-                getLeftVelocity(curTime,
-                                m_profileMaxVelocity) * period * m_sign;
-            m_rightSetpoint +=
-                getRightVelocity(curTime,
-                                 m_profileMaxVelocity) * period * m_sign;
-        }
-        else if (curTime < m_timeTotal) {
+            m_leftSetpoint += getLeftVelocity(curTime, m_profileMaxVelocity) *
+                              period * m_sign;
+            m_rightSetpoint += getRightVelocity(curTime, m_profileMaxVelocity) *
+                               period * m_sign;
+        } else if (curTime < m_timeTotal) {
             // Accelerate down
             double decelTime = curTime - m_timeFromMaxVelocity;
             double v = m_profileMaxVelocity - m_acceleration * decelTime;
@@ -54,8 +45,7 @@ double BezierTrapezoidProfile::updateSetpoint(double curTime) {
             m_leftSetpoint += getLeftVelocity(curTime, v) * period * m_sign;
             m_rightSetpoint += getRightVelocity(curTime, v) * period * m_sign;
         }
-    }
-    else if (m_mode == SetpointMode::velocity) {
+    } else if (m_mode == SetpointMode::velocity) {
         if (curTime < m_timeToMaxVelocity) {
             // Accelerate up
             m_setpoint = (m_acceleration * curTime) * m_sign;
@@ -63,16 +53,14 @@ double BezierTrapezoidProfile::updateSetpoint(double curTime) {
                 getLeftVelocity(curTime, m_acceleration * curTime) * m_sign;
             m_rightSetpoint =
                 getRightVelocity(curTime, m_acceleration * curTime) * m_sign;
-        }
-        else if (curTime < m_timeFromMaxVelocity) {
+        } else if (curTime < m_timeFromMaxVelocity) {
             // Maintain max velocity
             m_setpoint = m_profileMaxVelocity * m_sign;
             m_leftSetpoint =
                 getLeftVelocity(curTime, m_profileMaxVelocity) * m_sign;
             m_rightSetpoint =
                 getRightVelocity(curTime, m_profileMaxVelocity) * m_sign;
-        }
-        else if (curTime < m_timeTotal) {
+        } else if (curTime < m_timeTotal) {
             // Accelerate down
             double decelTime = curTime - m_timeFromMaxVelocity;
             double v = m_profileMaxVelocity + (-m_acceleration * decelTime);
@@ -111,9 +99,7 @@ void BezierTrapezoidProfile::resetProfile() {
     m_rightSetpoint = 0.0;
 }
 
-void BezierTrapezoidProfile::setWidth(double width) {
-    m_width = width;
-}
+void BezierTrapezoidProfile::setWidth(double width) { m_width = width; }
 
 double BezierTrapezoidProfile::getLeftVelocity(double t, double v) const {
     return (1.0 - m_curve.getCurvature(t / m_timeTotal) * m_width / 2.0) * v;
@@ -122,4 +108,3 @@ double BezierTrapezoidProfile::getLeftVelocity(double t, double v) const {
 double BezierTrapezoidProfile::getRightVelocity(double t, double v) const {
     return (1.0 + m_curve.getCurvature(t / m_timeTotal) * m_width / 2.0) * v;
 }
-

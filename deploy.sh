@@ -11,4 +11,3 @@ fi
 ssh $USER@$HOST "killall FRCUserProgram"
 scp $1/FRCUserProgram $USER@$HOST:/home/lvuser
 ssh $USER@$HOST "/home/lvuser/FRCUserProgram &"
-

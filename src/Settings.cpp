@@ -1,17 +1,10 @@
-// =============================================================================
-// File Name: Settings.cpp
-// Description: Opens a given file and creates an STL map of its name-value
-//              pairs
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "Settings.hpp"
 #include <fstream>
 #include <iostream>
 
-Settings::Settings(std::string fileName) : m_fileName(fileName) {
-    Update();
-}
+Settings::Settings(std::string fileName) : m_fileName(fileName) { Update(); }
 
 void Settings::Update() {
     std::string name;
@@ -46,8 +39,8 @@ std::string Settings::GetString(const std::string& key) const {
 
     // If the element wasn't found
     if (index == m_values.end()) {
-        std::cout << "Settings: " << m_fileName << ": '" << key <<
-            "' not found\n";
+        std::cout << "Settings: " << m_fileName << ": '" << key
+                  << "' not found\n";
         return "NOT_FOUND";
     }
 
@@ -60,8 +53,8 @@ double Settings::GetDouble(const std::string& key) const {
 
     // If the element wasn't found
     if (index == m_values.end()) {
-        std::cout << "Settings: " << m_fileName << ": '" << key <<
-            "' not found\n";
+        std::cout << "Settings: " << m_fileName << ": '" << key
+                  << "' not found\n";
         return 0.f;
     }
 
@@ -74,8 +67,8 @@ int Settings::GetInt(const std::string& key) const {
 
     // If the element wasn't found
     if (index == m_values.end()) {
-        std::cout << "Settings: " << m_fileName << ": '" << key <<
-            "' not found\n";
+        std::cout << "Settings: " << m_fileName << ": '" << key
+                  << "' not found\n";
         return 0;
     }
 
@@ -124,4 +117,3 @@ std::string Settings::ExtractValue() {
 
     return m_rawStr.substr(valueStart, m_index - valueStart);
 }
-

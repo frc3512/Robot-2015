@@ -4,10 +4,12 @@
 // Copyright (C) 2007-2012 Laurent Gomila (laurent.gom@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
+// including commercial applications, and to alter it and redistribute it
+// freely,
 // subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
@@ -23,14 +25,12 @@
 ////////////////////////////////////////////////////////////
 
 #include "Socket.hpp"
+#include <fcntl.h>
 #include <cstring>
 #include <iostream>
-#include <fcntl.h>
 
 namespace sf {
-Socket::Socket(Type sockType) :
-    m_socketType(sockType) {
-}
+Socket::Socket(Type sockType) : m_socketType(sockType) {}
 
 Socket::~Socket() {
     // Close the socket before it gets destructed
@@ -41,30 +41,23 @@ void Socket::setBlocking(bool blocking) {
     int status = fcntl(m_socket, F_GETFL);
     if (blocking) {
         fcntl(m_socket, F_SETFL, status & ~O_NONBLOCK);
-    }
-    else {
+    } else {
         fcntl(m_socket, F_SETFL, status | O_NONBLOCK);
     }
 
     m_isBlocking = blocking;
 }
 
-bool Socket::isBlocking() const {
-    return m_isBlocking;
-}
-
+bool Socket::isBlocking() const { return m_isBlocking; }
 
 ////////////////////////////////////////////////////////////
-int Socket::getHandle() const {
-    return m_socket;
-}
+int Socket::getHandle() const { return m_socket; }
 
 void Socket::create() {
     // Don't create the socket if it already exists
     if (m_socket == -1) {
-        int handle = socket(PF_INET,
-                            m_socketType == Tcp ? SOCK_STREAM : SOCK_DGRAM,
-                            0);
+        int handle =
+            socket(PF_INET, m_socketType == Tcp ? SOCK_STREAM : SOCK_DGRAM, 0);
         create(handle);
     }
 }
@@ -79,21 +72,19 @@ void Socket::create(int handle) {
         setBlocking(m_isBlocking);
 
         if (m_socketType == Tcp) {
-            // Disable the Nagle algorithm (ie. removes buffering of TCP packets)
+            // Disable the Nagle algorithm (ie. removes buffering of TCP
+            // packets)
             int yes = 1;
             if (setsockopt(m_socket, IPPROTO_TCP, TCP_NODELAY,
-                           reinterpret_cast<char*>(&yes),
-                           sizeof(yes)) == -1) {
-                std::cerr << "Failed to set socket option \"TCP_NODELAY\" ; " <<
-                    "all your TCP packets will be buffered\n";
+                           reinterpret_cast<char*>(&yes), sizeof(yes)) == -1) {
+                std::cerr << "Failed to set socket option \"TCP_NODELAY\" ; "
+                          << "all your TCP packets will be buffered\n";
             }
-        }
-        else {
+        } else {
             // Enable broadcast by default for UDP sockets
             int yes = 1;
             if (setsockopt(m_socket, SOL_SOCKET, SO_BROADCAST,
-                           reinterpret_cast<char*>(&yes),
-                           sizeof(yes)) == -1) {
+                           reinterpret_cast<char*>(&yes), sizeof(yes)) == -1) {
                 std::cerr << "Failed to enable broadcast on UDP socket\n";
             }
         }
@@ -112,8 +103,8 @@ sockaddr_in Socket::createAddress(uint32_t address, unsigned short port) {
     sockaddr_in addr;
     std::memset(addr.sin_zero, 0, sizeof(addr.sin_zero));
     addr.sin_addr.s_addr = htonl(address);
-    addr.sin_family      = AF_INET;
-    addr.sin_port        = htons(port);
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
 
     return addr;
 }
@@ -127,14 +118,20 @@ Socket::Status Socket::getErrorStatus() {
     }
 
     switch (errno) {
-    case EWOULDBLOCK:  return Socket::NotReady;
-    case ECONNABORTED: return Socket::Disconnected;
-    case ECONNRESET:   return Socket::Disconnected;
-    case ETIMEDOUT:    return Socket::Disconnected;
-    case ENETRESET:    return Socket::Disconnected;
-    case ENOTCONN:     return Socket::Disconnected;
-    default:           return Socket::Error;
+        case EWOULDBLOCK:
+            return Socket::NotReady;
+        case ECONNABORTED:
+            return Socket::Disconnected;
+        case ECONNRESET:
+            return Socket::Disconnected;
+        case ETIMEDOUT:
+            return Socket::Disconnected;
+        case ENETRESET:
+            return Socket::Disconnected;
+        case ENOTCONN:
+            return Socket::Disconnected;
+        default:
+            return Socket::Error;
     }
 }
-} // namespace sf
-
+}  // namespace sf

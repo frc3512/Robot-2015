@@ -1,11 +1,8 @@
-// =============================================================================
-// File Name: AutoDriveForward.cpp
-// Description: Drives forward
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "../Robot.hpp"
 
+// Drives forward
 void Robot::AutoDriveForward() {
     Timer timer;
     timer.Start();
@@ -17,4 +14,3 @@ void Robot::AutoDriveForward() {
     }
     robotDrive.Drive(0.0, 0.0, false);
 }
-

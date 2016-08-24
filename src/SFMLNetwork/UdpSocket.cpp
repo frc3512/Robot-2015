@@ -4,10 +4,12 @@
 // Copyright (C) 2007-2012 Laurent Gomila (laurent.gom@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
+// including commercial applications, and to alter it and redistribute it
+// freely,
 // subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
@@ -23,26 +25,22 @@
 ////////////////////////////////////////////////////////////
 
 #include "../SFML/Network/UdpSocket.hpp"
+#include <algorithm>
+#include <iostream>
 #include "../SFML/Network/IpAddress.hpp"
 #include "../SFML/Network/Packet.hpp"
 #include "Socket.hpp"
-#include <algorithm>
-#include <iostream>
 
 namespace sf {
-UdpSocket::UdpSocket() :
-    Socket(Udp),
-    m_buffer(MaxDatagramSize) {
-}
+UdpSocket::UdpSocket() : Socket(Udp), m_buffer(MaxDatagramSize) {}
 
-unsigned short UdpSocket::getLocalPort() const {
+uint16_t UdpSocket::getLocalPort() const {
     if (getHandle() != -1) {
         // Retrieve informations about the local end of the socket
         sockaddr_in address;
         Socket::AddrLength size = sizeof(address);
         socklen_t temp = size;
-        if (getsockname(getHandle(),
-                        reinterpret_cast<sockaddr*>(&address),
+        if (getsockname(getHandle(), reinterpret_cast<sockaddr*>(&address),
                         &temp) != -1) {
             return ntohs(address.sin_port);
         }
@@ -72,31 +70,28 @@ void UdpSocket::unbind() {
     close();
 }
 
-Socket::Status UdpSocket::send(const void* data,
-                               std::size_t size,
+Socket::Status UdpSocket::send(const void* data, std::size_t size,
                                const IpAddress& remoteAddress,
-                               unsigned short remotePort) {
+                               uint16_t remotePort) {
     // Create the internal socket if it doesn't exist
     create();
 
     // Make sure that all the data will fit in one datagram
     if (size > MaxDatagramSize) {
         std::cerr << "Cannot send data over the network "
-                  <<
-            "(the number of bytes to send is greater than sf::UdpSocket::MaxDatagramSize)\n";
+                  << "(the number of bytes to send is greater than "
+                     "sf::UdpSocket::MaxDatagramSize)\n";
         return Error;
     }
 
     // Build the target address
-    sockaddr_in address = Socket::createAddress(
-        remoteAddress.toInteger(), remotePort);
+    sockaddr_in address =
+        Socket::createAddress(remoteAddress.toInteger(), remotePort);
 
     // Send the data (unlike TCP, all the data is always sent in one call)
-    int sent =
-        sendto(
-            getHandle(), static_cast<char*>(const_cast<void*>(data)),
-            static_cast<int>(size), 0, reinterpret_cast<sockaddr*>(&address),
-            sizeof(address));
+    int sent = sendto(getHandle(), static_cast<char*>(const_cast<void*>(data)),
+                      static_cast<int>(size), 0,
+                      reinterpret_cast<sockaddr*>(&address), sizeof(address));
 
     // Check for errors
     if (sent < 0) {
@@ -106,20 +101,19 @@ Socket::Status UdpSocket::send(const void* data,
     return Done;
 }
 
-Socket::Status UdpSocket::receive(void* data,
-                                  std::size_t size,
+Socket::Status UdpSocket::receive(void* data, std::size_t size,
                                   std::size_t& received,
                                   IpAddress& remoteAddress,
-                                  unsigned short& remotePort) {
+                                  uint16_t& remotePort) {
     // First clear the variables to fill
-    received      = 0;
+    received = 0;
     remoteAddress = IpAddress();
-    remotePort    = 0;
+    remotePort = 0;
 
     // Check the destination buffer
     if (!data) {
-        std::cerr <<
-            "Cannot receive data from the network (the destination buffer is invalid)\n";
+        std::cerr << "Cannot receive data from the network (the destination "
+                     "buffer is invalid)\n";
         return Error;
     }
 
@@ -130,10 +124,9 @@ Socket::Status UdpSocket::receive(void* data,
     Socket::AddrLength addressSize = sizeof(address);
     socklen_t temp = addressSize;
     int sizeReceived =
-        recvfrom(
-            getHandle(), static_cast<char*>(const_cast<void*>(data)),
-            static_cast<int>(size), 0, reinterpret_cast<sockaddr*>(&address),
-            &temp);
+        recvfrom(getHandle(), static_cast<char*>(const_cast<void*>(data)),
+                 static_cast<int>(size), 0,
+                 reinterpret_cast<sockaddr*>(&address), &temp);
 
     // Check for errors
     if (sizeReceived < 0) {
@@ -141,16 +134,15 @@ Socket::Status UdpSocket::receive(void* data,
     }
 
     // Fill the sender informations
-    received      = static_cast<std::size_t>(sizeReceived);
+    received = static_cast<std::size_t>(sizeReceived);
     remoteAddress = IpAddress(ntohl(address.sin_addr.s_addr));
-    remotePort    = ntohs(address.sin_port);
+    remotePort = ntohs(address.sin_port);
 
     return Done;
 }
 
-Socket::Status UdpSocket::send(Packet& packet,
-                               const IpAddress& remoteAddress,
-                               unsigned short remotePort) {
+Socket::Status UdpSocket::send(Packet& packet, const IpAddress& remoteAddress,
+                               uint16_t remotePort) {
     /* UDP is a datagram-oriented protocol (as opposed to TCP which is a stream
      * protocol). Sending one datagram is almost safe: it may be lost but if
      * it's received, then its data is guaranteed to be ok. However, splitting
@@ -169,16 +161,14 @@ Socket::Status UdpSocket::send(Packet& packet,
     return send(data, size, remoteAddress, remotePort);
 }
 
-Socket::Status UdpSocket::receive(Packet& packet,
-                                  IpAddress& remoteAddress,
-                                  unsigned short& remotePort) {
+Socket::Status UdpSocket::receive(Packet& packet, IpAddress& remoteAddress,
+                                  uint16_t& remotePort) {
     // See the detailed comment in send(Packet) above.
 
     // Receive the datagram
     std::size_t received = 0;
-    Status status = receive(&m_buffer[0],
-                            m_buffer.size(), received, remoteAddress,
-                            remotePort);
+    Status status = receive(&m_buffer[0], m_buffer.size(), received,
+                            remoteAddress, remotePort);
 
     // If we received valid data, we can copy it to the user packet
     packet.clear();
@@ -188,5 +178,4 @@ Socket::Status UdpSocket::receive(Packet& packet,
 
     return status;
 }
-} // namespace sf
-
+}  // namespace sf

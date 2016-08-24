@@ -1,12 +1,9 @@
-// =============================================================================
-// File Name: AutoOneCanLeft.cpp
-// Description: Drives forward and picks up one can
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "../Robot.hpp"
 #include "../StateMachine.hpp"
 
+// Drives forward and picks up one can
 void Robot::AutoOneCanLeft() {
     StateMachine autoSM("AUTO_ONE_CAN_LEFT");
 
@@ -20,14 +17,11 @@ void Robot::AutoOneCanLeft() {
     autoSM.SetState("IDLE");
 
     state = std::make_unique<State>("SEEK_GROUND");
-    state->entry = [this] {
-        ev.raiseElevator("EV_GROUND");
-    };
+    state->entry = [this] { ev.raiseElevator("EV_GROUND"); };
     state->transition = [this] {
         if (ev.atGoal()) {
             return "GRAB_CAN";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -41,36 +35,29 @@ void Robot::AutoOneCanLeft() {
     state->transition = [this] {
         if (autoTimer.HasPeriodPassed(0.2)) {
             return "SEEK_GARBAGECAN_UP";
-        }
-        else {
+        } else {
             return "";
         }
     };
     autoSM.AddState(std::move(state));
 
     state = std::make_unique<State>("SEEK_GARBAGECAN_UP");
-    state->entry = [this] {
-        ev.raiseElevator("EV_TOTE_4");
-    };
+    state->entry = [this] { ev.raiseElevator("EV_TOTE_4"); };
     state->transition = [this] {
         if (ev.atGoal()) {
             return "DRIVE_FORWARD";
-        }
-        else {
+        } else {
             return "";
         }
     };
     autoSM.AddState(std::move(state));
 
     state = std::make_unique<State>("DRIVE_FORWARD");
-    state->entry = [this] {
-        autoTimer.Reset();
-    };
+    state->entry = [this] { autoTimer.Reset(); };
     state->transition = [this] {
         if (autoTimer.HasPeriodPassed(0.8)) {
             return "IDLE";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -90,4 +77,3 @@ void Robot::AutoOneCanLeft() {
         std::this_thread::sleep_for(10ms);
     }
 }
-

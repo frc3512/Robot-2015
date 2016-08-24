@@ -4,10 +4,12 @@
 // Copyright (C) 2007-2012 Laurent Gomila (laurent.gom@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
+// including commercial applications, and to alter it and redistribute it
+// freely,
 // subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
@@ -38,8 +40,8 @@ namespace std {
 typedef basic_string<wchar_t> wstring;
 }
 
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 uint64_t htonll(uint64_t value);
 uint64_t ntohll(uint64_t value);
@@ -55,7 +57,7 @@ class UdpSocket;
 ////////////////////////////////////////////////////////////
 class Packet {
     // A bool-like type that cannot be converted to integer or pointer types
-    typedef bool (Packet::* BoolType)(std::size_t);
+    typedef bool (Packet::*BoolType)(std::size_t);
 
 public:
     Packet() = default;
@@ -129,21 +131,21 @@ public:
     operator BoolType() const;
 
     // Overloads of operator >> to read data from the packet
-    Packet& operator>>(bool&           data);
-    Packet& operator>>(int8_t&         data);
-    Packet& operator>>(uint8_t&        data);
-    Packet& operator>>(int16_t&        data);
-    Packet& operator>>(uint16_t&       data);
-    Packet& operator>>(int32_t&        data);
-    Packet& operator>>(uint32_t&       data);
-    Packet& operator>>(int64_t&        data);
-    Packet& operator>>(uint64_t&       data);
-    Packet& operator>>(float&          data);
-    Packet& operator>>(double&         data);
-    Packet& operator>>(char*           data);
-    Packet& operator>>(std::string&    data);
-    Packet& operator>>(wchar_t*        data);
-    Packet& operator>>(std::wstring&   data);
+    Packet& operator>>(bool& data);
+    Packet& operator>>(int8_t& data);
+    Packet& operator>>(uint8_t& data);
+    Packet& operator>>(int16_t& data);
+    Packet& operator>>(uint16_t& data);
+    Packet& operator>>(int32_t& data);
+    Packet& operator>>(uint32_t& data);
+    Packet& operator>>(int64_t& data);
+    Packet& operator>>(uint64_t& data);
+    Packet& operator>>(float& data);
+    Packet& operator>>(double& data);
+    Packet& operator>>(char* data);
+    Packet& operator>>(std::string& data);
+    Packet& operator>>(wchar_t* data);
+    Packet& operator>>(std::wstring& data);
 
     // Overloads of operator << to write data into the packet
     Packet& operator<<(bool data);
@@ -157,10 +159,10 @@ public:
     Packet& operator<<(uint64_t data);
     Packet& operator<<(float data);
     Packet& operator<<(double data);
-    Packet& operator<<(const char*           data);
-    Packet& operator<<(const std::string&    data);
-    Packet& operator<<(const wchar_t*        data);
-    Packet& operator<<(const std::wstring&   data);
+    Packet& operator<<(const char* data);
+    Packet& operator<<(const std::string& data);
+    Packet& operator<<(const wchar_t* data);
+    Packet& operator<<(const std::wstring& data);
 
 protected:
     friend class TcpSocket;
@@ -216,12 +218,10 @@ private:
      */
     bool checkSize(std::size_t size);
 
-    std::vector<char> m_packetData;    ///< Data stored in the packet
-    std::size_t m_readPos = 0; ///< Current reading position in the packet
-    bool m_isValid = true; ///< Reading state of the packet
+    std::vector<char> m_packetData;  ///< Data stored in the packet
+    std::size_t m_readPos = 0;       ///< Current reading position in the packet
+    bool m_isValid = true;           ///< Reading state of the packet
 };
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_PACKET_HPP
-
+#endif  // SFML_PACKET_HPP

@@ -1,11 +1,8 @@
-// =============================================================================
-// File Name: AutoMotionProfile.cpp
-// Description: Drives forward
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "../Robot.hpp"
 
+// Drives forward
 void Robot::AutoMotionProfile() {
     robotDrive.setLeftManual(0.f);
     robotDrive.setRightManual(0.f);
@@ -48,4 +45,3 @@ void Robot::AutoMotionProfile() {
         std::this_thread::sleep_for(10ms);
     }
 }
-

@@ -1,8 +1,4 @@
-// =============================================================================
-// File Name: Robot.hpp
-// Description: Implements the main robot class
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
@@ -10,19 +6,22 @@
 #include <chrono>
 using namespace std::chrono_literals;
 
-#include <SampleRobot.h>
 #include <Joystick.h>
+#include <SampleRobot.h>
 #include <Solenoid.h>
 #include <Timer.h>
 
-#include "Subsystems/DriveTrain.hpp"
-#include "Subsystems/Elevator.hpp"
 #include "ButtonTracker.hpp"
 #include "Settings.hpp"
+#include "Subsystems/DriveTrain.hpp"
+#include "Subsystems/Elevator.hpp"
 
 #include "DSDisplay.hpp"
 #include "LiveGrapherHost/GraphHost.hpp"
 
+/**
+ * Implements the main robot class
+ */
 class Robot : public SampleRobot {
 public:
     Robot();
@@ -67,5 +66,4 @@ private:
     GraphHost pidGraph{3513};
 };
 
-#endif // ROBOT_HPP
-
+#endif  // ROBOT_HPP

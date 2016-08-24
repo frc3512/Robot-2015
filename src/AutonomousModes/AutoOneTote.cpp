@@ -1,12 +1,9 @@
-// =============================================================================
-// File Name: AutoOneTote.cpp
-// Description: Drives forward and picks up one tote
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "../Robot.hpp"
 #include "../StateMachine.hpp"
 
+// Drives forward and picks up one tote
 void Robot::AutoOneTote() {
     StateMachine autoSM("AUTO_ONE_TOTE");
 
@@ -27,22 +24,18 @@ void Robot::AutoOneTote() {
     state->transition = [this] {
         if (ev.atGoal()) {
             return "MOVE_TO_TOTE";
-        }
-        else {
+        } else {
             return "";
         }
     };
     autoSM.AddState(std::move(state));
 
     state = std::make_unique<State>("MOVE_TO_TOTE");
-    state->entry = [this] {
-        autoTimer.Reset();
-    };
+    state->entry = [this] { autoTimer.Reset(); };
     state->transition = [this] {
         if (autoTimer.HasPeriodPassed(1.0)) {
             return "AUTOSTACK";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -61,8 +54,7 @@ void Robot::AutoOneTote() {
     state->transition = [this] {
         if (autoTimer.HasPeriodPassed(1.0)) {
             return "TURN";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -77,8 +69,7 @@ void Robot::AutoOneTote() {
     state->transition = [this] {
         if (autoTimer.HasPeriodPassed(1.0)) {
             return "RUN_AWAY";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -95,8 +86,7 @@ void Robot::AutoOneTote() {
     state->transition = [this] {
         if (autoTimer.HasPeriodPassed(3.0)) {
             return "IDLE";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -116,4 +106,3 @@ void Robot::AutoOneTote() {
         std::this_thread::sleep_for(10ms);
     }
 }
-

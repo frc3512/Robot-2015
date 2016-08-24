@@ -1,8 +1,4 @@
-// =============================================================================
-// File Name: Robot.cpp
-// Description: Implements the main robot class
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "Robot.hpp"
 #include <cmath>
@@ -26,8 +22,7 @@ void Robot::OperatorControl() {
     while (IsEnabled() && IsOperatorControl()) {
         if (driveStick2.GetRawButton(2)) {
             robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX(), true);
-        }
-        else {
+        } else {
             robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX());
         }
 
@@ -87,36 +82,28 @@ void Robot::OperatorControl() {
         // Controls intake left side
         if (driveStick1.GetPOV() == 0 || evStick.GetPOV() == 0) {
             ev.setIntakeDirectionLeft(Elevator::S_FORWARD);
-        }
-        else if (driveStick1.GetPOV() == 90 || evStick.GetPOV() == 90) {
+        } else if (driveStick1.GetPOV() == 90 || evStick.GetPOV() == 90) {
             ev.setIntakeDirectionLeft(Elevator::S_ROTATE_CCW);
-        }
-        else if (driveStick1.GetPOV() == 180 || evStick.GetPOV() == 180 ||
-                 driveStick1.GetRawButton(1)) {
+        } else if (driveStick1.GetPOV() == 180 || evStick.GetPOV() == 180 ||
+                   driveStick1.GetRawButton(1)) {
             ev.setIntakeDirectionLeft(Elevator::S_REVERSE);
-        }
-        else if (driveStick1.GetPOV() == 270 || evStick.GetPOV() == 270) {
+        } else if (driveStick1.GetPOV() == 270 || evStick.GetPOV() == 270) {
             ev.setIntakeDirectionLeft(Elevator::S_ROTATE_CW);
-        }
-        else {
+        } else {
             ev.setIntakeDirectionLeft(Elevator::S_STOPPED);
         }
 
         // Controls intake right side
         if (driveStick2.GetPOV() == 0 || evStick.GetPOV() == 0) {
             ev.setIntakeDirectionRight(Elevator::S_FORWARD);
-        }
-        else if (driveStick2.GetPOV() == 90 || evStick.GetPOV() == 90) {
+        } else if (driveStick2.GetPOV() == 90 || evStick.GetPOV() == 90) {
             ev.setIntakeDirectionRight(Elevator::S_ROTATE_CCW);
-        }
-        else if (driveStick2.GetPOV() == 180 || evStick.GetPOV() == 180 ||
-                 driveStick2.GetRawButton(1)) {
+        } else if (driveStick2.GetPOV() == 180 || evStick.GetPOV() == 180 ||
+                   driveStick2.GetRawButton(1)) {
             ev.setIntakeDirectionRight(Elevator::S_REVERSE);
-        }
-        else if (driveStick2.GetPOV() == 270 || evStick.GetPOV() == 270) {
+        } else if (driveStick2.GetPOV() == 270 || evStick.GetPOV() == 270) {
             ev.setIntakeDirectionRight(Elevator::S_ROTATE_CW);
-        }
-        else {
+        } else {
             ev.setIntakeDirectionRight(Elevator::S_STOPPED);
         }
 
@@ -186,15 +173,12 @@ float Robot::ApplyDeadband(float value, float deadband) {
     if (fabs(value) > deadband) {
         if (value > 0) {
             return (value - deadband) / (1 - deadband);
-        }
-        else {
+        } else {
             return (value + deadband) / (1 - deadband);
         }
-    }
-    else {
+    } else {
         return 0.f;
     }
 }
 
 START_ROBOT_CLASS(Robot);
-

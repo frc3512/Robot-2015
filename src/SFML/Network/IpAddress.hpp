@@ -4,10 +4,12 @@
 // Copyright (C) 2007-2012 Laurent Gomila (laurent.gom@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
+// including commercial applications, and to alter it and redistribute it
+// freely,
 // subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
@@ -35,7 +37,6 @@
 #include <istream>
 #include <ostream>
 #include <string>
-
 
 namespace sf {
 class IpAddress {
@@ -117,9 +118,14 @@ public:
     ////////////////////////////////////////////////////////////
     static IpAddress getLocalAddress();
 
-    static const IpAddress None;      ///< Value representing an empty/invalid address
-    static const IpAddress LocalHost; ///< The "localhost" address (for connecting a computer to itself locally)
-    static const IpAddress Broadcast; ///< The "broadcast" address (for sending UDP messages to everyone on a local network)
+    static const IpAddress
+        None;  ///< Value representing an empty/invalid address
+    static const IpAddress LocalHost;  ///< The "localhost" address (for
+                                       /// connecting a computer to itself
+    /// locally)
+    static const IpAddress Broadcast;  ///< The "broadcast" address (for sending
+                                       /// UDP messages to everyone on a local
+                                       /// network)
 
 private:
     /* We're using 0 (INADDR_ANY) instead of INADDR_NONE to represent the
@@ -145,8 +151,6 @@ bool operator>=(const IpAddress& left, const IpAddress& right);
 std::istream& operator>>(std::istream& stream, IpAddress& address);
 
 std::ostream& operator<<(std::ostream& stream, const IpAddress& address);
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_IPADDRESS_HPP
-
+#endif  // SFML_IPADDRESS_HPP

@@ -1,25 +1,25 @@
-// =============================================================================
-// File Name: GearBox.hpp
-// Description: Represents a gear box with up to 3 motors and an encoder
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #ifndef GEARBOX_HPP
 #define GEARBOX_HPP
 
-#include "GearBoxBase.hpp"
+#include <CANTalon.h>
 #include <PIDOutput.h>
 #include <PIDSource.h>
-#include <CANTalon.h>
+
+#include "GearBoxBase.hpp"
 
 class Encoder;
 class PIDController;
 
+/**
+ * Represents a gear box with up to 3 motors and an encoder
+ */
 template <class T>
 class GearBox : public GearBoxBase<T>, public PIDOutput {
 public:
-    GearBox(int shifterChan, int encA, int encB,
-            int motor1, int motor2 = -1, int motor3 = -1);
+    GearBox(int shifterChan, int encA, int encB, int motor1, int motor2 = -1,
+            int motor3 = -1);
 
     // Enables PID controller automatically and sets its setpoint
     void setSetpoint(float setpoint);
@@ -79,10 +79,7 @@ private:
 template <>
 class GearBox<CANTalon> : public GearBoxBase<CANTalon> {
 public:
-    GearBox(int shifterChan,
-            int motor1,
-            int motor2 = -1,
-            int motor3 = -1);
+    GearBox(int shifterChan, int motor1, int motor2 = -1, int motor3 = -1);
 
     // Enables PID controller automatically and sets its setpoint
     void setSetpoint(float setpoint);
@@ -114,8 +111,8 @@ public:
     void resetPID();
 
     // Determines whether encoder returns distance or rate from PIDGet()
-    void setControlMode(CANTalon::ControlMode ctrlMode =
-                            CANTalon::kPercentVbus);
+    void setControlMode(
+        CANTalon::ControlMode ctrlMode = CANTalon::kPercentVbus);
 
     // Set soft limits of PID controller
     void setSoftPositionLimits(double forwardLimit, double backwardLimit);
@@ -131,5 +128,4 @@ public:
 
 #include "GearBoxCANTalon.inl"
 
-#endif // GEARBOX_HPP
-
+#endif  // GEARBOX_HPP

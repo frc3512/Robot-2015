@@ -1,7 +1,4 @@
-// =============================================================================
-// Description: Wrapper around graph client socket descriptors
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include <unistd.h>
 
@@ -13,4 +10,3 @@ void SocketConnection::queueWrite(T& buf) {
     selectflags |= SocketConnection::Write;
     write(m_ipcfd_w, "r", 1);
 }
-

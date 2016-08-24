@@ -1,7 +1,4 @@
-// =============================================================================
-// Description: The host for the LiveGrapher real-time graphing application
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #ifndef GRAPHHOST_HPP
 #define GRAPHHOST_HPP
@@ -29,33 +26,36 @@
  *     }
  */
 
-#include <vector>
+#include <atomic>
+#include <chrono>
+#include <cstdint>
+#include <mutex>
 #include <string>
 #include <thread>
-#include <mutex>
-#include <chrono>
-#include <atomic>
-#include <cstdint>
+#include <vector>
 
 using namespace std::chrono;
 using namespace std::chrono_literals;
 
 #include "SocketConnection.hpp"
 
-struct[[gnu::packed]] graph_payload_t{
-    char type; // Set to 'd' to identify this as a graph payload packet
+struct[[gnu::packed]] graph_payload_t {
+    char type;  // Set to 'd' to identify this as a graph payload packet
     char dataset[15];
     uint64_t x;
     float y;
 };
 
-struct[[gnu::packed]] graph_list_t{
+struct[[gnu::packed]] graph_list_t {
     char type;
     char dataset[15];
     char end;
     char pad[11];
 };
 
+/**
+ * The host for the LiveGrapher real-time graphing application
+ */
 class GraphHost {
 public:
     explicit GraphHost(int port);
@@ -89,7 +89,9 @@ private:
     // Last time data was graphed
     uint64_t m_lastTime = 0;
 
-    // Time interval after which data is sent to graph (in milliseconds per sample)
+    /* Time interval after which data is sent to graph (in milliseconds per
+     * sample)
+     */
     uint32_t m_sendInterval = 5;
 
     // Used as a temp variables in graphData(2)
@@ -114,5 +116,4 @@ private:
 
 #include "GraphHost.inl"
 
-#endif // GRAPHHOST_HPP
-
+#endif  // GRAPHHOST_HPP

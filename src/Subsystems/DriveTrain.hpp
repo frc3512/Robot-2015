@@ -1,18 +1,17 @@
-// =============================================================================
-// File Name: DriveTrain.hpp
-// Description: Provides an interface for this year's drive train
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #ifndef DRIVE_TRAIN_HPP
 #define DRIVE_TRAIN_HPP
 
-#include "SubsystemBase.hpp"
 #include "../MotionProfile/BezierTrapezoidProfile.hpp"
 #include "GearBox.hpp"
+#include "SubsystemBase.hpp"
 
 #include <CANTalon.h>
 
+/**
+ * Provides an interface for this year's drive train
+ */
 class DriveTrain : public SubsystemBase, public BezierTrapezoidProfile {
 public:
     DriveTrain();
@@ -53,7 +52,7 @@ public:
 
     void setControlMode(CANTalon::ControlMode ctrlMode);
 
-    const static float maxWheelSpeed;
+    static const float maxWheelSpeed;
 
 private:
     float m_deadband = 0.02f;
@@ -79,5 +78,4 @@ private:
 
 #include "DriveTrain.inl"
 
-#endif // DRIVE_TRAIN_HPP
-
+#endif  // DRIVE_TRAIN_HPP

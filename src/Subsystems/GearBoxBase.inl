@@ -1,25 +1,16 @@
-// =============================================================================
-// File Name: GearBoxBase.inl
-// Description: Represents a gear box with up to 3 motors and an encoder
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include <Solenoid.h>
 
 template <class T>
-GearBoxBase<T>::GearBoxBase(int shifterChan,
-                            int encA,
-                            int encB,
-                            int motor1,
-                            int motor2,
-                            int motor3) {
-    (void) encA;
-    (void) encB;
+GearBoxBase<T>::GearBoxBase(int shifterChan, int encA, int encB, int motor1,
+                            int motor2, int motor3) {
+    (void)encA;
+    (void)encB;
 
     if (shifterChan != -1) {
         m_shifter = std::make_unique<Solenoid>(shifterChan);
-    }
-    else {
+    } else {
         m_shifter = nullptr;
     }
 
@@ -61,9 +52,7 @@ template <class T>
 bool GearBoxBase<T>::getGear() const {
     if (m_shifter != nullptr) {
         return m_shifter->Get();
-    }
-    else {
+    } else {
         return false;
     }
 }
-

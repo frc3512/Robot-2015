@@ -1,8 +1,4 @@
-// =============================================================================
-// File Name: TrapezoidProfile.hpp
-// Description: Provides trapezoidal velocity control
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 /* Implementation of trapezoid motion profile translated to C++; base Java code
  * courtesy of FRC Team 254
@@ -19,6 +15,9 @@
 
 #include "ProfileBase.hpp"
 
+/**
+ * Provides trapezoidal velocity control
+ */
 class TrapezoidProfile : public ProfileBase {
 public:
     TrapezoidProfile(double maxV, double timeToMaxV);
@@ -55,5 +54,4 @@ protected:
     double m_sign;
 };
 
-#endif // TRAPEZOID_PROFILE_HPP
-
+#endif  // TRAPEZOID_PROFILE_HPP

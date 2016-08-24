@@ -1,16 +1,13 @@
-// =============================================================================
-// Description: Wrapper around graph client socket descriptors
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "SocketConnection.hpp"
 #include "GraphHost.hpp"
 
-#include <algorithm>
-#include <cstring>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <algorithm>
+#include <cstring>
 
 #ifdef __VXWORKS__
 #include <sockLib.h>
@@ -23,9 +20,7 @@ SocketConnection::SocketConnection(int nfd, int ipcWriteSock) {
     m_ipcfd_w = ipcWriteSock;
 }
 
-SocketConnection::~SocketConnection() {
-    close(fd);
-}
+SocketConnection::~SocketConnection() { close(fd); }
 
 // Receives 16 byte buffers
 int SocketConnection::readPackets() {
@@ -35,8 +30,8 @@ int SocketConnection::readPackets() {
         m_readdone = false;
     }
 
-    int error = recv(fd, &m_readbuf[0], m_readbuf.length() -
-                     m_readbufoffset, 0);
+    int error =
+        recv(fd, &m_readbuf[0], m_readbuf.length() - m_readbufoffset, 0);
     if (error == 0 || (error == -1 && errno != EAGAIN)) {
         // recv(3) failed, so return failure so socket is closed
         return -1;
@@ -58,20 +53,20 @@ void SocketConnection::processPacket(std::string& buf) {
     const char* graphName = buf.c_str() + 1;
 
     switch (buf[0]) {
-    case 'c':
-        // Start sending data for the graph specified by graphName
-        if (std::find(datasets.begin(), datasets.end(),
-                      graphName) == datasets.end()) {
-            datasets.push_back(graphName);
-        }
-        break;
-    case 'd':
-        // Stop sending data for the graph specified by graphName
-        std::remove_if(datasets.begin(), datasets.end(),
-                       [&] (const auto& set) { return set == graphName; });
-        break;
-    case 'l':
-        sendList();
+        case 'c':
+            // Start sending data for the graph specified by graphName
+            if (std::find(datasets.begin(), datasets.end(), graphName) ==
+                datasets.end()) {
+                datasets.push_back(graphName);
+            }
+            break;
+        case 'd':
+            // Stop sending data for the graph specified by graphName
+            std::remove_if(datasets.begin(), datasets.end(),
+                           [&](const auto& set) { return set == graphName; });
+            break;
+        case 'l':
+            sendList();
     }
 }
 
@@ -89,13 +84,13 @@ void SocketConnection::sendList() {
         // Is this the last element in the list?
         if (i + 1 == graphNames.size()) {
             replydg.end = 1;
-        }
-        else {
+        } else {
             replydg.end = 0;
         }
 
         // Copy in the string
-        std::strcpy(replydg.dataset, graphNames[i].c_str());
+        std::strncpy(replydg.dataset, graphNames[i].c_str(),
+                     graphNames[i].size());
 
         // Queue the datagram for writing
         queueWrite(replydg);
@@ -117,16 +112,15 @@ void SocketConnection::writePackets() {
         }
 
         // These descriptors are ready for writing
-        m_writebufoffset += send(fd, &m_writebuf[0],
-                                 m_writebuf.length() - m_writebufoffset, 0);
+        m_writebufoffset +=
+            send(fd, &m_writebuf[0], m_writebuf.length() - m_writebufoffset, 0);
 
         // Have we finished writing the buffer?
         if (m_writebufoffset == m_writebuf.length()) {
             // Reset the write buffer
             m_writebufoffset = 0;
             m_writedone = true;
-        }
-        else {
+        } else {
             // We haven't finished writing, keep selecting
             return;
         }
@@ -135,4 +129,3 @@ void SocketConnection::writePackets() {
     // Stop selecting on write
     selectflags &= ~SocketConnection::Write;
 }
-

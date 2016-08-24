@@ -1,12 +1,15 @@
+////////////////////////////////////////////////////////////
 //
 // SFML - Simple and Fast Multimedia Library
 // Copyright (C) 2007-2012 Laurent Gomila (laurent.gom@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
+// including commercial applications, and to alter it and redistribute it
+// freely,
 // subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
@@ -20,10 +23,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-
 #include "../SFML/Network/IpAddress.hpp"
 #include "Socket.hpp"
-
 
 namespace {
 uint32_t resolve(const std::string& address) {
@@ -31,9 +32,9 @@ uint32_t resolve(const std::string& address) {
         // The broadcast address needs to be handled explicitly,
         // because it is also the value returned by inet_addr on error
         return INADDR_BROADCAST;
-    }
-    else {
-        // Try to convert the address as a byte representation ("xxx.xxx.xxx.xxx")
+    } else {
+        // Try to convert the address as a byte representation
+        // ("xxx.xxx.xxx.xxx")
         uint32_t ip = inet_addr(const_cast<char*>(address.c_str()));
         if (ip != INADDR_NONE) {
             return ip;
@@ -49,32 +50,22 @@ uint32_t resolve(const std::string& address) {
         return 0;
     }
 }
-}
-
+}  // namespace
 
 namespace sf {
 const IpAddress IpAddress::None(0, 0, 0, 0);
 const IpAddress IpAddress::LocalHost(127, 0, 0, 1);
 const IpAddress IpAddress::Broadcast(255, 255, 255, 255);
 
-IpAddress::IpAddress(const std::string& address) :
-    m_address(resolve(address)) {
-}
+IpAddress::IpAddress(const std::string& address)
+    : m_address(resolve(address)) {}
 
-IpAddress::IpAddress(const char* address) :
-    m_address(resolve(address)) {
-}
+IpAddress::IpAddress(const char* address) : m_address(resolve(address)) {}
 
-IpAddress::IpAddress(uint8_t byte0, uint8_t byte1, uint8_t byte2,
-                     uint8_t byte3) :
-    m_address(htonl(
-                  (byte0 << 24) | (byte1 << 16) | (byte2 << 8) |
-                  byte3)) {
-}
+IpAddress::IpAddress(uint8_t byte0, uint8_t byte1, uint8_t byte2, uint8_t byte3)
+    : m_address(htonl((byte0 << 24) | (byte1 << 16) | (byte2 << 8) | byte3)) {}
 
-IpAddress::IpAddress(uint32_t address) :
-    m_address(htonl(address)) {
-}
+IpAddress::IpAddress(uint32_t address) : m_address(htonl(address)) {}
 
 std::string IpAddress::toString() const {
     in_addr address;
@@ -83,18 +74,13 @@ std::string IpAddress::toString() const {
     return inet_ntoa(address);
 }
 
-
-
-uint32_t IpAddress::toInteger() const {
-    return ntohl(m_address);
-}
-
-
+uint32_t IpAddress::toInteger() const { return ntohl(m_address); }
 
 IpAddress IpAddress::getLocalAddress() {
     // The method here is to connect a UDP socket to anyone (here to localhost),
     // and get the local socket address with the getsockname function.
-    // UDP connection will not send anything to the network, so this function won't cause any overhead.
+    // UDP connection will not send anything to the network, so this function
+    // won't cause any overhead.
 
     IpAddress localAddress;
 
@@ -106,8 +92,8 @@ IpAddress IpAddress::getLocalAddress() {
 
     // Connect the socket to localhost on any port
     sockaddr_in address = Socket::createAddress(ntohl(INADDR_LOOPBACK), 0);
-    if (connect(sock, reinterpret_cast<sockaddr*>(&address),
-                sizeof(address)) == -1) {
+    if (connect(sock, reinterpret_cast<sockaddr*>(&address), sizeof(address)) ==
+        -1) {
         ::close(sock);
         return localAddress;
     }
@@ -115,8 +101,7 @@ IpAddress IpAddress::getLocalAddress() {
     // Get the local address of the socket connection
     Socket::AddrLength size = sizeof(address);
     socklen_t temp = size;
-    if (getsockname(sock, reinterpret_cast<sockaddr*>(&address),
-                    &temp) == -1) {
+    if (getsockname(sock, reinterpret_cast<sockaddr*>(&address), &temp) == -1) {
         ::close(sock);
         return localAddress;
     }
@@ -165,5 +150,4 @@ std::istream& operator>>(std::istream& stream, IpAddress& address) {
 std::ostream& operator<<(std::ostream& stream, const IpAddress& address) {
     return stream << address.toString();
 }
-} // namespace sf
-
+}  // namespace sf

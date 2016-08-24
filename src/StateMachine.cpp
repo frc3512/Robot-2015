@@ -1,8 +1,4 @@
-// =============================================================================
-// File Name: StateMachine.cpp
-// Description: Provides an easier way to create state machines
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "StateMachine.hpp"
 #include <iostream>
@@ -49,9 +45,7 @@ bool StateMachine::SetState(const std::string& newState) {
 const std::string StateMachine::GetState() const {
     if (m_currentState != nullptr) {
         return m_currentState->Name();
-    }
-    else {
+    } else {
         return "";
     }
 }
-

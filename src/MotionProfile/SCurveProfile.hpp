@@ -1,8 +1,4 @@
-// =============================================================================
-// File Name: SCurveProfile.hpp
-// Description: Provides trapezoidal acceleration control
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 /* Implementation of trapezoid motion profile translated to C++; base Java code
  * courtesy of FRC Team 254
@@ -19,6 +15,9 @@
 
 #include "ProfileBase.hpp"
 
+/**
+ * Provides trapezoidal acceleration control
+ */
 class SCurveProfile : public ProfileBase {
 public:
     SCurveProfile(double maxV, double maxA, double timeToMaxA);
@@ -54,5 +53,4 @@ protected:
     double m_sign;
 };
 
-#endif // SCURVE_PROFILE_HPP
-
+#endif  // SCURVE_PROFILE_HPP

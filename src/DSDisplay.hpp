@@ -1,8 +1,4 @@
-// =============================================================================
-// File Name: DSDisplay.hpp
-// Description: Receives IP address from remote host then sends HUD data there
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #ifndef DS_DISPLAY_HPP
 #define DS_DISPLAY_HPP
@@ -15,7 +11,8 @@
  *    class. The port number passed in should be the port on which
  *    communications will be received (probably 1130).
  * 2) Call clear() on the pointer to empty the packet before adding new data.
- * 3) Add new data with the << operator (e.g. dsDisplay << 4.f; dsDisplay << myVar;).
+ * 3) Add new data with the << operator (e.g. dsDisplay << 4.f; dsDisplay <<
+ *    myVar;).
  * 4) After all data is packed, call sendToDS() to send the data to the Driver
  *    Station.
  *
@@ -38,24 +35,20 @@
  * The packets are always sent to 10.35.12.42 for testing purposes
  */
 
+#include <cstdint>
+#include <string>
+
 #include "SFML/Network/IpAddress.hpp"
 #include "SFML/Network/Packet.hpp"
 #include "SFML/Network/UdpSocket.hpp"
 
 #include "AutonContainer.hpp"
 
-#include <cstdint>
-#include <string>
-
 class DSDisplay {
 public:
-    enum StatusLight : int8_t {
-        active,
-        standby,
-        inactive
-    };
+    enum StatusLight : int8_t { active, standby, inactive };
 
-    static DSDisplay& GetInstance(unsigned short dsPort);
+    static DSDisplay& GetInstance(uint16_t dsPort);
 
     // Empties internal packet of data
     void Clear();
@@ -68,9 +61,8 @@ public:
 
     // Add and remove autonomous functions
     template <class T>
-    void AddAutoMethod(const std::string & methodName,
-                       void (T::* function)(),
-                       T * object);
+    void AddAutoMethod(const std::string& methodName, void (T::*function)(),
+                       T* object);
     void DeleteAllMethods();
 
     // Runs autonomous function currently selected
@@ -100,21 +92,28 @@ public:
     void AddData(std::string ID, double data);
 
 private:
-    DSDisplay(unsigned short portNumber);
+    DSDisplay(uint16_t portNumber);
 
     DSDisplay(const DSDisplay&) = delete;
     DSDisplay& operator=(const DSDisplay&) = delete;
 
     sf::Packet m_packet;
 
-    sf::UdpSocket m_socket; // socket for sending data to Driver Station
-    sf::IpAddress m_dsIP{sf::IpAddress::None}; // IP address of Driver Station
-    unsigned short m_dsPort; // port to which to send data
+    sf::UdpSocket m_socket;  // socket for sending data to Driver Station
+    sf::IpAddress m_dsIP{sf::IpAddress::None};  // IP address of Driver Station
+    uint16_t m_dsPort;                          // port to which to send data
 
-    sf::IpAddress m_recvIP{0, 0, 0, 0}; // stores IP address temporarily during receive
-    unsigned short m_recvPort = 0; // stores port temporarily during receive
-    char m_recvBuffer[256]; // buffer for Driver Station requests
-    size_t m_recvAmount = 0; // holds number of bytes received from Driver Station
+    // Stores IP address temporarily during receive
+    sf::IpAddress m_recvIP{0, 0, 0, 0};
+
+    // Stores port temporarily during receive
+    uint16_t m_recvPort = 0;
+
+    // Buffer for Driver Station requests
+    char m_recvBuffer[256];
+
+    // Holds number of bytes received from Driver Station
+    size_t m_recvAmount = 0;
 
     AutonContainer m_autonModes;
     char m_curAutonMode;
@@ -122,5 +121,4 @@ private:
 
 #include "DSDisplay.inl"
 
-#endif // DS_DISPLAY_HPP
-
+#endif  // DS_DISPLAY_HPP

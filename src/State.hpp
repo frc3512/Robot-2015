@@ -1,15 +1,14 @@
-// =============================================================================
-// File Name: State.hpp
-// Description: Defines State in StateMachine class
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #ifndef STATE_HPP
 #define STATE_HPP
 
-#include <string>
 #include <functional>
+#include <string>
 
+/**
+ * Defines State in StateMachine class
+ */
 class State {
 public:
     explicit State(std::string name);
@@ -36,5 +35,4 @@ private:
     std::string m_name;
 };
 
-#endif // STATE_HPP
-
+#endif  // STATE_HPP

@@ -1,8 +1,4 @@
-// =============================================================================
-// File Name: StateMachine.hpp
-// Description: Provides an easier way to create state machines
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #ifndef STATE_MACHINE_HPP
 #define STATE_MACHINE_HPP
@@ -16,6 +12,9 @@
  * machine
  */
 
+/**
+ * Provides an easier way to create state machines
+ */
 class StateMachine : public State {
 public:
     StateMachine(std::string name);
@@ -25,13 +24,10 @@ public:
      */
     void AddState(std::unique_ptr<State> state);
 
-    template <class T,
-              class =
-                  std::enable_if_t<!std::is_same<std::decay_t<T>,
-                                                 State>::value>>
-    void EmplaceState(T&& state) noexcept(std::is_nothrow_assignable<State&,
-                                                                     T>::value)
-    {
+    template <class T, class = std::enable_if_t<
+                           !std::is_same<std::decay_t<T>, State>::value>>
+    void EmplaceState(T&& state) noexcept(
+        std::is_nothrow_assignable<State&, T>::value) {
         m_states.push_back(std::make_unique<State>(std::forward<T>(state)));
     }
 
@@ -49,5 +45,4 @@ private:
     State* m_currentState = nullptr;
 };
 
-#endif // STATE_MACHINE_HPP
-
+#endif  // STATE_MACHINE_HPP

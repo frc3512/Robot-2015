@@ -1,8 +1,4 @@
-// =============================================================================
-// File Name: Elevator.hpp
-// Description: Provides an interface for the robot's elevator
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #ifndef ELEVATOR_HPP
 #define ELEVATOR_HPP
@@ -10,17 +6,21 @@
 class Solenoid;
 class CANTalon;
 
-#include "SubsystemBase.hpp"
-#include "../MotionProfile/TrapezoidProfile.hpp"
-#include <vector>
-#include <thread>
 #include <atomic>
-#include <Timer.h>
 #include <string>
+#include <thread>
+#include <vector>
 
-#include "GearBox.hpp"
+#include <Timer.h>
+
+#include "../MotionProfile/TrapezoidProfile.hpp"
 #include "../StateMachine.hpp"
+#include "GearBox.hpp"
+#include "SubsystemBase.hpp"
 
+/**
+ * Provides an interface for the robot's elevator
+ */
 class Elevator : public SubsystemBase, public TrapezoidProfile {
 public:
     enum IntakeMotorState {
@@ -117,5 +117,4 @@ private:
     double m_ttmaxv_b;
 };
 
-#endif // ELEVATOR_HPP
-
+#endif  // ELEVATOR_HPP

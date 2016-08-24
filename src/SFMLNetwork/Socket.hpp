@@ -4,10 +4,12 @@
 // Copyright (C) 2007-2012 Laurent Gomila (laurent.gom@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
+// including commercial applications, and to alter it and redistribute it
+// freely,
 // subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
@@ -34,14 +36,13 @@
 
 #include <vector>
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
-
 
 namespace sf {
 class SocketSelector;
@@ -61,15 +62,16 @@ public:
 
     // Status codes that may be returned by socket functions
     enum Status {
-        Done,         // The socket has sent / received the data
-        NotReady,     // The socket is not ready to send / receive data yet
-        Disconnected, // The TCP socket has been disconnected
-        Error         // An unexpected error happened
+        Done,          // The socket has sent / received the data
+        NotReady,      // The socket is not ready to send / receive data yet
+        Disconnected,  // The TCP socket has been disconnected
+        Error          // An unexpected error happened
     };
 
     // Some special values used by sockets
     enum {
-        AnyPort = 0 // Special value that tells the system to pick any available port
+        AnyPort =
+            0  // Special value that tells the system to pick any available port
     };
 
     virtual ~Socket();
@@ -95,8 +97,8 @@ public:
 protected:
     // Types of protocols that the socket can use
     enum Type {
-        Tcp, // TCP protocol
-        Udp  // UDP protocol
+        Tcp,  // TCP protocol
+        Udp   // UDP protocol
     };
 
     // This constructor can only be accessed by derived classes.
@@ -129,11 +131,9 @@ private:
     friend class SocketSelector;
 
     Type m_socketType;
-    int m_socket{-1};      // Socket descriptor
-    bool m_isBlocking{true}; // Current blocking mode of the socket
+    int m_socket{-1};         // Socket descriptor
+    bool m_isBlocking{true};  // Current blocking mode of the socket
 };
-} // namespace sf
+}  // namespace sf
 
-
-#endif // SFML_SOCKET_HPP
-
+#endif  // SFML_SOCKET_HPP

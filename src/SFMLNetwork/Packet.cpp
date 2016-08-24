@@ -4,10 +4,12 @@
 // Copyright (C) 2007-2012 Laurent Gomila (laurent.gom@gmail.com)
 //
 // This software is provided 'as-is', without any express or implied warranty.
-// In no event will the authors be held liable for any damages arising from the use of this software.
+// In no event will the authors be held liable for any damages arising from the
+// use of this software.
 //
 // Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it freely,
+// including commercial applications, and to alter it and redistribute it
+// freely,
 // subject to the following restrictions:
 //
 // 1. The origin of this software must not be misrepresented;
@@ -23,8 +25,8 @@
 ////////////////////////////////////////////////////////////
 
 #include "../SFML/Network/Packet.hpp"
-#include "Socket.hpp"
 #include <cstring>
+#include "Socket.hpp"
 
 uint64_t htonll(uint64_t value) {
     // PowerPC for VxWorks 6.3 is big endian
@@ -46,7 +48,6 @@ void Packet::append(const void* data, std::size_t sizeInBytes) {
     }
 }
 
-
 ////////////////////////////////////////////////////////////
 void Packet::clear() {
     m_packetData.clear();
@@ -54,30 +55,21 @@ void Packet::clear() {
     m_isValid = true;
 }
 
-
 ////////////////////////////////////////////////////////////
 const void* Packet::getData() const {
     return !m_packetData.empty() ? &m_packetData[0] : nullptr;
 }
 
+////////////////////////////////////////////////////////////
+std::size_t Packet::getDataSize() const { return m_packetData.size(); }
 
 ////////////////////////////////////////////////////////////
-std::size_t Packet::getDataSize() const {
-    return m_packetData.size();
-}
-
-
-////////////////////////////////////////////////////////////
-bool Packet::endOfPacket() const {
-    return m_readPos >= m_packetData.size();
-}
-
+bool Packet::endOfPacket() const { return m_readPos >= m_packetData.size(); }
 
 ////////////////////////////////////////////////////////////
 Packet::operator BoolType() const {
     return m_isValid ? &Packet::checkSize : nullptr;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(bool& data) {
@@ -89,7 +81,6 @@ Packet& Packet::operator>>(bool& data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(int8_t& data) {
     if (checkSize(sizeof(data))) {
@@ -100,7 +91,6 @@ Packet& Packet::operator>>(int8_t& data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(uint8_t& data) {
     if (checkSize(sizeof(data))) {
@@ -110,7 +100,6 @@ Packet& Packet::operator>>(uint8_t& data) {
 
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(int16_t& data) {
@@ -123,19 +112,16 @@ Packet& Packet::operator>>(int16_t& data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(uint16_t& data) {
     if (checkSize(sizeof(data))) {
         data =
-            ntohs(
-                *reinterpret_cast<const uint16_t*>(&m_packetData[m_readPos]));
+            ntohs(*reinterpret_cast<const uint16_t*>(&m_packetData[m_readPos]));
         m_readPos += sizeof(data);
     }
 
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(int32_t& data) {
@@ -148,45 +134,38 @@ Packet& Packet::operator>>(int32_t& data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(uint32_t& data) {
     if (checkSize(sizeof(data))) {
         data =
-            ntohl(
-                *reinterpret_cast<const uint32_t*>(&m_packetData[m_readPos]));
+            ntohl(*reinterpret_cast<const uint32_t*>(&m_packetData[m_readPos]));
         m_readPos += sizeof(data);
     }
 
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(int64_t& data) {
     if (checkSize(sizeof(data))) {
         data =
-            ntohll(
-                *reinterpret_cast<const int64_t*>(&m_packetData[m_readPos]));
+            ntohll(*reinterpret_cast<const int64_t*>(&m_packetData[m_readPos]));
         m_readPos += sizeof(data);
     }
 
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(uint64_t& data) {
     if (checkSize(sizeof(data))) {
-        data =
-            ntohll(
-                *reinterpret_cast<const uint64_t*>(&m_packetData[m_readPos]));
+        data = ntohll(
+            *reinterpret_cast<const uint64_t*>(&m_packetData[m_readPos]));
         m_readPos += sizeof(data);
     }
 
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(float& data) {
@@ -198,7 +177,6 @@ Packet& Packet::operator>>(float& data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(double& data) {
     if (checkSize(sizeof(data))) {
@@ -208,7 +186,6 @@ Packet& Packet::operator>>(double& data) {
 
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(char* data) {
@@ -228,7 +205,6 @@ Packet& Packet::operator>>(char* data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(std::string& data) {
     // First extract string length
@@ -246,7 +222,6 @@ Packet& Packet::operator>>(std::string& data) {
 
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(wchar_t* data) {
@@ -267,7 +242,6 @@ Packet& Packet::operator>>(wchar_t* data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator>>(std::wstring& data) {
     // First extract string length
@@ -287,13 +261,11 @@ Packet& Packet::operator>>(std::wstring& data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(bool data) {
     *this << static_cast<uint8_t>(data);
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(int8_t data) {
@@ -301,13 +273,11 @@ Packet& Packet::operator<<(int8_t data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(uint8_t data) {
     append(&data, sizeof(data));
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(int16_t data) {
@@ -316,14 +286,12 @@ Packet& Packet::operator<<(int16_t data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(uint16_t data) {
     uint16_t toWrite = htons(data);
     append(&toWrite, sizeof(toWrite));
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(int32_t data) {
@@ -332,14 +300,12 @@ Packet& Packet::operator<<(int32_t data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(uint32_t data) {
     uint32_t toWrite = htonl(data);
     append(&toWrite, sizeof(toWrite));
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(int64_t data) {
@@ -348,7 +314,6 @@ Packet& Packet::operator<<(int64_t data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(uint64_t data) {
     uint64_t toWrite = htonll(data);
@@ -356,20 +321,17 @@ Packet& Packet::operator<<(uint64_t data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(float data) {
     append(&data, sizeof(data));
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(double data) {
     append(&data, sizeof(data));
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(const char* data) {
@@ -386,7 +348,6 @@ Packet& Packet::operator<<(const char* data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(const std::string& data) {
     // First insert string length
@@ -400,7 +361,6 @@ Packet& Packet::operator<<(const std::string& data) {
 
     return *this;
 }
-
 
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(const wchar_t* data) {
@@ -419,7 +379,6 @@ Packet& Packet::operator<<(const wchar_t* data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 Packet& Packet::operator<<(const std::wstring& data) {
     // First insert string length
@@ -436,7 +395,6 @@ Packet& Packet::operator<<(const std::wstring& data) {
     return *this;
 }
 
-
 ////////////////////////////////////////////////////////////
 bool Packet::checkSize(std::size_t size) {
     m_isValid = m_isValid && (m_readPos + size <= m_packetData.size());
@@ -444,17 +402,14 @@ bool Packet::checkSize(std::size_t size) {
     return m_isValid;
 }
 
-
 ////////////////////////////////////////////////////////////
 const void* Packet::onSend(std::size_t& size) {
     size = getDataSize();
     return getData();
 }
 
-
 ////////////////////////////////////////////////////////////
 void Packet::onReceive(const void* data, std::size_t size) {
     append(data, size);
 }
-} // namespace sf
-
+}  // namespace sf

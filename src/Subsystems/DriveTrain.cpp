@@ -1,14 +1,10 @@
-// =============================================================================
-// File Name: DriveTrain.cpp
-// Description: Provides an interface for this year's drive train
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "DriveTrain.hpp"
 
 #include <cmath>
-#include <CANTalon.h>
 
+#include <CANTalon.h>
 
 const float DriveTrain::maxWheelSpeed = 80.0;
 
@@ -51,8 +47,8 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
 
     float turnNonLinearity = m_settings.GetDouble("TURN_NON_LINEARITY");
 
-    /* Apply a sine function that's scaled to make turning sensitivity feel better.
-     * turnNonLinearity should never be zero, but can be close
+    /* Apply a sine function that's scaled to make turning sensitivity feel
+     * better. turnNonLinearity should never be zero, but can be close
      */
     turn = sin(M_PI / 2.0 * turnNonLinearity * turn) /
            sin(M_PI / 2.0 * turnNonLinearity);
@@ -65,27 +61,24 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
     double negInertiaScalar;
     if (turn * negInertia > 0) {
         negInertiaScalar = m_settings.GetDouble("INERTIA_DAMPEN");
-    }
-    else {
+    } else {
         if (fabs(turn) > 0.65) {
             negInertiaScalar = m_settings.GetDouble("INERTIA_HIGH_TURN");
-        }
-        else {
+        } else {
             negInertiaScalar = m_settings.GetDouble("INERTIA_LOW_TURN");
         }
     }
 
-    m_negInertiaAccumulator += negInertia * negInertiaScalar; // adds negInertiaPower
+    m_negInertiaAccumulator +=
+        negInertia * negInertiaScalar;  // adds negInertiaPower
 
     // Apply negative inertia
     turn += m_negInertiaAccumulator;
     if (m_negInertiaAccumulator > 1) {
         m_negInertiaAccumulator -= 1;
-    }
-    else if (m_negInertiaAccumulator < -1) {
+    } else if (m_negInertiaAccumulator < -1) {
         m_negInertiaAccumulator += 1;
-    }
-    else {
+    } else {
         m_negInertiaAccumulator = 0;
     }
 
@@ -98,18 +91,15 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
         }
 
         angularPower = turn;
-    }
-    else {
-        angularPower = fabs(throttle) * turn * m_sensitivity -
-                       m_quickStopAccumulator;
+    } else {
+        angularPower =
+            fabs(throttle) * turn * m_sensitivity - m_quickStopAccumulator;
 
         if (m_quickStopAccumulator > 1) {
             m_quickStopAccumulator -= 1;
-        }
-        else if (m_quickStopAccumulator < -1) {
+        } else if (m_quickStopAccumulator < -1) {
             m_quickStopAccumulator += 1;
-        }
-        else {
+        } else {
             m_quickStopAccumulator = 0.0;
         }
     }
@@ -126,24 +116,21 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
         }
 
         leftPwm = 1.0;
-    }
-    else if (rightPwm > 1.0) {
+    } else if (rightPwm > 1.0) {
         // If overpowered turning enabled
         if (isQuickTurn) {
             leftPwm -= (rightPwm - 1.f);
         }
 
         rightPwm = 1.0;
-    }
-    else if (leftPwm < -1.0) {
+    } else if (leftPwm < -1.0) {
         // If overpowered turning enabled
         if (isQuickTurn) {
             rightPwm += (-leftPwm - 1.f);
         }
 
         leftPwm = -1.0;
-    }
-    else if (rightPwm < -1.0) {
+    } else if (rightPwm < -1.0) {
         // If overpowered turning enabled
         if (isQuickTurn) {
             leftPwm += (-rightPwm - 1.f);
@@ -155,9 +142,7 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
     m_rightGrbx.setManual(rightPwm);
 }
 
-void DriveTrain::setDeadband(float band) {
-    m_deadband = band;
-}
+void DriveTrain::setDeadband(float band) { m_deadband = band; }
 
 void DriveTrain::reloadPID() {
     m_settings.Update();
@@ -190,13 +175,9 @@ void DriveTrain::setRightSetpoint(double setpt) {
     m_rightGrbx.setSetpoint(setpt);
 }
 
-void DriveTrain::setLeftManual(float value) {
-    m_leftGrbx.setManual(value);
-}
+void DriveTrain::setLeftManual(float value) { m_leftGrbx.setManual(value); }
 
-void DriveTrain::setRightManual(float value) {
-    m_rightGrbx.setManual(value);
-}
+void DriveTrain::setRightManual(float value) { m_rightGrbx.setManual(value); }
 
 double DriveTrain::getLeftDist() const {
     return m_leftGrbx.get(Grbx::Position);
@@ -206,17 +187,11 @@ double DriveTrain::getRightDist() const {
     return m_rightGrbx.get(Grbx::Position);
 }
 
-double DriveTrain::getLeftRate() const {
-    return m_leftGrbx.get(Grbx::Speed);
-}
+double DriveTrain::getLeftRate() const { return m_leftGrbx.get(Grbx::Speed); }
 
-double DriveTrain::getRightRate() const {
-    return m_rightGrbx.get(Grbx::Speed);
-}
+double DriveTrain::getRightRate() const { return m_rightGrbx.get(Grbx::Speed); }
 
-double DriveTrain::getLeftSetpoint() const {
-    return m_leftGrbx.getSetpoint();
-}
+double DriveTrain::getLeftSetpoint() const { return m_leftGrbx.getSetpoint(); }
 
 double DriveTrain::getRightSetpoint() const {
     return m_rightGrbx.getSetpoint();
@@ -231,13 +206,10 @@ float DriveTrain::applyDeadband(float value) {
     if (fabs(value) > m_deadband) {
         if (value > 0) {
             return (value - m_deadband) / (1 - m_deadband);
-        }
-        else {
+        } else {
             return (value + m_deadband) / (1 - m_deadband);
         }
-    }
-    else {
+    } else {
         return 0.f;
     }
 }
-

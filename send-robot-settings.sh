@@ -12,4 +12,3 @@ for (( i=0 ; i < ${#FILESRC[@]} ; i++ ));
 do
     scp ${FILEDEST[$i]} $USER@$HOST:${PATHDEST[$i]}
 done
-

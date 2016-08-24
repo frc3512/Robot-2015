@@ -1,16 +1,10 @@
-// =============================================================================
-// File Name: GearBoxCANTalon.inl
-// Description: Represents a gear box with up to 3 motors and an encoder
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include <Solenoid.h>
 
-inline GearBox<CANTalon>::GearBox(int shifterChan,
-                                  int motor1,
-                                  int motor2,
-                                  int motor3) :
-    GearBoxBase(shifterChan, -1, -1, motor1, motor2, motor3) {
+inline GearBox<CANTalon>::GearBox(int shifterChan, int motor1, int motor2,
+                                  int motor3)
+    : GearBoxBase(shifterChan, -1, -1, motor1, motor2, motor3) {
     for (unsigned int i = 0; i < m_motors.size(); i++) {
         if (i == 0) {
             m_motors[i]->SetControlMode(CANTalon::kPercentVbus);
@@ -20,8 +14,7 @@ inline GearBox<CANTalon>::GearBox(int shifterChan,
             resetEncoder();
             setProfile(false);
             m_motors[i]->EnableControl();
-        }
-        else {
+        } else {
             // Use all other CANTalons as slaves
             m_motors[i]->SetControlMode(CANTalon::kFollower);
 
@@ -50,11 +43,9 @@ inline void GearBox<CANTalon>::setManual(float value) {
 inline float GearBox<CANTalon>::get(Grbx::PIDMode mode) const {
     if (mode == Grbx::Position) {
         return m_motors[0]->GetPosition() * m_distancePerPulse;
-    }
-    else if (mode == Grbx::Speed) {
+    } else if (mode == Grbx::Speed) {
         return m_motors[0]->GetEncVel() * m_distancePerPulse;
-    }
-    else if (mode == Grbx::Raw) {
+    } else if (mode == Grbx::Raw) {
         return m_motors[0]->Get();
     }
 
@@ -65,17 +56,13 @@ inline void GearBox<CANTalon>::setPID(float p, float i, float d) {
     m_motors[0]->SetPID(p, i, d);
 }
 
-inline void GearBox<CANTalon>::setF(float f) {
-    m_motors[0]->SetF(f);
-}
+inline void GearBox<CANTalon>::setF(float f) { m_motors[0]->SetF(f); }
 
 inline void GearBox<CANTalon>::setDistancePerPulse(double distancePerPulse) {
     m_distancePerPulse = distancePerPulse;
 }
 
-inline void GearBox<CANTalon>::resetEncoder() {
-    m_motors[0]->SetPosition(0);
-}
+inline void GearBox<CANTalon>::resetEncoder() { m_motors[0]->SetPosition(0); }
 
 inline void GearBox<CANTalon>::setEncoderReversed(bool reverse) {
     m_isEncoderReversed = reverse;
@@ -86,9 +73,7 @@ inline bool GearBox<CANTalon>::onTarget() const {
     return abs(m_motors[0]->GetClosedLoopError()) < 15;
 }
 
-inline void GearBox<CANTalon>::resetPID() {
-    m_motors[0]->ClearIaccum();
-}
+inline void GearBox<CANTalon>::resetPID() { m_motors[0]->ClearIaccum(); }
 
 inline void GearBox<CANTalon>::setControlMode(CANTalon::ControlMode ctrlMode) {
     m_motors[0]->SetControlMode(ctrlMode);
@@ -118,4 +103,3 @@ inline void GearBox<CANTalon>::setCloseLoopRampRate(double value) {
 inline void GearBox<CANTalon>::setProfile(bool secondProfile) {
     m_motors[0]->SelectProfileSlot(secondProfile);
 }
-

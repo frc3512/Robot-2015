@@ -1,9 +1,4 @@
-// =============================================================================
-// File Name: BezierTrapezoidProfile.hpp
-// Description: Provides trapezoidal velocity control and follows a given Bézier
-//             curve
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 /* Implementation of trapezoid motion profile translated to C++; base Java code
  * courtesy of FRC Team 254; modifications for Bézier curve by FRC Team 3512.
@@ -18,9 +13,12 @@
 #ifndef BEZIER_TRAPEZOID_PROFILE_HPP
 #define BEZIER_TRAPEZOID_PROFILE_HPP
 
-#include "TrapezoidProfile.hpp"
 #include "BezierCurve.hpp"
+#include "TrapezoidProfile.hpp"
 
+/**
+ * Provides trapezoidal velocity control and follows a given Bézier curve
+ */
 class BezierTrapezoidProfile : public TrapezoidProfile {
 public:
     BezierTrapezoidProfile(double maxV, double timeToMaxV);
@@ -68,5 +66,4 @@ private:
     double getRightVelocity(double t, double v) const;
 };
 
-#endif // BEZIER_TRAPEZOID_PROFILE_HPP
-
+#endif  // BEZIER_TRAPEZOID_PROFILE_HPP

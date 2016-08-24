@@ -1,19 +1,15 @@
-// =============================================================================
-// File Name: ProfileBase.hpp
-// Description: Base class for all types of motion profile controllers
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #ifndef PROFILE_BASE_HPP
 #define PROFILE_BASE_HPP
 
 #include <mutex>
 
-enum class SetpointMode {
-    displacement,
-    velocity
-};
+enum class SetpointMode { displacement, velocity };
 
+/**
+ * Base class for all types of motion profile controllers
+ */
 class ProfileBase {
 public:
     ProfileBase();
@@ -46,5 +42,4 @@ protected:
     SetpointMode m_mode;
 };
 
-#endif // PROFILE_BASE_HPP
-
+#endif  // PROFILE_BASE_HPP

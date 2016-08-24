@@ -1,14 +1,10 @@
-// =============================================================================
-// File Name: GearBoxBase.hpp
-// Description: Represents a gear box with up to 3 motors and an encoder
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #ifndef GEARBOX_BASE_HPP
 #define GEARBOX_BASE_HPP
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 class Solenoid;
 
@@ -26,15 +22,18 @@ namespace Grbx {
 enum PIDMode {
     Position,
     Speed,
-    Raw // Returns voltage [0..1] when used
+    Raw  // Returns voltage [0..1] when used
 };
 }
 
+/**
+ * Represents a gear box with up to 3 motors and an encoder
+ */
 template <class T>
 class GearBoxBase {
 public:
-    GearBoxBase(int shifterChan, int encA, int encB,
-                int motor1, int motor2 = -1, int motor3 = -1);
+    GearBoxBase(int shifterChan, int encA, int encB, int motor1,
+                int motor2 = -1, int motor3 = -1);
     virtual ~GearBoxBase() = default;
 
     // Enables PID controller automatically and sets its setpoint
@@ -100,5 +99,4 @@ protected:
 
 #include "GearBoxBase.inl"
 
-#endif // GEARBOX_BASE_HPP
-
+#endif  // GEARBOX_BASE_HPP

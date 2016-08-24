@@ -1,12 +1,9 @@
-// =============================================================================
-// File Name: Elevator.cpp
-// Description: Provides an interface for the robot's elevator
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "Elevator.hpp"
-#include <Solenoid.h>
+
 #include <CANTalon.h>
+#include <Solenoid.h>
 
 Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_intakeState = S_STOPPED;
@@ -23,15 +20,12 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_liftGrbx.setIZone(80);
     m_liftGrbx.setCloseLoopRampRate(1.0);
 
-
-
     m_profileUpdater = std::thread([this] {
         double height = 0.0;
         while (m_updateProfile) {
             if (!atGoal()) {
                 height = updateSetpoint(m_profileTimer.Get());
-            }
-            else {
+            } else {
                 height = m_setpoint;
             }
             setHeight(height);
@@ -46,9 +40,10 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
 
                     m_wasAtGround = true;
                 }
-            }
-            // Elevator isn't at ground anymore. If it was previously on ground
-            else if (m_wasAtGround) {
+            } else if (m_wasAtGround) {
+                /* Elevator isn't at ground anymore. If it was previously on
+                 * ground
+                 */
                 m_wasAtGround = false;
             }
 
@@ -73,20 +68,19 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     }
 
     m_toteHeights["EV_STEP"] = m_settings.GetDouble("EV_STEP");
-    m_toteHeights["EV_HALF_TOTE_OFFSET"] = m_settings.GetDouble(
-        "EV_HALF_TOTE_OFFSET");
-    m_toteHeights["EV_GARBAGECAN_LEVEL"] = m_settings.GetDouble(
-        "EV_GARBAGECAN_LEVEL");
-    m_toteHeights["EV_AUTO_DROP_LENGTH"] = m_settings.GetDouble(
-        "EV_AUTO_DROP_LENGTH");
+    m_toteHeights["EV_HALF_TOTE_OFFSET"] =
+        m_settings.GetDouble("EV_HALF_TOTE_OFFSET");
+    m_toteHeights["EV_GARBAGECAN_LEVEL"] =
+        m_settings.GetDouble("EV_GARBAGECAN_LEVEL");
+    m_toteHeights["EV_AUTO_DROP_LENGTH"] =
+        m_settings.GetDouble("EV_AUTO_DROP_LENGTH");
 
     auto state = std::make_unique<State>("IDLE");
     state->entry = [this] { m_startAutoStacking = false; };
     state->transition = [this] {
         if (m_startAutoStacking) {
             return "WAIT_INITIAL_HEIGHT";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -94,14 +88,11 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     m_autoStackSM.SetState("IDLE");
 
     state = std::make_unique<State>("WAIT_INITIAL_HEIGHT");
-    state->entry = [this] {
-        setProfileHeight(m_toteHeights["EV_TOTE_1"]);
-    };
+    state->entry = [this] { setProfileHeight(m_toteHeights["EV_TOTE_1"]); };
     state->transition = [this] {
         if (atGoal()) {
             return "SEEK_DROP_TOTES";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -114,8 +105,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     state->transition = [this] {
         if (atGoal()) {
             return "RELEASE";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -130,22 +120,18 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     state->transition = [this] {
         if (m_grabTimer.HasPeriodPassed(0.2)) {
             return "SEEK_GROUND";
-        }
-        else {
+        } else {
             return "";
         }
     };
     m_autoStackSM.AddState(std::move(state));
 
     state = std::make_unique<State>("SEEK_GROUND");
-    state->entry = [this] {
-        setProfileHeight(m_toteHeights["EV_GROUND"]);
-    };
+    state->entry = [this] { setProfileHeight(m_toteHeights["EV_GROUND"]); };
     state->transition = [this] {
         if (atGoal()) {
             return "GRAB";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -160,22 +146,18 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     state->transition = [this] {
         if (m_grabTimer.HasPeriodPassed(0.4)) {
             return "SEEK_HALF_TOTE";
-        }
-        else {
+        } else {
             return "";
         }
     };
     m_autoStackSM.AddState(std::move(state));
 
     state = std::make_unique<State>("SEEK_HALF_TOTE");
-    state->entry = [this] {
-        setProfileHeight(m_toteHeights["EV_TOTE_2"]);
-    };
+    state->entry = [this] { setProfileHeight(m_toteHeights["EV_TOTE_2"]); };
     state->transition = [this] {
         if (atGoal()) {
             return "INTAKE_IN";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -190,8 +172,7 @@ Elevator::Elevator() : TrapezoidProfile(0.0, 0.0) {
     state->transition = [this] {
         if (m_grabTimer.HasPeriodPassed(0.2)) {
             return "IDLE";
-        }
-        else {
+        } else {
             return "";
         }
     };
@@ -206,54 +187,34 @@ Elevator::~Elevator() {
     m_profileUpdater.join();
 }
 
-void Elevator::elevatorGrab(bool state) {
-    m_elevatorGrabber.Set(!state);
-}
+void Elevator::elevatorGrab(bool state) { m_elevatorGrabber.Set(!state); }
 
-bool Elevator::isElevatorGrabbed() const {
-    return !m_elevatorGrabber.Get();
-}
+bool Elevator::isElevatorGrabbed() const { return !m_elevatorGrabber.Get(); }
 
-void Elevator::intakeGrab(bool state) {
-    m_intakeGrabber.Set(state);
-}
+void Elevator::intakeGrab(bool state) { m_intakeGrabber.Set(state); }
 
-bool Elevator::isIntakeGrabbed() const {
-    return m_intakeGrabber.Get();
-}
+bool Elevator::isIntakeGrabbed() const { return m_intakeGrabber.Get(); }
 
-void Elevator::stowIntake(bool state) {
-    m_intakeStower.Set(!state);
-}
+void Elevator::stowIntake(bool state) { m_intakeStower.Set(!state); }
 
-bool Elevator::isIntakeStowed() const {
-    return !m_intakeStower.Get();
-}
+bool Elevator::isIntakeStowed() const { return !m_intakeStower.Get(); }
 
-void Elevator::containerGrab(bool state) {
-    m_containerGrabber.Set(!state);
-}
+void Elevator::containerGrab(bool state) { m_containerGrabber.Set(!state); }
 
-bool Elevator::isContainerGrabbed() const {
-    return !m_containerGrabber.Get();
-}
+bool Elevator::isContainerGrabbed() const { return !m_containerGrabber.Get(); }
 
 void Elevator::setIntakeDirectionLeft(IntakeMotorState state) {
     m_intakeState = state;
 
     if (state == S_STOPPED) {
         m_intakeWheelLeft.Set(0);
-    }
-    else if (state == S_FORWARD) {
+    } else if (state == S_FORWARD) {
         m_intakeWheelLeft.Set(1);
-    }
-    else if (state == S_REVERSE) {
+    } else if (state == S_REVERSE) {
         m_intakeWheelLeft.Set(-1);
-    }
-    else if (state == S_ROTATE_CCW) {
+    } else if (state == S_ROTATE_CCW) {
         m_intakeWheelLeft.Set(-1);
-    }
-    else if (state == S_ROTATE_CW) {
+    } else if (state == S_ROTATE_CW) {
         m_intakeWheelLeft.Set(1);
     }
 }
@@ -263,17 +224,13 @@ void Elevator::setIntakeDirectionRight(IntakeMotorState state) {
 
     if (state == S_STOPPED) {
         m_intakeWheelRight.Set(0);
-    }
-    else if (state == S_FORWARD) {
+    } else if (state == S_FORWARD) {
         m_intakeWheelRight.Set(-1);
-    }
-    else if (state == S_REVERSE) {
+    } else if (state == S_REVERSE) {
         m_intakeWheelRight.Set(1);
-    }
-    else if (state == S_ROTATE_CCW) {
+    } else if (state == S_ROTATE_CCW) {
         m_intakeWheelRight.Set(-1);
-    }
-    else if (state == S_ROTATE_CW) {
+    } else if (state == S_ROTATE_CW) {
         m_intakeWheelRight.Set(1);
     }
 }
@@ -303,16 +260,13 @@ void Elevator::setManualMode(bool on) {
         if (m_manual) {
             // Stop any auto-stacking when we switch to manual mode
             m_autoStackSM.SetState("IDLE");
-        }
-        else {
+        } else {
             setProfileHeight(getHeight());
         }
     }
 }
 
-bool Elevator::isManualMode() const {
-    return m_manual;
-}
+bool Elevator::isManualMode() const { return m_manual; }
 
 void Elevator::setHeight(double height) {
     if (m_manual == false) {
@@ -320,9 +274,7 @@ void Elevator::setHeight(double height) {
     }
 }
 
-double Elevator::getHeight() const {
-    return m_liftGrbx.get(Grbx::Position);
-}
+double Elevator::getHeight() const { return m_liftGrbx.get(Grbx::Position); }
 
 void Elevator::reloadPID() {
     m_settings.Update();
@@ -354,9 +306,7 @@ void Elevator::reloadPID() {
     m_liftGrbx.setF(f);
 }
 
-void Elevator::resetEncoders() {
-    m_liftGrbx.resetEncoder();
-}
+void Elevator::resetEncoders() { m_liftGrbx.resetEncoder(); }
 
 void Elevator::raiseElevator(std::string level) {
     size_t op = 0;
@@ -372,8 +322,7 @@ void Elevator::raiseElevator(std::string level) {
             if (op == std::string::npos) {
                 break;
             }
-        }
-        else {
+        } else {
             /* There is no operator associated with the first number, so keep
              * 'op' 0. This special case will be checked below so the number
              * is added to the total
@@ -391,8 +340,7 @@ void Elevator::raiseElevator(std::string level) {
         if (it != m_toteHeights.end()) {
             if (level[op] == '+' || op == 0) {
                 height += it->second;
-            }
-            else if (level[op] == '-') {
+            } else if (level[op] == '-') {
                 height -= it->second;
             }
         }
@@ -426,13 +374,11 @@ void Elevator::setProfileHeight(double height) {
         setMaxVelocity(88.0);
         setTimeToMaxV(0.4);
         m_liftGrbx.setProfile(true);
-    }
-    else {
+    } else {
         // Going down.
         if (height > 0.0) {
             setMaxVelocity(91.26);
-        }
-        else {
+        } else {
             setMaxVelocity(45.63);
             height = -100.0;
         }
@@ -451,8 +397,7 @@ double Elevator::getLevelHeight(std::string level) const {
 
     if (height == m_toteHeights.end()) {
         return 0.0;
-    }
-    else {
+    } else {
         return height->second;
     }
 }
@@ -462,13 +407,9 @@ void Elevator::stackTotes() {
     m_startAutoStacking = true;
 }
 
-bool Elevator::isStacking() const {
-    return m_autoStackSM.GetState() != "IDLE";
-}
+bool Elevator::isStacking() const { return m_autoStackSM.GetState() != "IDLE"; }
 
-void Elevator::cancelStack() {
-    m_autoStackSM.SetState("IDLE");
-}
+void Elevator::cancelStack() { m_autoStackSM.SetState("IDLE"); }
 
 void Elevator::updateState() {
     m_autoStackSM.run();
@@ -477,8 +418,7 @@ void Elevator::updateState() {
      * are open
      */
     if (isIntakeGrabbed()) {
-        if ((getSetpoint() < 11 && !isManualMode()) ||
-            !isElevatorGrabbed() ||
+        if ((getSetpoint() < 11 && !isManualMode()) || !isElevatorGrabbed() ||
             isIntakeStowed()) {
             intakeGrab(false);
         }
@@ -498,8 +438,7 @@ void Elevator::manualChangeSetpoint(double delta) {
         setMaxVelocity(m_maxv_a);
         setTimeToMaxV(m_ttmaxv_a);
         m_liftGrbx.setProfile(true);
-    }
-    else {
+    } else {
         // Going down.
         setMaxVelocity(m_maxv_b);
         setTimeToMaxV(m_ttmaxv_b);
@@ -508,4 +447,3 @@ void Elevator::manualChangeSetpoint(double delta) {
 
     m_setpoint = newSetpoint;
 }
-

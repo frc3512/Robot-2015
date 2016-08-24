@@ -1,16 +1,10 @@
-// =============================================================================
-// File Name: ButtonTracker.cpp
-// Description: Helps user determine if joystick button was just pressed or just
-//             released
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#include <DriverStation.h>
 #include "ButtonTracker.hpp"
 
-ButtonTracker::ButtonTracker(uint32_t port) {
-    m_port = port;
-}
+#include <DriverStation.h>
+
+ButtonTracker::ButtonTracker(uint32_t port) { m_port = port; }
 
 void ButtonTracker::UpdateButtons() {
     // "new" values are now "old"
@@ -21,16 +15,17 @@ void ButtonTracker::UpdateButtons() {
 }
 
 bool ButtonTracker::PressedButton(uint32_t button) {
-    return GetButtonState(m_oldStates, button) == false && // if button wasn't pressed
-           GetButtonState(m_newStates, button) == true; // and it is now
+    return GetButtonState(m_oldStates, button) ==
+               false &&  // if button wasn't pressed
+           GetButtonState(m_newStates, button) == true;  // and it is now
 }
 
 bool ButtonTracker::ReleasedButton(uint32_t button) {
-    return GetButtonState(m_oldStates, button) == true && // if button was pressed
-           GetButtonState(m_newStates, button) == false; // and it isn't now
+    return GetButtonState(m_oldStates, button) ==
+               true &&  // if button was pressed
+           GetButtonState(m_newStates, button) == false;  // and it isn't now
 }
 
-bool ButtonTracker::GetButtonState(short& buttonStates, uint32_t& button) {
+bool ButtonTracker::GetButtonState(uint16_t& buttonStates, uint32_t& button) {
     return ((1 << (button - 1)) & buttonStates) != 0;
 }
-

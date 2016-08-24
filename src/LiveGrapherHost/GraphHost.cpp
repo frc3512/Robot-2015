@@ -1,7 +1,4 @@
-// =============================================================================
-// Description: The host for the LiveGrapher real-time graphing application
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "GraphHost.hpp"
 
@@ -10,26 +7,27 @@
 #ifdef __VXWORKS__
 
 #include <cstdio>
-#include <pipeDrv.h>
 
-#include <sockLib.h>
 #include <hostLib.h>
+#include <pipeDrv.h>
 #include <selectLib.h>
+#include <sockLib.h>
 
 #define be64toh(x) x
 
 #else
 
+#include <endian.h>
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <signal.h>
-#include <fcntl.h>
-#include <endian.h>
 
 #endif
 
 GraphHost::GraphHost(int port) {
-    m_currentTime = duration_cast<milliseconds>(
-        system_clock::now().time_since_epoch()).count();
+    m_currentTime =
+        duration_cast<milliseconds>(system_clock::now().time_since_epoch())
+            .count();
 
     // Store the port to listen on
     m_port = port;
@@ -78,11 +76,12 @@ int GraphHost::GraphData(float value, std::string dataset) {
     static_assert(sizeof(float) == sizeof(uint32_t),
                   "float isn't 32 bits long");
 
-    m_currentTime = duration_cast<milliseconds>(
-        system_clock::now().time_since_epoch()).count();
+    m_currentTime =
+        duration_cast<milliseconds>(system_clock::now().time_since_epoch())
+            .count();
 
     struct graph_payload_t payload;
-    decltype(m_currentTime)xtmp;
+    decltype(m_currentTime) xtmp;
     uint32_t ytmp;
 
     // Zero the payload structure
@@ -124,15 +123,14 @@ int GraphHost::GraphData(float value, std::string dataset) {
 }
 
 bool GraphHost::HasIntervalPassed() {
-    m_currentTime = duration_cast<milliseconds>(
-        system_clock::now().time_since_epoch()).count();
+    m_currentTime =
+        duration_cast<milliseconds>(system_clock::now().time_since_epoch())
+            .count();
 
     return m_currentTime - m_lastTime > m_sendInterval;
 }
 
-void GraphHost::ResetInterval() {
-    m_lastTime = m_currentTime;
-}
+void GraphHost::ResetInterval() { m_lastTime = m_currentTime; }
 
 void GraphHost::socket_threadmain() {
     int listenfd;
@@ -220,15 +218,15 @@ void GraphHost::socket_threadmain() {
             if (fd != -1) {
                 m_mutex.lock();
                 // Add it to the list, this makes it a bit non-thread-safe
-                m_connList.emplace_back(std::make_unique<SocketConnection>(fd,
-                                                                           m_ipcfd_w));
+                m_connList.emplace_back(
+                    std::make_unique<SocketConnection>(fd, m_ipcfd_w));
                 m_mutex.unlock();
             }
         }
 
         // Handle IPC commands
         if (FD_ISSET(m_ipcfd_r, &readfds)) {
-            read(m_ipcfd_r, (char*) &ipccmd, 1);
+            read(m_ipcfd_r, reinterpret_cast<char*>(&ipccmd), 1);
         }
     }
 
@@ -250,10 +248,10 @@ int GraphHost::socket_listen(int port, uint32_t s_addr) {
         // Create a TCP socket
         sd = socket(AF_INET, SOCK_STREAM, 0);
         if (sd == -1) {
-            throw -1;
+            throw - 1;
         }
 
-        // Allow rebinding to the socket later if the connection is interrupted
+// Allow rebinding to the socket later if the connection is interrupted
 #ifndef __VXWORKS__
         int optval = 1;
         setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
@@ -270,15 +268,14 @@ int GraphHost::socket_listen(int port, uint32_t s_addr) {
         // Bind the socket to the listener sockaddr_in
         if (bind(sd, reinterpret_cast<struct sockaddr*>(&serv_addr),
                  sizeof(struct sockaddr_in)) != 0) {
-            throw -1;
+            throw - 1;
         }
 
         // Listen on the socket for incoming connections
         if (listen(sd, 5) != 0) {
-            throw -1;
+            throw - 1;
         }
-    }
-    catch (int e) {
+    } catch (int e) {
         perror("");
         if (sd != -1) {
             close(sd);
@@ -306,33 +303,32 @@ int GraphHost::socket_accept(int listenfd) {
 
     try {
         // Accept a new connection
-        new_fd = accept(listenfd,
-                        reinterpret_cast<struct sockaddr*>(&cli_addr), &clilen);
+        new_fd = accept(listenfd, reinterpret_cast<struct sockaddr*>(&cli_addr),
+                        &clilen);
 
         // Make sure that the file descriptor is valid
         if (new_fd == -1) {
-            throw -1;
+            throw - 1;
         }
 
 #ifdef __VXWORKS__
         // Set the socket non-blocking
         int on = 1;
-        if (ioctl(new_fd, (int) FIONBIO, on) == -1) {
-            throw -1;
+        if (ioctl(new_fd, static_cast<int>(FIONBIO), on) == -1) {
+            throw - 1;
         }
 #else
         // Set the socket non-blocking
         int flags = fcntl(new_fd, F_GETFL, 0);
         if (flags == -1) {
-            throw -1;
+            throw - 1;
         }
 
         if (fcntl(new_fd, F_SETFL, flags | O_NONBLOCK) == -1) {
-            throw -1;
+            throw - 1;
         }
 #endif
-    }
-    catch (int e) {
+    } catch (int e) {
         perror("");
         if (new_fd != -1) {
             close(new_fd);
@@ -358,4 +354,3 @@ int GraphHost::AddGraph(const std::string& dataset) {
 
     return 0;
 }
-

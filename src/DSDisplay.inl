@@ -1,13 +1,7 @@
-// =============================================================================
-// File Name: DSDisplay.inl
-// Description: Receives IP address from remote host then sends HUD data there
-// Author: FRC Team 3512, Spartatroniks
-// =============================================================================
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 template <class T>
 void DSDisplay::AddAutoMethod(const std::string& methodName,
-                              void (T::* function)(),
-                              T* object) {
+                              void (T::*function)(), T* object) {
     m_autonModes.addMethod(methodName, std::bind(function, object));
 }
-
