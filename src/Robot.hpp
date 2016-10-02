@@ -1,9 +1,9 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef ROBOT_HPP
-#define ROBOT_HPP
+#pragma once
 
 #include <chrono>
+
 using namespace std::chrono_literals;
 
 #include <Joystick.h>
@@ -65,5 +65,3 @@ private:
     // The LiveGrapher host
     GraphHost pidGraph{3513};
 };
-
-#endif  // ROBOT_HPP

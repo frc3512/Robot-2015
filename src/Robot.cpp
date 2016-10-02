@@ -1,6 +1,7 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "Robot.hpp"
+
 #include <cmath>
 #include <iostream>
 
@@ -170,7 +171,7 @@ void Robot::DS_PrintOut() {
 }
 
 float Robot::ApplyDeadband(float value, float deadband) {
-    if (fabs(value) > deadband) {
+    if (std::fabs(value) > deadband) {
         if (value > 0) {
             return (value - deadband) / (1 - deadband);
         } else {

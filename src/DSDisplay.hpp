@@ -1,7 +1,6 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef DS_DISPLAY_HPP
-#define DS_DISPLAY_HPP
+#pragma once
 
 /* This class allows you to pack data into an SFML packet and send it to an
  * application on the DriverStation that displays it in a GUI.
@@ -35,14 +34,14 @@
  * The packets are always sent to 10.35.12.42 for testing purposes
  */
 
-#include <cstdint>
+#include <stdint.h>
+
 #include <string>
 
+#include "AutonContainer.hpp"
 #include "SFML/Network/IpAddress.hpp"
 #include "SFML/Network/Packet.hpp"
 #include "SFML/Network/UdpSocket.hpp"
-
-#include "AutonContainer.hpp"
 
 class DSDisplay {
 public:
@@ -92,7 +91,7 @@ public:
     void AddData(std::string ID, double data);
 
 private:
-    DSDisplay(uint16_t portNumber);
+    explicit DSDisplay(uint16_t portNumber);
 
     DSDisplay(const DSDisplay&) = delete;
     DSDisplay& operator=(const DSDisplay&) = delete;
@@ -120,5 +119,3 @@ private:
 };
 
 #include "DSDisplay.inl"
-
-#endif  // DS_DISPLAY_HPP

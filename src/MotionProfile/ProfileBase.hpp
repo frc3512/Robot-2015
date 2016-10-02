@@ -1,7 +1,6 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef PROFILE_BASE_HPP
-#define PROFILE_BASE_HPP
+#pragma once
 
 #include <mutex>
 
@@ -41,5 +40,3 @@ protected:
 
     SetpointMode m_mode;
 };
-
-#endif  // PROFILE_BASE_HPP

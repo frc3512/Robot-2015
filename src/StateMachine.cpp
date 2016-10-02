@@ -1,7 +1,10 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "StateMachine.hpp"
+
 #include <iostream>
+#include <string>
+#include <utility>
 
 StateMachine::StateMachine(std::string name) : State(std::move(name)) {
     run = [this] {

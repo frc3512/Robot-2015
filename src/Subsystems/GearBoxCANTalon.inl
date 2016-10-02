@@ -1,5 +1,9 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
+#pragma once
+
+#include <memory>
+
 #include <Solenoid.h>
 
 inline GearBox<CANTalon>::GearBox(int shifterChan, int motor1, int motor2,
@@ -70,7 +74,7 @@ inline void GearBox<CANTalon>::setEncoderReversed(bool reverse) {
 }
 
 inline bool GearBox<CANTalon>::onTarget() const {
-    return abs(m_motors[0]->GetClosedLoopError()) < 15;
+    return std::abs(m_motors[0]->GetClosedLoopError()) < 15;
 }
 
 inline void GearBox<CANTalon>::resetPID() { m_motors[0]->ClearIaccum(); }

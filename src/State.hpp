@@ -1,7 +1,6 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef STATE_HPP
-#define STATE_HPP
+#pragma once
 
 #include <functional>
 #include <string>
@@ -27,12 +26,10 @@ public:
     // run() is run while the state machine is in that state.
     std::function<void()> run = [] {};
 
-    // exit() is run when the state is being transitioned away from.
+    // std::exit() is run when the state is being transitioned away from.
     std::function<void()> exit = [] {};
 
 private:
     // Contains the name of the state
     std::string m_name;
 };
-
-#endif  // STATE_HPP

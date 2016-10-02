@@ -1,12 +1,12 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef ELEVATOR_HPP
-#define ELEVATOR_HPP
+#pragma once
 
 class Solenoid;
 class CANTalon;
 
 #include <atomic>
+#include <map>
 #include <string>
 #include <thread>
 #include <vector>
@@ -116,5 +116,3 @@ private:
     double m_maxv_b;
     double m_ttmaxv_b;
 };
-
-#endif  // ELEVATOR_HPP

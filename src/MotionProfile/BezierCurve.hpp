@@ -1,7 +1,6 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef BEZIER_CURVE_HPP
-#define BEZIER_CURVE_HPP
+#pragma once
 
 #include <vector>
 
@@ -39,5 +38,3 @@ public:
 private:
     std::vector<Point> m_pts;
 };
-
-#endif  // BEZIER_CURVE_HPP

@@ -1,13 +1,16 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "SocketConnection.hpp"
-#include "GraphHost.hpp"
 
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+
 #include <algorithm>
 #include <cstring>
+#include <utility>
+
+#include "GraphHost.hpp"
 
 #ifdef __VXWORKS__
 #include <sockLib.h>

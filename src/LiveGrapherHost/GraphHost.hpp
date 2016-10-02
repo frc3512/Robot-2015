@@ -1,7 +1,6 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef GRAPHHOST_HPP
-#define GRAPHHOST_HPP
+#pragma once
 
 /* Usage:
  *
@@ -26,9 +25,11 @@
  *     }
  */
 
+#include <stdint.h>
+
 #include <atomic>
 #include <chrono>
-#include <cstdint>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -115,5 +116,3 @@ private:
 };
 
 #include "GraphHost.inl"
-
-#endif  // GRAPHHOST_HPP

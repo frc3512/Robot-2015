@@ -1,5 +1,9 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
+#pragma once
+
+#include <memory>
+
 #include <Encoder.h>
 #include <PIDController.h>
 

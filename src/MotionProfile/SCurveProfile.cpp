@@ -1,6 +1,7 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "SCurveProfile.hpp"
+
 #include <cmath>
 
 SCurveProfile::SCurveProfile(double maxV, double maxA, double timeToMaxA) {
@@ -16,25 +17,27 @@ double SCurveProfile::updateSetpoint(double curTime) {
 
     if (curTime < m_timeToMaxA) {
         // Ramp up acceleration
-        tmpSP = 0.5 * m_jerk * pow(curTime, 2);
+        tmpSP = 0.5 * m_jerk * std::pow(curTime, 2);
     } else if (curTime < m_t2) {
         // Increase speed at max acceleration
         tmpSP = m_acceleration * (curTime - 0.5 * m_timeToMaxA);
     } else if (curTime < m_t3) {
         // Ramp down acceleration
-        tmpSP = m_acceleration * m_t2 - 0.5 * m_jerk * pow(m_t2 - curTime, 2);
+        tmpSP =
+            m_acceleration * m_t2 - 0.5 * m_jerk * std::pow(m_t2 - curTime, 2);
     } else if (curTime < m_t4) {
         // Maintain max velocity
         tmpSP = m_profileMaxVelocity;
     } else if (curTime < m_t5) {
         // Ramp down acceleration
-        tmpSP = m_profileMaxVelocity - 0.5 * m_jerk * pow(curTime - m_t4, 2);
+        tmpSP =
+            m_profileMaxVelocity - 0.5 * m_jerk * std::pow(curTime - m_t4, 2);
     } else if (curTime < m_t6) {
         // Decrease speed at max acceleration
         tmpSP = m_acceleration * (m_t2 + m_t5 - curTime);
     } else if (curTime < m_t7) {
         // Ramp down acceleration
-        tmpSP = 0.5 * m_jerk * pow(m_t6 - curTime, 2);
+        tmpSP = 0.5 * m_jerk * std::pow(m_t6 - curTime, 2);
     }
 
     if (m_mode == SetpointMode::displacement) {
@@ -62,8 +65,8 @@ double SCurveProfile::setGoal(double t, double goal, double curSource) {
 
     if (shortProfile) {
         m_profileMaxVelocity =
-            m_acceleration * (sqrt(m_sign * m_setpoint / m_acceleration -
-                                   0.75 * pow(m_timeToMaxA, 2)) -
+            m_acceleration * (std::sqrt(m_sign * m_setpoint / m_acceleration -
+                                        0.75 * std::pow(m_timeToMaxA, 2)) -
                               0.5 * m_timeToMaxA);
     } else {
         m_profileMaxVelocity = m_maxVelocity;

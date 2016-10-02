@@ -2,6 +2,9 @@
 
 #include "Elevator.hpp"
 
+#include <memory>
+#include <utility>
+
 #include <CANTalon.h>
 #include <Solenoid.h>
 

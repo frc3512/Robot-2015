@@ -1,7 +1,6 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef GEARBOX_BASE_HPP
-#define GEARBOX_BASE_HPP
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -98,5 +97,3 @@ protected:
 };
 
 #include "GearBoxBase.inl"
-
-#endif  // GEARBOX_BASE_HPP

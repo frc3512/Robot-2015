@@ -1,7 +1,6 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef SUBSYSTEM_BASE_HPP
-#define SUBSYSTEM_BASE_HPP
+#pragma once
 
 #include "../Settings.hpp"
 
@@ -18,5 +17,3 @@ public:
 protected:
     Settings m_settings{"/home/lvuser/RobotSettings.txt"};
 };
-
-#endif  // SUBSYSTEM_BASE_HPP

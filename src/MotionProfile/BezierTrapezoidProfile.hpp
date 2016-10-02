@@ -10,8 +10,7 @@
  * acceleration.
  */
 
-#ifndef BEZIER_TRAPEZOID_PROFILE_HPP
-#define BEZIER_TRAPEZOID_PROFILE_HPP
+#pragma once
 
 #include "BezierCurve.hpp"
 #include "TrapezoidProfile.hpp"
@@ -65,5 +64,3 @@ private:
     double getLeftVelocity(double t, double v) const;
     double getRightVelocity(double t, double v) const;
 };
-
-#endif  // BEZIER_TRAPEZOID_PROFILE_HPP

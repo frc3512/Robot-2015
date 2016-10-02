@@ -1,6 +1,7 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "BezierTrapezoidProfile.hpp"
+
 #include <cmath>
 
 BezierTrapezoidProfile::BezierTrapezoidProfile(double maxV, double timeToMaxV)

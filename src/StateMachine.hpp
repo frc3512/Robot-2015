@@ -1,10 +1,12 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef STATE_MACHINE_HPP
-#define STATE_MACHINE_HPP
+#pragma once
 
 #include <memory>
+#include <string>
+#include <utility>
 #include <vector>
+
 #include "State.hpp"
 
 /* The default state is "IDLE". States that end the state machine should return
@@ -17,7 +19,7 @@
  */
 class StateMachine : public State {
 public:
-    StateMachine(std::string name);
+    explicit StateMachine(std::string name);
 
     /* Ownership of 'state' will be transferred to this class, which will handle
      * destroying it.
@@ -32,7 +34,8 @@ public:
     }
 
     /* Moves the state machine to the given state. If the next state is found,
-     * exit() for the current state and entry() for the next state are called.
+     * std::exit() for the current state and entry() for the next state are
+     * called.
      * 'true' is returned if the next state was found and 'false' otherwise.
      */
     bool SetState(const std::string& nextState);
@@ -44,5 +47,3 @@ private:
     std::vector<std::unique_ptr<State>> m_states;
     State* m_currentState = nullptr;
 };
-
-#endif  // STATE_MACHINE_HPP

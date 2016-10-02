@@ -10,8 +10,7 @@
  * acceleration.
  */
 
-#ifndef SCURVE_PROFILE_HPP
-#define SCURVE_PROFILE_HPP
+#pragma once
 
 #include "ProfileBase.hpp"
 
@@ -52,5 +51,3 @@ protected:
 
     double m_sign;
 };
-
-#endif  // SCURVE_PROFILE_HPP

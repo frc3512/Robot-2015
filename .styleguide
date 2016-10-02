@@ -1,3 +1,20 @@
+cExtensions {
+  c
+  h
+}
+
+cppHeaderExtensions {
+  hpp
+  inl
+}
+
+cppSrcExtensions {
+  cpp
+}
+
+otherExtensions {
+}
+
 genFolderExclude {
   CMakeFiles
 }
@@ -18,4 +35,19 @@ modifiableFolderExclude {
 }
 
 modifiableFileExclude {
+}
+
+includeRelated {
+}
+
+includeCSys {
+}
+
+includeCppSys {
+}
+
+includeOtherLibs {
+}
+
+includeProject {
 }

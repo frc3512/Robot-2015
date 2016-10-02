@@ -10,8 +10,7 @@
  * acceleration.
  */
 
-#ifndef TRAPEZOID_PROFILE_HPP
-#define TRAPEZOID_PROFILE_HPP
+#pragma once
 
 #include "ProfileBase.hpp"
 
@@ -53,5 +52,3 @@ protected:
     double m_timeToMaxVelocity;
     double m_sign;
 };
-
-#endif  // TRAPEZOID_PROFILE_HPP

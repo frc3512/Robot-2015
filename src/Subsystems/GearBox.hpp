@@ -1,7 +1,8 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef GEARBOX_HPP
-#define GEARBOX_HPP
+#pragma once
+
+#include <memory>
 
 #include <CANTalon.h>
 #include <PIDOutput.h>
@@ -127,5 +128,3 @@ public:
 };
 
 #include "GearBoxCANTalon.inl"
-
-#endif  // GEARBOX_HPP

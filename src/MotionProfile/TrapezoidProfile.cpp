@@ -1,6 +1,7 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "TrapezoidProfile.hpp"
+
 #include <cmath>
 
 TrapezoidProfile::TrapezoidProfile(double maxV, double timeToMaxV) {
@@ -80,9 +81,9 @@ double TrapezoidProfile::setGoal(double t, double goal, double curSource) {
          * 1/2 * a * t^2 = m_setpoint/2
          * a * t^2 = m_setpoint
          * t^2 = m_setpoint / a
-         * t = sqrt( m_setpoint / a )
+         * t = std::sqrt( m_setpoint / a )
          */
-        m_timeToMaxVelocity = sqrt(m_sign * m_setpoint / m_acceleration);
+        m_timeToMaxVelocity = std::sqrt(m_sign * m_setpoint / m_acceleration);
         m_timeFromMaxVelocity = m_timeToMaxVelocity;
         m_timeTotal = 2 * m_timeToMaxVelocity;
         m_profileMaxVelocity = m_acceleration * m_timeToMaxVelocity;

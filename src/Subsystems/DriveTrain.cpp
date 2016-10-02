@@ -50,8 +50,8 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
     /* Apply a sine function that's scaled to make turning sensitivity feel
      * better. turnNonLinearity should never be zero, but can be close
      */
-    turn = sin(M_PI / 2.0 * turnNonLinearity * turn) /
-           sin(M_PI / 2.0 * turnNonLinearity);
+    turn = std::sin(M_PI / 2.0 * turnNonLinearity * turn) /
+           std::sin(M_PI / 2.0 * turnNonLinearity);
 
     double angularPower = 0.f;
     double linearPower = throttle;
@@ -62,7 +62,7 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
     if (turn * negInertia > 0) {
         negInertiaScalar = m_settings.GetDouble("INERTIA_DAMPEN");
     } else {
-        if (fabs(turn) > 0.65) {
+        if (std::fabs(turn) > 0.65) {
             negInertiaScalar = m_settings.GetDouble("INERTIA_HIGH_TURN");
         } else {
             negInertiaScalar = m_settings.GetDouble("INERTIA_LOW_TURN");
@@ -84,7 +84,7 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
 
     // QuickTurn!
     if (isQuickTurn) {
-        if (fabs(linearPower) < 0.2) {
+        if (std::fabs(linearPower) < 0.2) {
             double alpha = 0.1;
             m_quickStopAccumulator = (1 - alpha) * m_quickStopAccumulator +
                                      alpha * limit(turn, 1.f) * 5;
@@ -93,7 +93,7 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
         angularPower = turn;
     } else {
         angularPower =
-            fabs(throttle) * turn * m_sensitivity - m_quickStopAccumulator;
+            std::fabs(throttle) * turn * m_sensitivity - m_quickStopAccumulator;
 
         if (m_quickStopAccumulator > 1) {
             m_quickStopAccumulator -= 1;
@@ -203,7 +203,7 @@ void DriveTrain::setControlMode(CANTalon::ControlMode ctrlMode) {
 }
 
 float DriveTrain::applyDeadband(float value) {
-    if (fabs(value) > m_deadband) {
+    if (std::fabs(value) > m_deadband) {
         if (value > 0) {
             return (value - m_deadband) / (1 - m_deadband);
         } else {

@@ -1,6 +1,7 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
 #include "DSDisplay.hpp"
+
 #include <cstring>
 #include <fstream>
 #include <functional>
@@ -90,14 +91,15 @@ const std::string DSDisplay::ReceiveFromDS() {
             m_packet << m_autonModes.name(m_curAutonMode);
 
             // Store newest autonomous choice to file for persistent storage
-            FILE* autonModeFile = fopen("/home/lvuser/autonMode.txt", "w");
+            std::FILE* autonModeFile =
+                std::fopen("/home/lvuser/autonMode.txt", "w");
             if (autonModeFile) {
                 char temp[] = "auto";
-                fwrite(temp, 1, 4, autonModeFile);
-                fwrite(&m_curAutonMode, 1, sizeof(m_curAutonMode),
-                       autonModeFile);
+                std::fwrite(temp, 1, 4, autonModeFile);
+                std::fwrite(&m_curAutonMode, 1, sizeof(m_curAutonMode),
+                            autonModeFile);
 
-                fclose(autonModeFile);
+                std::fclose(autonModeFile);
             } else {
                 std::cout
                     << "DSDisplay: autonSelect: failed to open autonMode.txt\n";
@@ -130,18 +132,19 @@ DSDisplay::DSDisplay(uint16_t portNumber) : m_dsPort(portNumber) {
     }
 #endif
 
-    FILE* autonModeFile = fopen("/home/lvuser/autonMode.txt", "r");
+    std::FILE* autonModeFile = std::fopen("/home/lvuser/autonMode.txt", "r");
     if (autonModeFile) {
         char temp[4];
-        fread(temp, 1, 4, autonModeFile);
+        std::fread(temp, 1, 4, autonModeFile);
 
         if (std::strcmp(temp, "auto") == 0) {
-            fread(&m_curAutonMode, 1, sizeof(m_curAutonMode), autonModeFile);
+            std::fread(&m_curAutonMode, 1, sizeof(m_curAutonMode),
+                       autonModeFile);
         } else {
             m_curAutonMode = 0;
         }
 
-        fclose(autonModeFile);
+        std::fclose(autonModeFile);
     } else {
         m_curAutonMode = 0;
     }

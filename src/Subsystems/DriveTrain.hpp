@@ -1,13 +1,12 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef DRIVE_TRAIN_HPP
-#define DRIVE_TRAIN_HPP
+#pragma once
+
+#include <CANTalon.h>
 
 #include "../MotionProfile/BezierTrapezoidProfile.hpp"
 #include "GearBox.hpp"
 #include "SubsystemBase.hpp"
-
-#include <CANTalon.h>
 
 /**
  * Provides an interface for this year's drive train
@@ -77,5 +76,3 @@ private:
 };
 
 #include "DriveTrain.inl"
-
-#endif  // DRIVE_TRAIN_HPP

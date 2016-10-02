@@ -1,7 +1,6 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef AUTON_CONTAINER_HPP
-#define AUTON_CONTAINER_HPP
+#pragma once
 
 #include <functional>
 #include <string>
@@ -36,5 +35,3 @@ private:
     // Contains function pointers to the autonomous functions
     std::vector<AutonMethod> m_functionList;
 };
-
-#endif  // AUTON_CONTAINER_HPP

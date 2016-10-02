@@ -1,7 +1,6 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
 
-#ifndef BUTTON_TRACKER_HPP
-#define BUTTON_TRACKER_HPP
+#pragma once
 
 #include <stdint.h>
 
@@ -43,5 +42,3 @@ private:
     uint16_t m_oldStates = 0;
     uint16_t m_newStates = 0;
 };
-
-#endif  // BUTTON_TRACKER_HPP
