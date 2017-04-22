@@ -1,11 +1,13 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #pragma once
 
 #include <memory>
 #include <vector>
 
+namespace frc {
 class Solenoid;
+}
 
 /* Notes:
  * The template type of this template class is only used for creating the right
@@ -91,7 +93,7 @@ protected:
 
     float m_feedforward = 0.f;
 
-    std::unique_ptr<Solenoid> m_shifter;
+    std::unique_ptr<frc::Solenoid> m_shifter;
 
     std::vector<std::unique_ptr<T>> m_motors;
 };

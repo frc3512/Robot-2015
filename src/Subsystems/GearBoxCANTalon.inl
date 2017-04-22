@@ -1,10 +1,8 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #pragma once
 
 #include <memory>
-
-#include <Solenoid.h>
 
 inline GearBox<CANTalon>::GearBox(int shifterChan, int motor1, int motor2,
                                   int motor3)

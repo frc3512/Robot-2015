@@ -1,4 +1,4 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #pragma once
 
@@ -12,11 +12,11 @@ GearBox<T>::GearBox(int shifterChan, int encA, int encB, int motor1, int motor2,
                     int motor3)
     : GearBoxBase<T>(shifterChan, encA, encB, motor1, motor2, motor3) {
     if (encA != -1 && encB != -1) {
-        m_encoder = std::make_shared<Encoder>(encA, encB);
-        m_pid =
-            std::make_unique<PIDController>(0, 0, 0, 0, m_encoder.get(), this);
+        m_encoder = std::make_shared<frc::Encoder>(encA, encB);
+        m_pid = std::make_unique<frc::PIDController>(0, 0, 0, 0,
+                                                     m_encoder.get(), this);
 
-        m_encoder->SetPIDSourceType(PIDSourceType::kDisplacement);
+        m_encoder->SetPIDSourceType(frc::PIDSourceType::kDisplacement);
 
         m_pid->SetAbsoluteTolerance(1);
 

@@ -1,4 +1,4 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #include "GraphHost.hpp"
 
@@ -24,6 +24,8 @@
 #include <signal.h>
 
 #endif
+
+using namespace std::chrono;
 
 GraphHost::GraphHost(int port) {
     m_currentTime =

@@ -1,9 +1,11 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #include "Robot.hpp"
 
 #include <cmath>
 #include <iostream>
+
+using namespace std::chrono_literals;
 
 Robot::Robot() {
     dsDisplay.AddAutoMethod("Noop Auton", &Robot::AutoNoop, this);

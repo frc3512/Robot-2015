@@ -1,7 +1,8 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #include "Elevator.hpp"
 
+#include <iostream>
 #include <memory>
 #include <utility>
 

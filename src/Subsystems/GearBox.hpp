@@ -1,4 +1,4 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #pragma once
 
@@ -10,8 +10,10 @@
 
 #include "GearBoxBase.hpp"
 
+namespace frc {
 class Encoder;
 class PIDController;
+}
 
 /**
  * Represents a gear box with up to 3 motors and an encoder
@@ -71,8 +73,8 @@ private:
     // Sets motor speed to 'output'
     void PIDWrite(float output);
 
-    std::unique_ptr<PIDController> m_pid;
-    std::shared_ptr<Encoder> m_encoder;
+    std::unique_ptr<frc::PIDController> m_pid;
+    std::shared_ptr<frc::Encoder> m_encoder;
 };
 
 #include "GearBox.inl"

@@ -1,10 +1,6 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #pragma once
-
-#include <chrono>
-
-using namespace std::chrono_literals;
 
 #include <Joystick.h>
 #include <SampleRobot.h>
@@ -12,12 +8,11 @@ using namespace std::chrono_literals;
 #include <Timer.h>
 
 #include "ButtonTracker.hpp"
+#include "DSDisplay.hpp"
+#include "LiveGrapherHost/GraphHost.hpp"
 #include "Settings.hpp"
 #include "Subsystems/DriveTrain.hpp"
 #include "Subsystems/Elevator.hpp"
-
-#include "DSDisplay.hpp"
-#include "LiveGrapherHost/GraphHost.hpp"
 
 /**
  * Implements the main robot class

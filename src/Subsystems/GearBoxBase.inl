@@ -1,4 +1,4 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #pragma once
 
@@ -13,7 +13,7 @@ GearBoxBase<T>::GearBoxBase(int shifterChan, int encA, int encB, int motor1,
     (void)encB;
 
     if (shifterChan != -1) {
-        m_shifter = std::make_unique<Solenoid>(shifterChan);
+        m_shifter = std::make_unique<frc::Solenoid>(shifterChan);
     } else {
         m_shifter = nullptr;
     }

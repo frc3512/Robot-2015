@@ -1,4 +1,4 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #pragma once
 
@@ -84,25 +84,25 @@ public:
     void updateState();
 
 private:
-    Solenoid m_elevatorGrabber{3};
-    Solenoid m_containerGrabber{4};
+    frc::Solenoid m_elevatorGrabber{3};
+    frc::Solenoid m_containerGrabber{4};
     GearBox<CANTalon> m_liftGrbx{-1, 7, 2};
     bool m_manual = false;
 
     // Intake
     IntakeMotorState m_intakeState;
-    Solenoid m_intakeStower{1};
-    Solenoid m_intakeGrabber{2};
+    frc::Solenoid m_intakeStower{1};
+    frc::Solenoid m_intakeGrabber{2};
     CANTalon m_intakeWheelLeft{3};
     CANTalon m_intakeWheelRight{6};
 
     std::map<std::string, double> m_toteHeights;
-    Timer m_profileTimer;
+    frc::Timer m_profileTimer;
     std::atomic<bool> m_updateProfile{true};
     std::thread m_profileUpdater;
 
     StateMachine m_autoStackSM{"AUTO_STACK"};
-    Timer m_grabTimer;
+    frc::Timer m_grabTimer;
     bool m_startAutoStacking = false;
     bool m_wasAtGround = false;
 

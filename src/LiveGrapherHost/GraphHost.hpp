@@ -1,4 +1,4 @@
-// Copyright (c) FRC Team 3512, Spartatroniks 2015-2016. All Rights Reserved.
+// Copyright (c) FRC Team 3512, Spartatroniks 2015-2017. All Rights Reserved.
 
 #pragma once
 
@@ -34,9 +34,6 @@
 #include <string>
 #include <thread>
 #include <vector>
-
-using namespace std::chrono;
-using namespace std::chrono_literals;
 
 #include "SocketConnection.hpp"
 
