@@ -22,7 +22,6 @@ genFileExclude {
 }
 
 modifiableFolderExclude {
-  \.git
   SFML
   SFMLNetwork
 }
