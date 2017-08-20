@@ -12,34 +12,7 @@ cppSrcExtensions {
   cpp
 }
 
-otherExtensions {
-}
-
-genFolderExclude {
-}
-
-genFileExclude {
-}
-
-modifiableFolderExclude {
-  SFML
-  SFMLNetwork
-}
-
 modifiableFileExclude {
-}
-
-includeRelated {
-}
-
-includeCSys {
-}
-
-includeCppSys {
-}
-
-includeOtherLibs {
-}
-
-includeProject {
+  SFML/
+  SFMLNetwork/
 }
