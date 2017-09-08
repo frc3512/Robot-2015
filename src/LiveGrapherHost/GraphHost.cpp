@@ -6,23 +6,18 @@
 #include <memory>
 
 #ifdef __VXWORKS__
-
-#include <cstdio>
-
 #include <hostLib.h>
 #include <pipeDrv.h>
 #include <selectLib.h>
 #include <sockLib.h>
 
+#include <cstdio>
 #define be64toh(x) x
-
 #else
-
 #include <endian.h>
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <signal.h>
-
 #endif
 
 using namespace std::chrono;

@@ -1,15 +1,14 @@
-cExtensions {
-  c
-  h
+cHeaderFileInclude {
+  \.h$
 }
 
-cppHeaderExtensions {
-  hpp
-  inl
+cppHeaderFileInclude {
+  \.hpp$
+  \.inl$
 }
 
-cppSrcExtensions {
-  cpp
+cppSrcFileInclude {
+  \.cpp$
 }
 
 modifiableFileExclude {

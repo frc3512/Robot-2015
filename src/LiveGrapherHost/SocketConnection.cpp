@@ -6,15 +6,15 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#ifdef __VXWORKS__
+#include <sockLib.h>
+#endif
+
 #include <algorithm>
 #include <cstring>
 #include <utility>
 
 #include "GraphHost.hpp"
-
-#ifdef __VXWORKS__
-#include <sockLib.h>
-#endif
 
 std::vector<std::string> SocketConnection::graphNames;
 
