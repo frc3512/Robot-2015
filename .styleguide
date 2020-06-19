@@ -1,10 +1,7 @@
-cHeaderFileInclude {
-  \.h$
-}
-
 cppHeaderFileInclude {
+  \.h$
   \.hpp$
-  \.inl$
+  \.inc$
 }
 
 cppSrcFileInclude {
@@ -12,6 +9,11 @@ cppSrcFileInclude {
 }
 
 modifiableFileExclude {
-  SFML/
-  SFMLNetwork/
+  gradle/
+}
+
+includeOtherLibs {
+  frc/
+  frc2/
+  wpi/
 }

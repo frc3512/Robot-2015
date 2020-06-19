@@ -1,18 +1,10 @@
-*.log
-*.a
-*.dll
-*.d
-*.o
-FRCUserProgram
-
-# CMake-generated files
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-
-/Debug/
-/Release/
+.gradle/
+.project
 .settings/
-sysProps.xml
+.vscode/
+.wpilib/
+build/
+docs/
 *.swp
+*.csv
+*.log
