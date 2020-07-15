@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
@@ -37,14 +37,14 @@
 
 #include "SocketConnection.hpp"
 
-struct[[gnu::packed]] graph_payload_t {
+struct [[gnu::packed]] graph_payload_t {
     char type;  // Set to 'd' to identify this as a graph payload packet
     char dataset[15];
     uint64_t x;
     float y;
 };
 
-struct[[gnu::packed]] graph_list_t {
+struct [[gnu::packed]] graph_list_t {
     char type;
     char dataset[15];
     char end;

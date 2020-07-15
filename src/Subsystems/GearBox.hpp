@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
@@ -13,7 +13,7 @@
 namespace frc {
 class Encoder;
 class PIDController;
-}
+}  // namespace frc
 
 /**
  * Represents a gear box with up to 3 motors and an encoder

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
 
 #include "GraphHost.hpp"
 
@@ -20,9 +20,11 @@
 #include <signal.h>
 #endif
 
-using namespace std::chrono;
-
 GraphHost::GraphHost(int port) {
+    using std::chrono::duration_cast;
+    using std::chrono::milliseconds;
+    using std::chrono::system_clock;
+
     m_currentTime =
         duration_cast<milliseconds>(system_clock::now().time_since_epoch())
             .count();
@@ -66,6 +68,10 @@ GraphHost::~GraphHost() {
 }
 
 int GraphHost::GraphData(float value, std::string dataset) {
+    using std::chrono::duration_cast;
+    using std::chrono::milliseconds;
+    using std::chrono::system_clock;
+
     if (!m_running) {
         return -1;
     }
@@ -121,6 +127,10 @@ int GraphHost::GraphData(float value, std::string dataset) {
 }
 
 bool GraphHost::HasIntervalPassed() {
+    using std::chrono::duration_cast;
+    using std::chrono::milliseconds;
+    using std::chrono::system_clock;
+
     m_currentTime =
         duration_cast<milliseconds>(system_clock::now().time_since_epoch())
             .count();
@@ -246,7 +256,7 @@ int GraphHost::socket_listen(int port, uint32_t s_addr) {
         // Create a TCP socket
         sd = socket(AF_INET, SOCK_STREAM, 0);
         if (sd == -1) {
-            throw - 1;
+            throw -1;
         }
 
 // Allow rebinding to the socket later if the connection is interrupted
@@ -266,12 +276,12 @@ int GraphHost::socket_listen(int port, uint32_t s_addr) {
         // Bind the socket to the listener sockaddr_in
         if (bind(sd, reinterpret_cast<struct sockaddr*>(&serv_addr),
                  sizeof(struct sockaddr_in)) != 0) {
-            throw - 1;
+            throw -1;
         }
 
         // Listen on the socket for incoming connections
         if (listen(sd, 5) != 0) {
-            throw - 1;
+            throw -1;
         }
     } catch (int e) {
         std::perror("");
@@ -306,24 +316,24 @@ int GraphHost::socket_accept(int listenfd) {
 
         // Make sure that the file descriptor is valid
         if (new_fd == -1) {
-            throw - 1;
+            throw -1;
         }
 
 #ifdef __VXWORKS__
         // Set the socket non-blocking
         int on = 1;
         if (ioctl(new_fd, static_cast<int>(FIONBIO), on) == -1) {
-            throw - 1;
+            throw -1;
         }
 #else
         // Set the socket non-blocking
         int flags = fcntl(new_fd, F_GETFL, 0);
         if (flags == -1) {
-            throw - 1;
+            throw -1;
         }
 
         if (fcntl(new_fd, F_SETFL, flags | O_NONBLOCK) == -1) {
-            throw - 1;
+            throw -1;
         }
 #endif
     } catch (int e) {

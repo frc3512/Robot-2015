@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
@@ -7,7 +7,7 @@
 
 namespace frc {
 class Solenoid;
-}
+}  // namespace frc
 
 /* Notes:
  * The template type of this template class is only used for creating the right
@@ -25,7 +25,7 @@ enum PIDMode {
     Speed,
     Raw  // Returns voltage [0..1] when used
 };
-}
+}  // namespace Grbx
 
 /**
  * Represents a gear box with up to 3 motors and an encoder
