@@ -13,7 +13,8 @@ modifiableFileExclude {
 }
 
 includeOtherLibs {
-  frc/
-  frc2/
-  wpi/
+  ^frc/
+  ^frc2/
+  ^units/
+  ^wpi/
 }
