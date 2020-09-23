@@ -2,9 +2,9 @@
 
 #include "subsystems/Drivetrain.hpp"
 
-#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
-
 #include <cmath>
+
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
 Drivetrain::Drivetrain() {
     m_leftGrbx.SetInverted(true);

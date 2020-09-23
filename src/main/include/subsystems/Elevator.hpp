@@ -2,14 +2,13 @@
 
 #pragma once
 
-#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
-
 #include <atomic>
 #include <map>
 #include <string>
 #include <thread>
 #include <vector>
 
+#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 #include <frc/Solenoid.h>
 #include <frc/SpeedControllerGroup.h>
 #include <frc/controller/ProfiledPIDController.h>

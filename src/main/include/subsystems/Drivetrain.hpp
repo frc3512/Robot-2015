@@ -3,7 +3,6 @@
 #pragma once
 
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
-
 #include <frc/SpeedControllerGroup.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/drive/DifferentialDrive.h>
