@@ -10,13 +10,13 @@
 
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 #include <frc/Solenoid.h>
-#include <frc/SpeedControllerGroup.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc2/Timer.h>
 
 #include "CANDigitalInput.hpp"
 #include "CANEncoder.hpp"
 #include "StateMachine.hpp"
+#include "TalonSRXGroup.hpp"
 
 /**
  * Provides an interface for the robot's elevator
@@ -104,7 +104,7 @@ private:
 
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX m_liftLeftMotor{7};
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX m_liftRightMotor{2};
-    frc::SpeedControllerGroup m_liftGrbx{m_liftLeftMotor, m_liftRightMotor};
+    TalonSRXGroup m_liftGrbx{m_liftLeftMotor, m_liftRightMotor};
     CANEncoder m_liftEncoder{m_liftLeftMotor, true};
     bool m_manual = false;
 

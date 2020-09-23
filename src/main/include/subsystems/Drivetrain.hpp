@@ -3,11 +3,11 @@
 #pragma once
 
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
-#include <frc/SpeedControllerGroup.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/drive/DifferentialDrive.h>
 
 #include "CANEncoder.hpp"
+#include "TalonSRXGroup.hpp"
 
 /**
  * Provides an interface for this year's drive train
@@ -69,8 +69,8 @@ private:
     CANEncoder m_leftEncoder{m_frontLeftMotor, true};
     CANEncoder m_rightEncoder{m_frontRightMotor, true};
 
-    frc::SpeedControllerGroup m_leftGrbx{m_frontLeftMotor, m_backLeftMotor};
-    frc::SpeedControllerGroup m_rightGrbx{m_frontRightMotor, m_backRightMotor};
+    TalonSRXGroup m_leftGrbx{m_frontLeftMotor, m_backLeftMotor};
+    TalonSRXGroup m_rightGrbx{m_frontRightMotor, m_backRightMotor};
 
     frc::DifferentialDrive m_drive{m_leftGrbx, m_rightGrbx};
 
