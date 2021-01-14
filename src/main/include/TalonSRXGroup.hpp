@@ -10,7 +10,7 @@ public:
     template <class... Talons>
     explicit TalonSRXGroup(ctre::phoenix::motorcontrol::can::TalonSRX& leader,
                            Talons&... followers)
-        : m_leader{leader} {
+        : m_leader{&leader} {
         FollowImpl(followers...);
     }
 
@@ -28,11 +28,11 @@ public:
 private:
     double m_speed = 0.0;
     bool m_isInverted = false;
-    ctre::phoenix::motorcontrol::can::TalonSRX& m_leader;
+    ctre::phoenix::motorcontrol::can::TalonSRX* m_leader;
 
     template <class Talon, class... Talons>
     void FollowImpl(Talon& follower, Talons&... followers) {
-        follower.Follow(m_leader);
+        follower.Follow(*m_leader);
 
         if constexpr (sizeof...(followers) > 0) {
             FollowImpl(followers...);
