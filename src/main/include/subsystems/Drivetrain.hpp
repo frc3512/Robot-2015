@@ -1,10 +1,14 @@
-// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2021 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/drive/DifferentialDrive.h>
+#include <units/acceleration.h>
+#include <units/length.h>
+#include <units/velocity.h>
+#include <units/voltage.h>
 
 #include "CANEncoder.hpp"
 #include "TalonSRXGroup.hpp"

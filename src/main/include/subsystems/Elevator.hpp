@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2021 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
@@ -12,6 +12,10 @@
 #include <frc/Solenoid.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc2/Timer.h>
+#include <units/acceleration.h>
+#include <units/length.h>
+#include <units/velocity.h>
+#include <units/voltage.h>
 
 #include "CANDigitalInput.hpp"
 #include "CANEncoder.hpp"
