@@ -1,6 +1,7 @@
 cppHeaderFileInclude {
   \.h$
   \.hpp$
+  \.inl$
   \.inc$
 }
 
@@ -8,14 +9,29 @@ cppSrcFileInclude {
   \.cpp$
 }
 
+generatedFileExclude {
+  src/main/cpp/fmt/
+  src/main/include/fmt/
+}
+
 modifiableFileExclude {
   gradle/
+  Win32PipeImpl\.
 }
 
 includeOtherLibs {
-  ^ctre/
-  ^frc/
-  ^frc2/
-  ^units/
-  ^wpi/
+  Eigen/
+  fmt/
+  frc/
+  frc2/
+  gtest/
+  hal/
+  mockdata/
+  networktables/
+  ctre/.*?\.h$
+  simulation/
+  units/
+  unsupported/
+  wpi/
+  cscore\.h$
 }

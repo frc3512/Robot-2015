@@ -1,19 +1,20 @@
-// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2021 FRC Team 3512. All Rights Reserved.
 
-#include <chrono>
+#include <frc2/Timer.h>
 
 #include "Robot.hpp"
 
-using namespace std::chrono_literals;
+void Robot::AutoDriveForward() {
+    frc2::Timer timer;
+    timer.Start();
 
-static frc2::Timer timer;
-
-void Robot::AutoDriveForwardInit() { timer.Start(); }
-
-void Robot::AutoDriveForwardPeriodic() {
-    if (timer.Get() < 2.5_s) {
+    while (timer.Get() < 2.5_s) {
         drivetrain.Drive(-0.4, 0.0, false);
-    } else {
-        drivetrain.Drive(0.0, 0.0, false);
+        autonChooser.YieldToMain();
+        if (!IsAutonomousEnabled()) {
+            return;
+        }
     }
+
+    drivetrain.Drive(0.0, 0.0, false);
 }

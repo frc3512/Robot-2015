@@ -1,103 +1,67 @@
-// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2021 FRC Team 3512. All Rights Reserved.
 
 #include "Robot.hpp"
 
-using namespace std::chrono_literals;
-
-void Robot::AutoOneToteInit() {
-    autoOneToteSM.SetState("IDLE");
-    autoOneToteSM.run();
-
+void Robot::AutoOneTote() {
     elevator.SetManualMode(false);
-}
+    elevator.SetIntakeDirection(Elevator::S_STOPPED);
 
-void Robot::AutoOneTotePeriodic() {
-    if (autoOneToteSM.GetState() != "IDLE") {
-        autoOneToteSM.run();
-        elevator.UpdateState();
+    // Seek garbage can up
+    elevator.RaiseElevator(Elevator::kGarbageCanHeight);
+    elevator.StowIntake(false);
+    while (!elevator.AtGoal()) {
+        autonChooser.YieldToMain();
+        if (!IsAutonomousEnabled()) {
+            return;
+        }
     }
-}
 
-StateMachine Robot::MakeAutoOneToteSM() {
-    StateMachine autoSM{"AUTO_ONE_TOTE"};
+    // Move to tote
+    frc2::Timer timer;
+    timer.Start();
+    while (!timer.HasPeriodPassed(1_s)) {
+        drivetrain.Drive(-0.3, 0, false);
 
-    State state{"IDLE"};
-    state.transition = [this] { return "SEEK_GARBAGECAN_UP"; };
-    state.exit = [this] { elevator.SetIntakeDirection(Elevator::S_STOPPED); };
-    autoSM.AddState(std::move(state));
-
-    state = State{"SEEK_GARBAGECAN_UP"};
-    state.entry = [this] {
-        elevator.RaiseElevator(Elevator::kGarbageCanHeight);
-        elevator.StowIntake(false);
-    };
-    state.transition = [this] {
-        if (elevator.AtGoal()) {
-            return "MOVE_TO_TOTE";
-        } else {
-            return "";
+        autonChooser.YieldToMain();
+        if (!IsAutonomousEnabled()) {
+            return;
         }
-    };
-    autoSM.AddState(std::move(state));
+    }
 
-    state = State{"MOVE_TO_TOTE"};
-    state.entry = [this] { autoTimer.Reset(); };
-    state.transition = [this] {
-        if (autoTimer.HasPeriodPassed(1_s)) {
-            return "AUTOSTACK";
-        } else {
-            return "";
+    // Autostack
+    timer.Reset();
+    elevator.IntakeGrab(true);
+    elevator.SetIntakeDirection(Elevator::S_REVERSE);
+    while (!timer.HasPeriodPassed(1_s)) {
+        autonChooser.YieldToMain();
+        if (!IsAutonomousEnabled()) {
+            return;
         }
-    };
-    state.run = [this] { drivetrain.Drive(-0.3, 0, false); };
-    autoSM.AddState(std::move(state));
+    }
 
-    state = State{"AUTOSTACK"};
-    state.entry = [this] {
-        autoTimer.Reset();
-        elevator.IntakeGrab(true);
-        elevator.SetIntakeDirection(Elevator::S_REVERSE);
-    };
-    state.transition = [this] {
-        if (autoTimer.HasPeriodPassed(1_s)) {
-            return "TURN";
-        } else {
-            return "";
+    // Turn
+    timer.Reset();
+    elevator.SetIntakeDirection(Elevator::S_REVERSE);
+    while (!timer.HasPeriodPassed(1_s)) {
+        drivetrain.Drive(-0.3, -0.3, true);
+
+        autonChooser.YieldToMain();
+        if (!IsAutonomousEnabled()) {
+            return;
         }
-    };
-    autoSM.AddState(std::move(state));
+    }
+    drivetrain.Drive(0.0, 0.0, false);
 
-    state = State{"TURN"};
-    state.entry = [this] {
-        autoTimer.Reset();
-        elevator.SetIntakeDirection(Elevator::S_REVERSE);
-    };
-    state.transition = [this] {
-        if (autoTimer.HasPeriodPassed(1_s)) {
-            return "RUN_AWAY";
-        } else {
-            return "";
+    // Run away
+    timer.Reset();
+    elevator.SetIntakeDirection(Elevator::S_REVERSE);
+    while (!timer.HasPeriodPassed(3_s)) {
+        drivetrain.Drive(-0.3, 0, false);
+
+        autonChooser.YieldToMain();
+        if (!IsAutonomousEnabled()) {
+            return;
         }
-    };
-    state.run = [this] { drivetrain.Drive(-0.3, -0.3, true); };
-    state.exit = [this] { drivetrain.Drive(0.0, 0.0, false); };
-    autoSM.AddState(std::move(state));
-
-    state = State{"RUN_AWAY"};
-    state.entry = [this] {
-        autoTimer.Reset();
-        elevator.SetIntakeDirection(Elevator::S_REVERSE);
-    };
-    state.transition = [this] {
-        if (autoTimer.HasPeriodPassed(3_s)) {
-            return "IDLE";
-        } else {
-            return "";
-        }
-    };
-    state.run = [this] { drivetrain.Drive(-0.3, 0, false); };
-    state.exit = [this] { drivetrain.Drive(0, 0, false); };
-    autoSM.AddState(std::move(state));
-
-    return autoSM;
+    }
+    drivetrain.Drive(0, 0, false);
 }

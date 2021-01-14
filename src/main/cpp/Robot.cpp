@@ -1,28 +1,14 @@
-// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2021 FRC Team 3512. All Rights Reserved.
 
 #include "Robot.hpp"
 
 Robot::Robot() {
-    autonSelector.AddAutoMethod(
-        "Noop Auton", [] {}, [] {});
-    autonSelector.AddAutoMethod(
-        "DriveForward", std::bind(&Robot::AutoDriveForwardInit, this),
-        std::bind(&Robot::AutoDriveForwardPeriodic, this));
-    autonSelector.AddAutoMethod(
-        "ResetElevator", std::bind(&Robot::AutoResetElevatorInit, this),
-        std::bind(&Robot::AutoResetElevatorPeriodic, this));
-    autonSelector.AddAutoMethod(
-        "OneCanLeft", std::bind(&Robot::AutoOneCanLeftInit, this),
-        std::bind(&Robot::AutoOneCanLeftPeriodic, this));
-    autonSelector.AddAutoMethod(
-        "OneCanCenter", std::bind(&Robot::AutoOneCanCenterInit, this),
-        std::bind(&Robot::AutoOneCanCenterPeriodic, this));
-    autonSelector.AddAutoMethod(
-        "OneCanRight", std::bind(&Robot::AutoOneCanRightInit, this),
-        std::bind(&Robot::AutoOneCanRightPeriodic, this));
-    autonSelector.AddAutoMethod("OneTote",
-                                std::bind(&Robot::AutoOneToteInit, this),
-                                std::bind(&Robot::AutoOneTotePeriodic, this));
+    autonChooser.AddAutonomous("DriveForward", [=] { AutoDriveForward(); });
+    autonChooser.AddAutonomous("ResetElevator", [=] { AutoResetElevator(); });
+    autonChooser.AddAutonomous("OneCanLeft", [=] { AutoOneCanLeft(); });
+    autonChooser.AddAutonomous("OneCanCenter", [=] { AutoOneCanCenter(); });
+    autonChooser.AddAutonomous("OneCanRight", [=] { AutoOneCanRight(); });
+    autonChooser.AddAutonomous("OneTote", [=] { AutoOneTote(); });
 }
 
 void Robot::TeleopPeriodic() {
@@ -99,15 +85,13 @@ void Robot::TeleopPeriodic() {
     elevator.UpdateState();
 }
 
-void Robot::AutonomousInit() {
-    autoTimer.Reset();
-    autoTimer.Start();
+void Robot::AutonomousInit() { drivetrain.ResetEncoders(); }
 
-    drivetrain.ResetEncoders();
-    autonSelector.ExecAutonomousInit();
+void Robot::AutonomousPeriodic() {
+    autonChooser.AwaitRunAutonomous();
+
+    elevator.UpdateState();
 }
-
-void Robot::AutonomousPeriodic() { autonSelector.ExecAutonomousPeriodic(); }
 
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }

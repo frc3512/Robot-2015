@@ -1,66 +1,39 @@
-// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2021 FRC Team 3512. All Rights Reserved.
+
+#include <frc2/Timer.h>
 
 #include "Robot.hpp"
 
-using namespace std::chrono_literals;
-
-void Robot::AutoOneCanRightInit() {
-    autoOneCanRightSM.SetState("IDLE");
-    autoOneCanRightSM.run();
-
+void Robot::AutoOneCanRight() {
     elevator.SetManualMode(false);
-}
+    elevator.SetIntakeDirection(Elevator::S_STOPPED);
 
-void Robot::AutoOneCanRightPeriodic() {
-    if (autoOneCanRightSM.GetState() != "IDLE") {
-        autoOneCanRightSM.run();
-        elevator.UpdateState();
+    // Seek ground
+    elevator.RaiseElevator(Elevator::kGroundHeight);
+    while (!elevator.AtGoal()) {
+        autonChooser.YieldToMain();
+        if (!IsAutonomousEnabled()) {
+            return;
+        }
     }
-}
 
-StateMachine Robot::MakeAutoOneCanRightSM() {
-    StateMachine autoSM{"AUTO_ONE_CAN_RIGHT"};
-
-    State state{"IDLE"};
-    state.transition = [this] { return "SEEK_GROUND"; };
-    state.exit = [this] { elevator.SetIntakeDirection(Elevator::S_STOPPED); };
-    autoSM.AddState(std::move(state));
-
-    state = State{"SEEK_GROUND"};
-    state.entry = [this] { elevator.RaiseElevator(Elevator::kGroundHeight); };
-    state.transition = [this] {
-        if (elevator.AtGoal()) {
-            return "GRAB_CAN";
-        } else {
-            return "";
+    // Grab can
+    frc2::Timer timer;
+    timer.Start();
+    elevator.ElevatorGrab(true);
+    while (!timer.HasPeriodPassed(0.2_s)) {
+        autonChooser.YieldToMain();
+        if (!IsAutonomousEnabled()) {
+            return;
         }
-    };
-    autoSM.AddState(std::move(state));
+    }
 
-    state = State{"GRAB_CAN"};
-    state.entry = [this] {
-        autoTimer.Reset();
-        elevator.ElevatorGrab(true);
-    };
-    state.transition = [this] {
-        if (autoTimer.HasPeriodPassed(0.2_s)) {
-            return "SEEK_GARBAGECAN_UP";
-        } else {
-            return "";
+    // Seek garbage can up
+    elevator.RaiseElevator(Elevator::kToteHeight4);
+    while (!elevator.AtGoal()) {
+        autonChooser.YieldToMain();
+        if (!IsAutonomousEnabled()) {
+            return;
         }
-    };
-    autoSM.AddState(std::move(state));
-
-    state = State{"SEEK_GARBAGECAN_UP"};
-    state.entry = [this] { elevator.RaiseElevator(Elevator::kToteHeight4); };
-    state.transition = [this] {
-        if (elevator.AtGoal()) {
-            return "IDLE";
-        } else {
-            return "";
-        }
-    };
-    autoSM.AddState(std::move(state));
-
-    return autoSM;
+    }
 }
