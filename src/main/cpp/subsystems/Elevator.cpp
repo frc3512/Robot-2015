@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2015-2021 FRC Team 3512. All Rights Reserved.
 
 #include "subsystems/Elevator.hpp"
 
@@ -7,9 +7,6 @@
 #include <wpi/raw_ostream.h>
 
 Elevator::Elevator() {
-    // For CANTalon PID loop
-    m_liftEncoder.SetDistancePerPulse(70.5 / 5090.0);
-
     State state{"IDLE"};
     state.entry = [this] { m_startAutoStacking = false; };
     state.transition = [this] {

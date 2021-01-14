@@ -6,12 +6,7 @@
 
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
-Drivetrain::Drivetrain() {
-    m_leftGrbx.SetInverted(true);
-
-    m_leftEncoder.SetDistancePerPulse(72.0 / 2800.0);
-    m_rightEncoder.SetDistancePerPulse(72.0 / 2800.0);
-}
+Drivetrain::Drivetrain() { m_leftGrbx.SetInverted(true); }
 
 void Drivetrain::Drive(double throttle, double turn, bool isQuickTurn) {
     m_drive.CurvatureDrive(throttle, turn, isQuickTurn);

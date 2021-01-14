@@ -109,7 +109,7 @@ private:
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX m_liftLeftMotor{7};
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX m_liftRightMotor{2};
     TalonSRXGroup m_liftGrbx{m_liftLeftMotor, m_liftRightMotor};
-    CANEncoder m_liftEncoder{m_liftLeftMotor, true};
+    CANEncoder m_liftEncoder{m_liftLeftMotor, 70.5 / 5090.0, true};
     bool m_manual = false;
 
     // Intake

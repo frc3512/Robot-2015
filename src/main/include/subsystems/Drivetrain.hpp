@@ -70,8 +70,8 @@ private:
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX m_frontRightMotor{5};
     ctre::phoenix::motorcontrol::can::WPI_TalonSRX m_backRightMotor{8};
 
-    CANEncoder m_leftEncoder{m_frontLeftMotor, true};
-    CANEncoder m_rightEncoder{m_frontRightMotor, true};
+    CANEncoder m_leftEncoder{m_frontLeftMotor, 72.0 / 2800.0, true};
+    CANEncoder m_rightEncoder{m_frontRightMotor, 72.0 / 2800.0, true};
 
     TalonSRXGroup m_leftGrbx{m_frontLeftMotor, m_backLeftMotor};
     TalonSRXGroup m_rightGrbx{m_frontRightMotor, m_backRightMotor};

@@ -1,4 +1,4 @@
-// Copyright (c) 2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2020-2021 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
@@ -7,9 +7,7 @@
 class CANEncoder {
 public:
     CANEncoder(ctre::phoenix::motorcontrol::can::TalonSRX& motor,
-               bool reverseDirection = false);
-
-    void SetDistancePerPulse(double distancePerPulse);
+               double distancePerPulse = 1.0, bool reverseDirection = false);
 
     double GetDistance();
 
